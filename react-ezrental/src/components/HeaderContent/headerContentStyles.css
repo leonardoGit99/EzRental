@@ -1,0 +1,42 @@
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: lightskyblue;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    height: 100%;
+}
+
+/* .menu-btn-inactive-container{
+    flex: 1 1;
+} */
+
+.title-web-site-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1 1;
+    height: 100%;
+    /* background-color: blue; */
+}
+
+.header__menu-btn--inactive {
+    display: none;
+}
+
+
+@media only screen and (max-width: 1436.2px)and (max-height: 1400px) {
+    .header__menu-btn--inactive {
+        display: block;
+        margin: 0 10px;
+        height: 43px;
+        width: 50px;
+    }
+
+    .title-web-site-container {
+        font-size: 0.5em;
+    }
+
+}
