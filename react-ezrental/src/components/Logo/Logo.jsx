@@ -5,7 +5,7 @@ import './logoStyles.css';
 function Logo() {
     return (
         <div className='logo-container'>
-            <a href='/homeHost'>
+            <a href='/home'>
                 <img src={logoLizardTech} alt="logo lizardtech S.R.L" className='logo__img' />
             </a>
             <p className='title-logo'>EZ RENTAL</p>

@@ -1,0 +1,52 @@
+import React from 'react';
+import { Modal, Button, message } from 'antd';
+import './deleteCardModalStyles.css';
+
+function DeleteCardModal({ visible, onClose, idResidencia, titulo, setRefresh, cerrarModal}) {
+  
+  const handleOk = async () => {
+    // await deleteProductDB();
+    deleteResidenceDBSimulation();
+    cerrarModal();
+    setRefresh(true);
+    message.success("La residencia '" + titulo + "' ha sido eliminado exitosamente.");
+  };
+
+  function deleteResidenceDBSimulation(){
+    console.log('Simulación de peticion delete');
+  }
+  /* const deleteProductDB = async () => {
+    //Ruta para server en localhost: "http://localhost:8080/store/products"
+    //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products/`
+    const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/` + idResidencia, {
+      method: "DELETE"
+    });
+    return res;
+  } */
+
+  return (
+    <>
+      <Modal
+      className='delete-modal'
+        title="Eliminar Residencia"
+        open={visible}
+        onCancel={onClose}
+        width="25%"
+        footer={[
+          <Button danger id="boton" form="editForm" key="edit" type="primary" onClick={handleOk}>
+            Ok
+          </Button>,
+          <Button key="cancel" onClick={onClose}>
+            Cancelar
+          </Button>
+        ]}
+        destroyOnClose="true"
+      >
+        <p>¿Está seguro de querer eliminar <b>{titulo}</b>?</p>
+      </Modal>
+    </>
+  );
+};
+
+
+export default DeleteCardModal;

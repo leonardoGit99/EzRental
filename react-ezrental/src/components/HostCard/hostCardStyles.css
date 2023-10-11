@@ -1,0 +1,15 @@
+.host-card{
+    width: 210px;
+    /* text-align: center;  */
+}
+
+.img-host-card{
+    width: 110;
+    height: 150;
+    object-fit: cover;
+    margin: auto;
+    /* margin-top: 20px; */
+}
+
+
+
