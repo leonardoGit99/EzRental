@@ -8,11 +8,11 @@ import Logo from '../Logo/Logo';
 
 function SideMenu({ sideMenuCollapsed, displaySideMenu }) {
   const items = [
-    { key: "/home", label: (<Link to="/home">Home</Link>), icon: <HomeOutlined /> },
+    { key: "/", label: (<Link to="/">Home</Link>), icon: <HomeOutlined /> },
     {
       key: 2, label: 'Modo Anfitrion', icon: <FormOutlined />, children: [
-        { key: "/aniadirAnuncio", label: (<Link to="/aniadirAnuncio">Añadir Anuncio</Link>) },
-        { key: "/misAnuncios", label: (<Link to="/misAnuncios">Mis Anuncios</Link>) }
+        { key: "/aniadir-anuncio", label: (<Link to="/aniadir-anuncio">Añadir Anuncio</Link>) },
+        { key: "/mis-anuncios", label: (<Link to="/mis-anuncios">Mis Anuncios</Link>) }
       ]
     },
   ];

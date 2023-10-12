@@ -1,9 +1,12 @@
 import React from 'react';
+import { useParams } from 'react-router-dom';
 
 function MoreInfoMyAds() {
+  let {id} = useParams();
+  
   return (
     <>
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus expedita sit, maxime nemo labore minima doloribus ut? Blanditiis quia doloribus veniam minima officiis labore, possimus quidem provident corrupti ratione debitis?
+      Mas info de card host {id}
     </>
   );
 };

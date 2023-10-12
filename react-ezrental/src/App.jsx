@@ -9,6 +9,7 @@ import Home from './pages/Home';
 import RentalForm from './components/RentalForm/RentalForm';
 import MyAds from './pages/MyAds';
 import MoreInfoMyAds from './pages/MoreInfoMyAds';
+import MoreInfoAds from './pages/MoreInfoAds';
 import './App.css';
 
 
@@ -34,10 +35,11 @@ function App() {
           <PagesContainer>
             {/* Contenido de las distintas vistas mediante rutas */}
             <Routes>
-              <Route index path="/home" element={<Home />} />
-              <Route path="/aniadirAnuncio" element={<RentalForm />} />
-              <Route path="/misAnuncios" element={<MyAds />} />
-              <Route path="/misAnuncios/:detalleAnuncio" element={<MoreInfoMyAds />} />
+              <Route index path="/" element={<Home />} />
+              <Route path="/aniadir-anuncio" element={<RentalForm />} />
+              <Route path="/mis-anuncios" element={<MyAds />} />
+              <Route path="/mis-anuncios/:id" element={<MoreInfoMyAds />} />
+              <Route path="/:id" element={<MoreInfoAds />} />
             </Routes>
           </PagesContainer>
         </Content>
