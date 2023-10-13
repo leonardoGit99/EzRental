@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, Button, Tooltip } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
@@ -19,45 +19,50 @@ function HostCard({ idResidencia, imagen, titulo, ciudad, pais, fechaIni, fechaF
 
   return (
     <>
-      <Link to={`/mis-anuncios/${idResidencia}`}>
-        <Card
-          // style={{
-          //   width: 210,
-          //   // textAlign: 'center'
-          // }}
-          className='host-card'
-          hoverable
-          cover={
-            <Tooltip title={/* descripcion */`Clic para más detalles`} placement="right">
-              <img
-                className='img-host-card'
-                alt="Algo salio mal..."
-                src={/* imagen === "Sin imagen" ? defaultLogo : */ imagen}
-              />
+      <Card
+        // style={{
+        //   width: 210,
+        //   // textAlign: 'center'
+        // }}
+        className='host-card'
+        hoverable
+        cover={
+
+          <img
+            className='img-host-card'
+            alt="Algo salio mal..."
+            src={/* imagen === "Sin imagen" ? defaultLogo : */ imagen}
+          />
+
+        }
+
+        actions={[
+          <>
+            <Tooltip title="Clic para eliminar" placement='bottom'>
+              <Button name="modalBorrar" danger size='small' onClick={abrirModalBorrar} ><DeleteOutlined /></Button>
             </Tooltip>
-          }
+            <DeleteCardModal
+              visible={modalBorrar}
+              onClose={cerrarModalBorrar}
+              idResidencia={idResidencia}
+              titulo={titulo}
+              setRefresh={setRefresh}
+              cerrarModal={cerrarModalBorrar}
+            />
+          </>
+        ]}
 
-          actions={[
-            <>
-              <Tooltip title="Clic para eliminar" placement='bottom'>
-                <Button name="modalBorrar" danger size='small' onClick={abrirModalBorrar} ><DeleteOutlined /></Button>
-              </Tooltip>
-              <DeleteCardModal
-                visible={modalBorrar}
-                onClose={cerrarModalBorrar}
-                idResidencia={idResidencia}
-                titulo={titulo}
-                setRefresh={setRefresh}
-                cerrarModal={cerrarModalBorrar}
-              />
-            </>
-          ]}
+      >
 
-        >
-
-          <Meta title={`${ciudad}, ${pais}`} description={`${titulo} ${fechaIni} - ${fechaFin} ${precio}`} />
-        </Card>
-      </Link>
+        <Link to={`/mis-anuncios/${idResidencia}`}>
+          <Tooltip title={/* descripcion */`Clic para más detalles`} placement="right">
+            <Meta
+              title={`${ciudad}, ${pais}`}
+              description={`${titulo} ${fechaIni} - ${fechaFin} ${precio}`}
+            />
+          </Tooltip>
+        </Link>
+      </Card>
     </>
   );
 };

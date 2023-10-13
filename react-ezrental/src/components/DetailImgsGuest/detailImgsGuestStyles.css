@@ -1,0 +1,18 @@
+.img-flex-container{
+    display: flex;
+    justify-content: center;
+}
+.img-container{
+    width: 53vw;
+}
+
+.carousel-detail-img{
+    width: 100% !important;
+}
+
+.carousel-detail__img{
+    object-fit: cover !important;
+    margin: auto !important;
+    width: 50vw !important;
+    height: 40vh !important;
+}

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Modal, Button, message } from 'antd';
 import { WarningTwoTone } from '@ant-design/icons';
-
 import './deleteCardModalStyles.css';
 
 function DeleteCardModal({ visible, onClose, idResidencia, titulo, setRefresh, cerrarModal }) {

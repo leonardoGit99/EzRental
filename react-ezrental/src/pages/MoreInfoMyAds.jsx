@@ -5,9 +5,9 @@ function MoreInfoMyAds() {
   let {id} = useParams();
   
   return (
-    <>
-      Mas info de card host {id}
-    </>
+   <>
+    Mas info de card {id}
+   </>
   );
 };
 
