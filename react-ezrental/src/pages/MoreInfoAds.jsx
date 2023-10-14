@@ -4,9 +4,8 @@ import DetailTitle from '../components/DetailTitle/DetailTitle';
 import DetailImgs from '../components/DetailImgs/DetailImgs';
 import DetailDescription from '../components/DetailDescription/DetailDescription';
 import DetailOffers from '../components/DetailOffers/DetailOffers';
-import DetailsForHostOnly from '../components/DetailsForHostOnly/DetailsForHostOnly';
 
-function MoreInfoMyAds() {
+function MoreInfoAds() {
   let { id } = useParams();
   const [detailAdd, setDetailAdd] = useState([]);
   const [refresh, setRefresh] = useState(true);
@@ -97,14 +96,15 @@ function MoreInfoMyAds() {
           numberOfBeds={detailAdd.numberOfBeds}
           numberOfBathrooms={detailAdd.numberOfBathrooms}
         />
-        <DetailOffers
+        <DetailOffers 
           services={detailAdd.services}
           modCons={detailAdd.modCons}
           characteristics={detailAdd.characteristics}
         />
+
       </div>
     </div>
   )
 }
 
-export default MoreInfoMyAds;
+export default MoreInfoAds;

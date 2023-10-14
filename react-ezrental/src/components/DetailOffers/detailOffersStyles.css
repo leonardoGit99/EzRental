@@ -1,0 +1,15 @@
+.offers-container{
+    display: flex;
+    justify-content: space-around;
+    /* background-color: aquamarine; */
+    width: 50%;
+}
+
+
+.offers-container-col-1 p{
+    display: inline-block;
+}
+
+.offers-container-col-2 p{
+    display: inline-block;
+}

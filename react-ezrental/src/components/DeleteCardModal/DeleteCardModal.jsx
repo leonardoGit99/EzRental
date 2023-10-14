@@ -1,9 +1,10 @@
 import React from 'react';
 import { Modal, Button, message } from 'antd';
+import { WarningTwoTone } from '@ant-design/icons';
 import './deleteCardModalStyles.css';
 
-function DeleteCardModal({ visible, onClose, idResidencia, titulo, setRefresh, cerrarModal}) {
-  
+function DeleteCardModal({ visible, onClose, idResidencia, titulo, setRefresh, cerrarModal }) {
+
   const handleOk = async () => {
     // await deleteProductDB();
     deleteResidenceDBSimulation();
@@ -12,7 +13,7 @@ function DeleteCardModal({ visible, onClose, idResidencia, titulo, setRefresh, c
     message.success("La residencia '" + titulo + "' ha sido eliminado exitosamente.");
   };
 
-  function deleteResidenceDBSimulation(){
+  function deleteResidenceDBSimulation() {
     console.log('Simulación de peticion delete');
   }
   /* const deleteProductDB = async () => {
@@ -27,13 +28,16 @@ function DeleteCardModal({ visible, onClose, idResidencia, titulo, setRefresh, c
   return (
     <>
       <Modal
-      className='delete-modal'
-        title="Eliminar Residencia"
+        className='delete-modal'
+        title={
+          <>
+            <WarningTwoTone  twoToneColor="#FFA709" style={{fontSize:'1.3em'}}/> <b>Eliminar anuncio</b> 
+          </>
+        }
         open={visible}
         onCancel={onClose}
-        width="25%"
         footer={[
-          <Button danger id="boton" form="editForm" key="edit" type="primary" onClick={handleOk}>
+          <Button id="boton" form="editForm" key="edit" danger type="primary" onClick={handleOk}>
             Ok
           </Button>,
           <Button key="cancel" onClick={onClose}>

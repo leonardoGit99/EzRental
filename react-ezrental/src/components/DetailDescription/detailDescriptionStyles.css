@@ -1,0 +1,19 @@
+.detail-description-summary{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* background-color: aquamarine; */
+    width: 50%;
+}
+
+.detail-description{
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    /* background-color: aquamarine; */
+}
+
+.detail-description-flex-container{
+    display: flex;
+}
+
