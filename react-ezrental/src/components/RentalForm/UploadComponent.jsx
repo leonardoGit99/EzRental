@@ -4,7 +4,8 @@ import { Upload, Modal, Button } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import axios from "axios";
 
-function UploadComponent() {
+function UploadComponent({urls}) {
+
   const getBase64 = (file) =>
     new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -16,7 +17,6 @@ function UploadComponent() {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
-  const [urls, setUrls] = useState([]);
   const [fileList, setFileList] = useState([]);
 
   const handleCancel = () => setPreviewOpen(false);
@@ -97,7 +97,7 @@ function UploadComponent() {
         {fileList.length >= 10 ? null : uploadButton}
 
       </Upload>
-      {fileList.length < 5 ? <p>Debe subir al menos 5 fotos</p> : ""}
+      {fileList.length >= 1 && fileList.length < 5 ? <p>Debe subir al menos 5 fotos</p> : ""}
       {/* {fileList.length > 9 ? message.info("Solo puede subir 10 fotos") : ""} */}
       {fileList.length > 9 ? <p>Solo puede subir 10 fotos</p> : ""}
       
