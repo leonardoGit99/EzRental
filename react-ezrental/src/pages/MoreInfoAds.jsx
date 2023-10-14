@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import homePageEnDesarrollo from '../assets/homePageEnDesarrollo.jpg';
-import DetailTitleGuest from '../components/DetailTitleGuest/DetailTitleGuest';
-import DetailImgsGuest from '../components/DetailImgsGuest/DetailImgsGuest';
-import DetailDescriptionGuest from '../components/DetailDescriptionGuest/DetailDescriptionGuest';
-import DetailOffersGuest from '../components/DetailOffersGuest/DetailOffersGuest';
+import DetailTitle from '../components/DetailTitle/DetailTitle';
+import DetailImgs from '../components/DetailImgs/DetailImgs';
+import DetailDescription from '../components/DetailDescription/DetailDescription';
+import DetailOffers from '../components/DetailOffers/DetailOffers';
 
 function MoreInfoAds() {
   let { id } = useParams();
@@ -79,16 +78,16 @@ function MoreInfoAds() {
     <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
       <div style={{ display: 'flex', flexDirection: 'column', maxWidth: '1200px' }}>
         {/* Mas info de card guest {id} */}
-        <DetailTitleGuest
+        <DetailTitle
           title={detailAdd.title}
           city={detailAdd.city}
           country={detailAdd.country}
         />
-        <DetailImgsGuest
+        <DetailImgs
           images={detailAdd.images}
           setRefresh={setRefresh}
         />
-        <DetailDescriptionGuest
+        <DetailDescription
           residenceType={detailAdd.residenceType}
           spaceType={detailAdd.spaceType}
           description={detailAdd.description}
@@ -97,7 +96,7 @@ function MoreInfoAds() {
           numberOfBeds={detailAdd.numberOfBeds}
           numberOfBathrooms={detailAdd.numberOfBathrooms}
         />
-        <DetailOffersGuest 
+        <DetailOffers 
           services={detailAdd.services}
           modCons={detailAdd.modCons}
           characteristics={detailAdd.characteristics}

@@ -1,9 +1,9 @@
 import React from 'react';
 import { Avatar, Divider } from 'antd';
 import homePageEnDesarrollo from '../../assets/homePageEnDesarrollo.jpg';
-import './detailDescriptionGuestStyles.css';
+import './detailDescriptionStyles.css';
 
-function DetailDescriptionGuest({residenceType, spaceType, description, numberOfGuests, numberOfRooms, numberOfBeds, numberOfBathrooms }) {
+function DetailDescription({residenceType, spaceType, description, numberOfGuests, numberOfRooms, numberOfBeds, numberOfBathrooms }) {
   return (
     <div>
       <Divider />
@@ -25,4 +25,4 @@ function DetailDescriptionGuest({residenceType, spaceType, description, numberOf
   )
 }
 
-export default DetailDescriptionGuest
+export default DetailDescription

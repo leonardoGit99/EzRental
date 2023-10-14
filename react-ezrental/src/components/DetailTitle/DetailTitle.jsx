@@ -1,8 +1,8 @@
 import { Divider } from 'antd';
 import React from 'react';
-import './detailTitleGuestStyles.css';
+import './detailTitleStyles.css';
 
-function DetailTitleGuest({title, city, country}) {
+function DetailTitle({title, city, country}) {
   return (
     <div className="title-city-country-container">
       <h2>{title}</h2>
@@ -12,4 +12,4 @@ function DetailTitleGuest({title, city, country}) {
   )
 }
 
-export default DetailTitleGuest
+export default DetailTitle

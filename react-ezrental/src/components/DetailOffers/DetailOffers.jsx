@@ -1,9 +1,9 @@
 import React from 'react'
 import { WifiOutlined } from '@ant-design/icons';
 import { Button, Divider, List } from 'antd';
-import './detailOffersGuestStyles.css'
+import './detailOffersStyles.css'
 
-function DetailOffersGuest({ services, modCons, characteristics }) {
+function DetailOffers({ services, modCons, characteristics }) {
   return (
     <div>
       <Divider />
@@ -60,4 +60,4 @@ function DetailOffersGuest({ services, modCons, characteristics }) {
   )
 }
 
-export default DetailOffersGuest;
+export default DetailOffers;

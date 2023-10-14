@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Carousel, Image } from 'antd';
-import homePageEnDesarrollo from '../../assets/homePageEnDesarrollo.jpg';
-import './detailImgsGuestStyles.css';
+import './detailImgsStyles.css';
 
-function DetailImgsGuest({ images }) {
+function DetailImgs({ images }) {
   // console.log(images);
 
   return (
@@ -35,4 +34,4 @@ function DetailImgsGuest({ images }) {
   )
 }
 
-export default DetailImgsGuest
+export default DetailImgs;

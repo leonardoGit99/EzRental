@@ -13,3 +13,7 @@
     /* background-color: aquamarine; */
 }
 
+.detail-description-flex-container{
+    display: flex;
+}
+
