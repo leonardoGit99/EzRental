@@ -84,7 +84,7 @@ function UploadComponent({urls}) {
 
   return (
     <>
-      <p>Agregue algunas fotos de su residencia</p>
+      <h2>Agregue algunas fotos de su residencia</h2>
 
       <Upload
         customRequest={uploadImage}
