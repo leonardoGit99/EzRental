@@ -4,6 +4,7 @@ import DetailTitle from '../components/DetailTitle/DetailTitle';
 import DetailImgs from '../components/DetailImgs/DetailImgs';
 import DetailDescription from '../components/DetailDescription/DetailDescription';
 import DetailOffers from '../components/DetailOffers/DetailOffers';
+import DetailCheckInOut from '../components/DetailCheckInOut/DetailCheckInOut';
 
 function MoreInfoAds() {
   let { id } = useParams();
@@ -26,19 +27,20 @@ function MoreInfoAds() {
     description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit laborum nam dolore harum commodi doloribus ipsum architecto repellendus. Deserunt ea commodi perspiciatis excepturi perferendis totam doloremque necessitatibus sapiente temporibus qui.Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit laborum nam dolore harum commodi doloribus ipsum architecto repellendus. Deserunt ea commodi perspiciatis excepturi perferendis totam doloremque necessitatibus sapiente temporibus qui.",
     startDate: "13 de mayo",
     endDate: "21 de mayo",
-    services:
-      [
-        'wifi',
-        'Camara de seguridad'
-      ],
-    modCons:
-      [
-        "Aire acondicionado"
-      ],
-    characteristics: [
-      "Ideal para familias",
-      "Tranquilo",
-    ],
+    services:{
+      parqueo: true,
+      parrilla: true,
+      piscina: true,
+      estacionamiento: true,
+      terraza: true,
+      refrigerador: true,
+      aireAcondicionado: true,
+      cocina: true,
+      lavarropa: true,
+      equipoEjercicio: true,
+      wifi: true,
+      camaraSeguridad: true,
+    },
     checkIn: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis aspernatur ex magnam aliquam, cum aperiam cumque voluptatibus fugiat, odit similique a, perferendis quaerat porro. Vero modi atque natus facere sapiente.",
     checkOut: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis aspernatur ex magnam aliquam, cum aperiam cumque voluptatibus fugiat, odit similique a, perferendis quaerat porro. Vero modi atque natus facere sapiente.",
     price: 1500,
@@ -98,10 +100,11 @@ function MoreInfoAds() {
         />
         <DetailOffers 
           services={detailAdd.services}
-          modCons={detailAdd.modCons}
-          characteristics={detailAdd.characteristics}
         />
-
+        <DetailCheckInOut
+          checkIn={detailAdd.checkIn}
+          checkOut={detailAdd.checkOut}
+        />
       </div>
     </div>
   )

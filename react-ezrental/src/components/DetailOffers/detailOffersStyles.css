@@ -1,15 +1,18 @@
 .offers-container{
     display: flex;
-    justify-content: space-around;
+    /* justify-content: space-around; */
     /* background-color: aquamarine; */
-    width: 50%;
+    /* width: 50%; */
 }
 
 
-.offers-container-col-1 p{
-    display: inline-block;
+.list-offer-item p{
+    display: inline;
 }
 
-.offers-container-col-2 p{
-    display: inline-block;
+.list-items-offers-container{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
 }
+
