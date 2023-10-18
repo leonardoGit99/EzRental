@@ -40,6 +40,7 @@ function App() {
               <Route path="/mis-anuncios" element={<MyAds />} />
               <Route path="/mis-anuncios/:id" element={<MoreInfoMyAds />} />
               <Route path="/:id" element={<MoreInfoAds />} />
+              <Route path="/editar-anuncio/:id" element={<RentalForm />} />
             </Routes>
           </PagesContainer>
         </Content>

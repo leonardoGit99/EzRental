@@ -8,7 +8,6 @@ function MyAds() {
   const [residences, setResidences] = useState([]);
   const [refresh, setRefresh] = useState(true);
 
-
   const ads = [
     {
       id: "1",

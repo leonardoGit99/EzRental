@@ -46,7 +46,7 @@ function DeleteCardModal({ visible, onClose, idResidencia, titulo, setRefresh, c
         ]}
         destroyOnClose="true"
       >
-        <p>¿Está seguro de querer eliminar <b>{titulo}</b>?</p>
+        <p>¿Está seguro que desea eliminar <b>{titulo}</b>?</p>
       </Modal>
     </>
   );
