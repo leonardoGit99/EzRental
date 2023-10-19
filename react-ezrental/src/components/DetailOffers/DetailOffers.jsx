@@ -1,7 +1,7 @@
 import React from 'react'
-import { CarOutlined, WifiOutlined, VideoCameraOutlined, SkinOutlined,TabletOutlined } from '@ant-design/icons';
+import { CarOutlined, WifiOutlined, VideoCameraOutlined, SkinOutlined, TabletOutlined } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faWaterLadder, faKitchenSet, faFan, faDumbbell,faUtensils, faSquareParking, faBuilding } from '@fortawesome/free-solid-svg-icons';
+import { faWaterLadder, faKitchenSet, faFan, faDumbbell, faUtensils, faBuilding, faTv, faHotTubPerson, faFireFlameCurved } from '@fortawesome/free-solid-svg-icons';
 import { Button, Divider, List } from 'antd';
 import './detailOffersStyles.css'
 
@@ -10,76 +10,76 @@ function DetailOffers({ services }) {
   function addServicesToArray(services) {
     const servicesArray = [];
     if (services && typeof services === 'object') {
-      if (services.hasOwnProperty("parqueo") && services.parqueo) {
+      if (services.hasOwnProperty("wifi_residencia") && services.wifi_residencia) {
         servicesArray.push(
           <div className="list-offer-item">
-            <FontAwesomeIcon icon={faSquareParking} /> <p> Parqueo</p>
+            <WifiOutlined /> <p> Wifi </p>
           </div>
         )
-      } if (services.hasOwnProperty("parrilla") && services.parrilla) {
-        servicesArray.push(
-          <div className="list-offer-item">
-            <FontAwesomeIcon icon={faUtensils} /> <p> Parrilla</p>
-          </div>
-        )
-      } if (services.hasOwnProperty("piscina") && services.piscina) {
-        servicesArray.push(
-          <div className="list-offer-item">
-            <FontAwesomeIcon icon={faWaterLadder} />  <p> Piscina</p>
-          </div>
-        )
-      } if (services.hasOwnProperty("estacionamiento") && services.estacionamiento) {
-        servicesArray.push(
-          <div className="list-offer-item">
-            <CarOutlined /> <p> Estacionamiento</p>
-          </div>
-        )
-      } if (services.hasOwnProperty("terraza") && services.terraza) {
-        servicesArray.push(
-          <div className="list-offer-item">
-            <FontAwesomeIcon icon={faBuilding} /> <p> Terraza</p>
-          </div>
-        )
-      } if (services.hasOwnProperty("refrigerador") && services.refrigerador) {
-        servicesArray.push(
-          <div className="list-offer-item">
-            <TabletOutlined /> <p> Refrigerador</p>
-          </div>
-        )
-      } if (services.hasOwnProperty("aireAcondicionado") && services.aireAcondicionado) {
-        servicesArray.push(
-          <div className="list-offer-item">
-            <FontAwesomeIcon icon={faFan} /> <p> Aire Acondicionado</p>
-          </div>
-        )
-      } if (services.hasOwnProperty("cocina") && services.cocina) {
+      } if (services.hasOwnProperty("cocina_residencia") && services.cocina_residencia) {
         servicesArray.push(
           <div className="list-offer-item">
             <FontAwesomeIcon icon={faKitchenSet} /> <p> Cocina</p>
           </div>
         )
-      } if (services.hasOwnProperty("lavarropa") && services.lavarropa) {
+      } if (services.hasOwnProperty("televisor_residencia") && services.televisor_residencia) {
         servicesArray.push(
           <div className="list-offer-item">
-            <SkinOutlined /> <p> Lava Ropa</p>
+            <FontAwesomeIcon icon={faTv} />  <p> Televisor </p>
           </div>
         )
-      } if (services.hasOwnProperty("equipoEjercicio") && services.equipoEjercicio) {
+      } if (services.hasOwnProperty("lavadora_residencia") && services.lavadora_residencia) {
         servicesArray.push(
           <div className="list-offer-item">
-            <FontAwesomeIcon icon={faDumbbell} /> <p> Equipo para hacer ejercicio </p>
+            <SkinOutlined /> <p> Lavadora </p>
           </div>
         )
-      } if (services.hasOwnProperty("wifi") && services.wifi) {
+      } if (services.hasOwnProperty("aire_acond_residencia") && services.aire_acond_residencia) {
         servicesArray.push(
           <div className="list-offer-item">
-            <WifiOutlined /> <p> Wifi</p>
+            <FontAwesomeIcon icon={faFan} /> <p> Aire acondicionado</p>
           </div>
         )
-      } if (services.hasOwnProperty("camaraSeguridad") && services.camaraSeguridad) {
+      } if (services.hasOwnProperty("psicina_residencia") && services.psicina_residencia) {
         servicesArray.push(
           <div className="list-offer-item">
-            <VideoCameraOutlined /> <p> Cámara de Seguridad</p>
+            <FontAwesomeIcon icon={faWaterLadder} /> <p> Psicina </p>
+          </div>
+        )
+      } if (services.hasOwnProperty("jacuzzi_residencia") && services.jacuzzi_residencia) {
+        servicesArray.push(
+          <div className="list-offer-item">
+            <FontAwesomeIcon icon={faHotTubPerson} /> <p> Jacuzzi </p>
+          </div>
+        )
+      } if (services.hasOwnProperty("estacionamiento_residencia") && services.estacionamiento_residencia) {
+        servicesArray.push(
+          <div className="list-offer-item">
+            <CarOutlined /> <p> Estacionamiento </p>
+          </div>
+        )
+      } if (services.hasOwnProperty("gimnasio_residencia") && services.gimnasio_residencia) {
+        servicesArray.push(
+          <div className="list-offer-item">
+            <FontAwesomeIcon icon={faDumbbell} /> <p> Gimnasio </p>
+          </div>
+        )
+      } if (services.hasOwnProperty("parrilla_residencia") && services.parrilla_residencia) {
+        servicesArray.push(
+          <div className="list-offer-item">
+            <FontAwesomeIcon icon={faUtensils} /> <p> Parrilla </p>
+          </div>
+        )
+      } if (services.hasOwnProperty("camaras_segurid_residencia") && services.camaras_segurid_residencia) {
+        servicesArray.push(
+          <div className="list-offer-item">
+            <VideoCameraOutlined /> <p> Cámara de seguridad </p>
+          </div>
+        )
+      } if (services.hasOwnProperty("humo_segurid_residencia") && services.humo_segurid_residencia) {
+        servicesArray.push(
+          <div className="list-offer-item">
+            <FontAwesomeIcon icon={faFireFlameCurved} /> <p> Sistema contra incendios </p>
           </div>
         )
       }

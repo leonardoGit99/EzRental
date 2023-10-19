@@ -26,7 +26,11 @@ function GuestCard({ idResidencia, imagen, titulo, ciudad, pais, fechaIni, fecha
         >
           <Meta
             title={`${ciudad}, ${pais}`}
-            description={`${titulo} ${fechaIni} - ${fechaFin} ${precio}`}
+            description={
+              <div style={{whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis'}}>
+                {titulo} <br /> {fechaIni} / {fechaFin} <br /> Bs. {precio}
+              </div>
+            }
           />
         </Card>
       </Link>

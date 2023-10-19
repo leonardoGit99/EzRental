@@ -16,10 +16,10 @@ function DeleteCardModal({ visible, onClose, idResidencia, titulo, setRefresh, c
   function deleteResidenceDBSimulation() {
     console.log('Simulación de peticion delete');
   }
-  /* const deleteProductDB = async () => {
-    //Ruta para server en localhost: "http://localhost:8080/store/products"
-    //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/products/`
-    const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/products/` + idResidencia, {
+  /* const deleteResidenceDB = async () => {
+    //Ruta para server en localhost: "http://localhost:8080/store/resid"
+    //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/resid`
+    const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/resid/` + idResidencia, {
       method: "DELETE"
     });
     return res;
@@ -31,7 +31,7 @@ function DeleteCardModal({ visible, onClose, idResidencia, titulo, setRefresh, c
         className='delete-modal'
         title={
           <>
-            <WarningTwoTone  twoToneColor="#FFA709" style={{fontSize:'1.3em'}}/> <b>Eliminar anuncio</b> 
+            <WarningTwoTone  twoToneColor="#FFA709" style={{fontSize:'1.1em'}}/> <b>Eliminar anuncio</b> 
           </>
         }
         open={visible}

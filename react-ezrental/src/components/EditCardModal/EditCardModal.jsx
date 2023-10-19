@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Button } from 'antd';
-import { WarningTwoTone } from '@ant-design/icons';
+import { ExclamationCircleTwoTone } from '@ant-design/icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { setIsEditing } from '../../store/slices/editSlice';
 import { useNavigate } from 'react-router-dom';
@@ -21,7 +21,7 @@ function EditCardModal({ visible, onClose, idResidencia, titulo, description, se
         className="edit-modal"
         title={
           <>
-            <WarningTwoTone twoToneColor="#FFA709" style={{ fontSize: '1.3em' }} /> <b>Editar anuncio</b>
+            <ExclamationCircleTwoTone  twoToneColor="#FFA709" style={{ fontSize: '1.1em' }} /> <b>Editar anuncio</b>
           </>
         }
         open={visible}
