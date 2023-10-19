@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
-import editSlice from './slices/editSlice';
+import editRentalFormSlice from './slices/editRentalFormSlice';
 
 export default configureStore({
     reducer: {
-        edit: editSlice,
+        editRentalForm: editRentalFormSlice,
     }
 });

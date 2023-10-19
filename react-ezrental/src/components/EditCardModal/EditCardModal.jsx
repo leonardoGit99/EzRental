@@ -2,16 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { Modal, Button } from 'antd';
 import { ExclamationCircleTwoTone } from '@ant-design/icons';
 import { useSelector, useDispatch } from 'react-redux';
-import { setIsEditing } from '../../store/slices/editSlice';
+import { setIsEditingRentalForm } from '../../store/slices/editRentalFormSlice';
 import { useNavigate } from 'react-router-dom';
 import './editCardModalStyles.css';
 
 function EditCardModal({ visible, onClose, idResidencia, titulo, description, setRefresh, closeEditModal }) {
-  const isEdit = useSelector((state) => state.edit); // Acceder al estado global
+  const isEdit = useSelector((state) => state.editRentalForm); // Acceder al estado global
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleOk = () => {
-    dispatch(setIsEditing(true)); // Cambiar el estado global
+    dispatch(setIsEditingRentalForm(true)); // Cambiar el estado global
     navigate(`/editar-anuncio/${idResidencia}`);
   }
 
@@ -21,7 +21,7 @@ function EditCardModal({ visible, onClose, idResidencia, titulo, description, se
         className="edit-modal"
         title={
           <>
-            <ExclamationCircleTwoTone  twoToneColor="#FFA709" style={{ fontSize: '1.1em' }} /> <b>Editar anuncio</b>
+            <ExclamationCircleTwoTone twoToneColor="#FFA709" style={{ fontSize: '1.1em' }} /> <b>Editar anuncio</b>
           </>
         }
         open={visible}

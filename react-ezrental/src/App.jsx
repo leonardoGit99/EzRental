@@ -6,10 +6,11 @@ import SideMenu from './components/SideMenu/SideMenu';
 import PagesContainer from './components/PagesContainer/PagesContainer';
 import FooterContent from './components/FooterContent/FooterContent';
 import Home from './pages/Home';
-import RentalForm from './components/RentalForm/RentalForm';
 import MyAds from './pages/MyAds';
 import MoreInfoMyAds from './pages/MoreInfoMyAds';
 import MoreInfoAds from './pages/MoreInfoAds';
+import RentalFormPrueba from './components/RentalFormPrueba/RentalFormPrueba';
+import Addad from './pages/AddAd';
 import './App.css';
 
 
@@ -36,11 +37,11 @@ function App() {
             {/* Contenido de las distintas vistas mediante rutas */}
             <Routes>
               <Route index path="/" element={<Home />} />
-              <Route path="/aniadir-anuncio" element={<RentalForm />} />
+              <Route path="/aniadir-anuncio" element={<Addad />} />
               <Route path="/mis-anuncios" element={<MyAds />} />
               <Route path="/mis-anuncios/:id" element={<MoreInfoMyAds />} />
               <Route path="/:id" element={<MoreInfoAds />} />
-              <Route path="/editar-anuncio/:id" element={<RentalForm />} />
+              <Route path="/editar-anuncio/:id" element={<RentalFormPrueba />} />
             </Routes>
           </PagesContainer>
         </Content>
