@@ -1,29 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Modal, Button, message } from 'antd';
 import { WarningTwoTone } from '@ant-design/icons';
 import './deleteCardModalStyles.css';
+import { deleteResidence } from '../../services/residences';
 
-function DeleteCardModal({ visible, onClose, idResidencia, titulo, setRefresh, cerrarModal }) {
-
+function DeleteCardModal({ visible, onClose, idResidencia, titulo, isRefresh, setRefresh, cerrarModal }) {
   const handleOk = async () => {
-    // await deleteProductDB();
-    deleteResidenceDBSimulation();
+    await deleteResidence(idResidencia);
     cerrarModal();
     setRefresh(true);
+    // window.location.reload();//Otra forma de recargar la pagina
     message.success("La residencia '" + titulo + "' ha sido eliminado exitosamente.");
   };
 
-  function deleteResidenceDBSimulation() {
-    console.log('Simulación de peticion delete');
-  }
-  /* const deleteResidenceDB = async () => {
-    //Ruta para server en localhost: "http://localhost:8080/store/resid"
-    //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/store/resid`
-    const res = await fetch(`${process.env.REACT_APP_SERVERURL}/store/resid/` + idResidencia, {
+/*   const deleteResidenceDB = async () => {
+    //Ruta para server en localhost: `http://localhost:4000/resid/${idResidencia}` 
+    //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/${idResidencia}`
+    const res = await fetch(`http://localhost:4000/resid/${idResidencia}`, {
       method: "DELETE"
     });
     return res;
-  } */
+  }
+ */
 
   return (
     <>
@@ -31,7 +29,7 @@ function DeleteCardModal({ visible, onClose, idResidencia, titulo, setRefresh, c
         className='delete-modal'
         title={
           <>
-            <WarningTwoTone  twoToneColor="#FFA709" style={{fontSize:'1.1em'}}/> <b>Eliminar anuncio</b> 
+            <WarningTwoTone twoToneColor="#FFA709" style={{ fontSize: '1.1em' }} /> <b>Eliminar anuncio</b>
           </>
         }
         open={visible}
@@ -46,11 +44,10 @@ function DeleteCardModal({ visible, onClose, idResidencia, titulo, setRefresh, c
         ]}
         destroyOnClose="true"
       >
-        <p>¿Está seguro que desea eliminar <b>{titulo}</b>?</p>
+        <p>¿Está seguro que desea eliminar <span className="modal-delete-title">"{titulo}"</span>?</p>
       </Modal>
     </>
   );
 };
-
 
 export default DeleteCardModal;

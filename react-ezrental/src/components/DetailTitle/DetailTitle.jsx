@@ -1,6 +1,5 @@
 import React from 'react';
 import { Divider } from 'antd';
-import DetailsForHostOnly from '../DetailsForHostOnly/DetailsForHostOnly';
 import './detailTitleStyles.css';
 
 function DetailTitle({ children, title, city, country }) {

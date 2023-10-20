@@ -1,8 +1,8 @@
 import React from 'react'
+import { Divider, List } from 'antd';
 import { CarOutlined, WifiOutlined, VideoCameraOutlined, SkinOutlined, TabletOutlined } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faWaterLadder, faKitchenSet, faFan, faDumbbell, faUtensils, faBuilding, faTv, faHotTubPerson, faFireFlameCurved } from '@fortawesome/free-solid-svg-icons';
-import { Button, Divider, List } from 'antd';
+import { faWaterLadder, faKitchenSet, faFan, faDumbbell, faUtensils, faTv, faHotTubPerson, faFireFlameCurved } from '@fortawesome/free-solid-svg-icons';
 import './detailOffersStyles.css'
 
 function DetailOffers({ services }) {
@@ -89,7 +89,6 @@ function DetailOffers({ services }) {
 
   const renderedServices = addServicesToArray(services);
 
-  // console.log(renderedServices);
   return (
     <div>
       <Divider />
