@@ -1,12 +1,19 @@
-import { Divider } from 'antd';
 import React from 'react';
+import { Divider } from 'antd';
 import './detailTitleStyles.css';
 
-function DetailTitle({title, city, country}) {
+function DetailTitle({ children, title, city, country }) {
   return (
     <div className="title-city-country-container">
-      <h2>{title}</h2>
-      <p> {city}, {country}</p>
+      <div className="flex-container">
+        <div>
+          <h2>{title}</h2>
+          <p> {city}, {country}</p>
+        </div>
+        <div>
+          {children}
+        </div>
+      </div>
       <Divider />
     </div>
   )

@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, Tooltip } from 'antd';
-const { Meta } = Card;
 import ImgCarouselCard from '../ImgCarouselCard/ImgCarouselCard';
 import './guestCardStyles.css';
 
 function GuestCard({ idResidencia, imagen, titulo, ciudad, pais, fechaIni, fechaFin, precio, setRefresh }) {
+  const { Meta } = Card;
 
   return (
     <>
@@ -26,13 +26,16 @@ function GuestCard({ idResidencia, imagen, titulo, ciudad, pais, fechaIni, fecha
         >
           <Meta
             title={`${ciudad}, ${pais}`}
-            description={`${titulo} ${fechaIni} - ${fechaFin} ${precio}`}
+            description={
+              <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {titulo} <br /> {fechaIni} / {fechaFin} <br /> Bs. {precio}
+              </div>
+            }
           />
         </Card>
       </Link>
     </>
   );
 };
-
 
 export default GuestCard;

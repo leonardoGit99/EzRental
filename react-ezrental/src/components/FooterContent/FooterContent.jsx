@@ -9,5 +9,4 @@ function FooterContent() {
   );
 };
 
-
 export default FooterContent;

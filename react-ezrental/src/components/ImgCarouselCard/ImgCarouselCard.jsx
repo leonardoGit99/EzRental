@@ -1,7 +1,8 @@
 import React from 'react';
 import { Carousel } from 'antd';
-
+import './imgCarouselCardStyles.css'
 function ImgCarouselCard({ imagen }) {
+
   return (
     <>
       <Carousel autoplay>

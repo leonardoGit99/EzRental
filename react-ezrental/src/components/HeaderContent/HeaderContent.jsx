@@ -5,7 +5,6 @@ import './headerContentStyles.css';
 
 function HeaderContent({ sideMenuCollapsed, displaySideMenu }) {
 
-
   return (
     <div className="header-container">
       <div>
@@ -22,6 +21,5 @@ function HeaderContent({ sideMenuCollapsed, displaySideMenu }) {
     </div>
   );
 }
-
 
 export default HeaderContent;
