@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./rentalFormStyles.css";
-import { Upload, Modal, message, modal } from "antd";
+import { Upload, Modal, message} from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import axios from "axios";
 

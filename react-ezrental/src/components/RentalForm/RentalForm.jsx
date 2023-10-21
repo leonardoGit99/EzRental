@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Form, Input, Button, Select, Checkbox, DatePicker } from 'antd';
 import './rentalFormStyles.css';
+import UploadComponent from './UploadComponent';
 const { Option } = Select;
 
 const { RangePicker } = DatePicker;
 
+
 const RentalForm = () => {
+  const [urls,setUrls]=useState([]);
   const onFinish = (values) => {
     console.log('Valores del formulario:', values);
   };
@@ -234,6 +237,11 @@ const RentalForm = () => {
         autoSize={{ minRows: 5, maxRows: 20 }}
     />
   </Form.Item>
+<Form.Item>
+  <UploadComponent urls={urls}>
+
+  </UploadComponent>
+</Form.Item>
   </div>
 </div>
 
