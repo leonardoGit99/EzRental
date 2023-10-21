@@ -18,13 +18,13 @@ function MoreInfoMyAds() {
     setIsRefresh(status);
   }
 
-/*   async function fetchResidenceByIdAndUser() {
-    //`http://localhost:4000/resid/${id}`
-    //`${process.env.REACT_APP_SERVERURL}/resid/${id}`
-    const response = await fetch(`http://localhost:4000/resid/${id}`);
-    const jsonData = await response.json();
-    setDetailAdd(jsonData);
-  } */
+  /*   async function fetchResidenceByIdAndUser() {
+      //`http://localhost:4000/resid/${id}`
+      //`${process.env.REACT_APP_SERVERURL}/resid/${id}`
+      const response = await fetch(`http://localhost:4000/resid/${id}`);
+      const jsonData = await response.json();
+      setDetailAdd(jsonData);
+    } */
 
   useEffect(() => {
     if (isRefresh) {
@@ -33,17 +33,17 @@ function MoreInfoMyAds() {
     }
   }, [setRefresh, isRefresh]);
 
-/*   async function fetchServicesByIdAndUser() {
-    //`http://localhost:4000/resid/${id}`
-    //`${process.env.REACT_APP_SERVERURL}/resid/${id}`
-    const response = await fetch(`http://localhost:4000/serv/${id}`);
-    const jsonData = await response.json();
-    setDetailServices(jsonData);
-  } */
+  /*   async function fetchServicesByIdAndUser() {
+      //`http://localhost:4000/resid/${id}`
+      //`${process.env.REACT_APP_SERVERURL}/resid/${id}`
+      const response = await fetch(`http://localhost:4000/serv/${id}`);
+      const jsonData = await response.json();
+      setDetailServices(jsonData);
+    } */
 
   useEffect(() => {
     if (isRefresh) {
-      getServicesByResidence(id).then((data)=>setDetailServices(data));
+      getServicesByResidence(id).then((data) => setDetailServices(data));
       setRefresh(false);
     }
   }, [setRefresh, isRefresh]);

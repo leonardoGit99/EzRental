@@ -13,7 +13,7 @@
     margin-right: 20px; /* Espacio entre las dos columnas */
 }
 
-.w-500 {
+.inputsize {
     width: 500px;
   }
 .ant-form-item-control-input-content .ant-select {
