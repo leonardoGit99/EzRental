@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { Form, Input, Button, Select, Checkbox, DatePicker } from 'antd';
 import './rentalFormStyles.css';
 import UploadComponent from './UploadComponent';
+
+
 const { Option } = Select;
 
 const { RangePicker } = DatePicker;
-
 
 const RentalForm = () => {
   const [urls,setUrls]=useState([]);
@@ -20,6 +21,12 @@ const RentalForm = () => {
     return Promise.resolve();
   };
   
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setInputs({ ...inputs, [name]: value });
+    console.log(inputs);
+  }
+
   return (
     <div /*style={{display:"flex", flexDirection:"column",alignItems:"center",justifyContent:"space-between"}}*/>
     <h1 className="form-title">Registro</h1>
@@ -36,7 +43,10 @@ const RentalForm = () => {
         rules={[{ required: true, message: 'Por favor, ingresa el título de la residencia.' }]
         }
       >
-        <Input className="inputsize" placeholder="Introduce el título de la residencia"/>
+        <Input 
+        className="inputsize" 
+        placeholder="Introduce el título de la residencia"
+        onChange={handleChange}/>
       </Form.Item>
 
       <Form.Item
@@ -44,7 +54,13 @@ const RentalForm = () => {
           name="precioResid"
           rules={[{ required: true, message: 'Por favor, ingresa el precio de la residencia.' },{ validator: validarinputmayor0 }]}
         >
-          <Input className="inputsize" type="number" addonBefore="Bs" placeholder="Ingresa el precio de la residencia"/>
+          <Input 
+          className="inputsize" 
+          name="precioResid"
+          type="number" 
+          addonBefore="Bs" 
+          placeholder="Ingresa el precio de la residencia"
+          onChange={handleChange}/>
         </Form.Item>
 
       <Form.Item
@@ -53,7 +69,9 @@ const RentalForm = () => {
         rules={[{ required: true, message: 'Por favor, selecciona el tipo de residencia.' }]
         }
       >
-        <Select placeholder="Selecciona el tipo de residencia">
+        <Select 
+        name="tipoResid"
+        placeholder="Selecciona el tipo de residencia">
           <Option value="casa">Casa</Option>
           <Option value="departamento">Departamento</Option>
           <Option value="habitacion">Habitacion</Option>
@@ -66,7 +84,9 @@ const RentalForm = () => {
           name="tipoAlojam"
           rules={[{ required: true, message: 'Por favor, selecciona el tipo de alojamiento.' }]}
         >
-          <Select placeholder="Selecciona el tipo de alojamiento">
+          <Select 
+          name="tipoAlojam"
+          placeholder="Selecciona el tipo de alojamiento">
             <Option value="alojamientoCompartido">Alojamiento Compartido</Option>
             <Option value="alojamientoEntero">Alojamiento Entero</Option>
           </Select>
@@ -75,20 +95,29 @@ const RentalForm = () => {
 
       <Form.Item
           label="Número Máximo de Huéspedes"
-          name="maxGuests"
+          name="huesMaxResid"
           rules={[{ required: true, message: 'Por favor, ingresa el numero maximo de Huesped.' },{ validator: validarinputmayor0 }]
           }
         >
-          <Input className="inputsize" type="number" placeholder="Ingresa el número máximo de huéspedes"/>
+          <Input 
+          className="inputsize" 
+          name="huesMaxResid"
+          type="number" 
+          placeholder="Ingresa el número máximo de huéspedes"
+          onChange={handleChange}/>
         </Form.Item>
     
       <Form.Item
         label="País"
-        name="country"
+        name="paisResid"
         rules={[{ required: true, message: 'Por favor, ingresa el país.' }]
         }
       >
-        <Input className="inputsize" placeholder="Ingresa el país"/>
+        <Input 
+        className="inputsize" 
+        name="paisResid"
+        placeholder="Ingresa el país"
+        onChange={handleChange}/>
       </Form.Item>
 
       <Form.Item
@@ -97,7 +126,11 @@ const RentalForm = () => {
         rules={[{ required: true, message: 'Por favor, ingresa la ciudad.' }]
         }
       >
-        <Input className="inputsize" placeholder="Ingresa la ciudad"/>
+        <Input 
+        className="inputsize" 
+        name="ciudadResid"
+        placeholder="Ingresa la ciudad"
+        onChange={handleChange}/>
       </Form.Item>
 
       <Form.Item
@@ -106,7 +139,11 @@ const RentalForm = () => {
         rules={[{ required: true, message: 'Por favor, ingresa la dirección.' }]
         }
       >
-        <Input className="inputsize" placeholder="Ingresa la dirección de la residencia"/>
+        <Input 
+        className="inputsize" 
+        name="direcResid"
+        placeholder="Ingresa la dirección de la residencia"
+        onChange={handleChange}/>
       </Form.Item>
 
       <Form.Item
@@ -115,7 +152,12 @@ const RentalForm = () => {
         rules={[{ required: true, message: 'Por favor, ingresa el número de camas.' },{ validator: validarinputmayor0 }]
         }
       >
-        <Input className="inputsize" type="number" placeholder="Ingresa el número de camas"/>
+        <Input 
+        className="inputsize" 
+        name="camaResid"
+        type="number" 
+        placeholder="Ingresa el número de camas"
+        onChange={handleChange}/>
       </Form.Item>
 
       <Form.Item
@@ -124,7 +166,11 @@ const RentalForm = () => {
         rules={[{ required: true, message: 'Por favor, ingresa el número de habitaciones.' },{ validator: validarinputmayor0 }]
         }
       >
-        <Input className="inputsize" type="number" placeholder="Ingresa el número de habitaciones"/>
+        <Input className="inputsize" 
+        name="habitResid"
+        type="number" 
+        placeholder="Ingresa el número de habitaciones"
+        onChange={handleChange}/>
       </Form.Item>
 
       <Form.Item
@@ -133,7 +179,12 @@ const RentalForm = () => {
         rules={[{ required: true, message: 'Por favor, ingresa el número de baños.' },{ validator: validarinputmayor0 }]
         }
       >
-        <Input className="inputsize" type="number" placeholder="Ingresa el número de baños"/>
+        <Input 
+        className="inputsize" 
+        name="banioResid"
+        type="number" 
+        placeholder="Ingresa el número de baños"
+        onChange={handleChange}/>
       </Form.Item>
 
       <Form.Item
@@ -142,12 +193,14 @@ const RentalForm = () => {
         rules={[{ required: true, message: 'Por favor, ingresa una descripción del espacio.' }]
         }
       >
-        <Input.TextArea className="inputsize"
+        <Input.TextArea 
+        className="inputsize"
+        name="descripResid"
         showCount
         maxLength={1000}
         autoSize={{ minRows: 5, maxRows: 20 }}
         placeholder="Ingresa una descripción del espacio"
-         />
+        onChange={handleChange} />
       </Form.Item>
       
       <h2 className="form-title">Servicios</h2>
@@ -187,7 +240,7 @@ const RentalForm = () => {
 
         <Form.Item
           label="Seguridad"
-          name="features"
+          name="segurity"
         >
           <div className="amenities-group">
             <div className="amenities-row">
@@ -218,11 +271,14 @@ const RentalForm = () => {
     }
     className="check-in-item" // Agrega una clase aquí
   >
-    <Input.TextArea className="inputsize"
+    <Input.TextArea
+        className="inputsize"
+        name="checkInResid"
         showCount
         maxLength={1000}
         autoSize={{ minRows: 5, maxRows: 20 }}
         placeholder="Ingresa la hora de check-in"
+        onChange={handleChange}
     />
   </Form.Item>
   </div> 
@@ -233,11 +289,14 @@ const RentalForm = () => {
     rules={[{ required: true, message: 'Por favor, ingresa la hora de check-out.' }]
   }
   >
-    <Input.TextArea className="inputsize"
+    <Input.TextArea 
+        className="inputsize"
+        name="checkOutResid"
         showCount
         maxLength={1000}
         autoSize={{ minRows: 5, maxRows: 20 }}
         placeholder="Ingresa la hora de check-out"
+        onChange={handleChange}
     />
   </Form.Item>
 <Form.Item>
