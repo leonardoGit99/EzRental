@@ -8,10 +8,12 @@ const {
     getResid,
     createResid,
     getServ,
-    updateResid
+    updateResid,
+    uploadFile
 
 } = require("../controllers/resid.controller");
 
+router.post('/api/upload', uploadFile);
 
 router.get("/resid", getAllResid);
 router.get("/serv/:idResid", getServ);

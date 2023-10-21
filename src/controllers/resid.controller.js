@@ -1,4 +1,49 @@
 const pool = require('../db')
+const fs = require('fs')
+const { google } = require('googleapis')
+const GOOGLE_API_FOLDER_ID = '1lCnH6L-cciJ4UqJLsmDGXJ9_1o5T2BhO'
+
+
+
+const uploadFile = async (req, res) => {
+  try {
+    const auth = new google.auth.GoogleAuth({
+      keyFile: 'src/controllers/googlekey.json',
+      scopes: ['https://www.googleapis.com/auth/drive']
+    })
+
+    const driveService = google.drive({
+      version: 'v3',
+      auth
+    })
+
+    const fileMetaData = {
+      'name': 'snowplace.jpg',
+      'parents': [GOOGLE_API_FOLDER_ID]
+    }
+
+    const media = {
+      mimeType: 'image/jpg',
+      body: fs.createReadStream('src/controllers/snow.jpg')
+    }
+
+    const response = await driveService.files.create({
+      resource: fileMetaData,
+      media: media,
+      fields: 'id'
+    })
+
+    console.log(response.data.id);
+
+    // Envía el ID del archivo como respuesta al cliente
+    res.status(200).json({ fileId: response.data.id });
+  } catch (err) {
+    console.log('Upload file error', err);
+
+    // Envía una respuesta de error al cliente en caso de error
+    res.status(500).json({ error: 'Error al cargar el archivo a Google Drive' });
+  }
+}
 
 
 const getAllResid = async (req, res) =>{
@@ -136,5 +181,6 @@ module.exports = {
     deleteResid,
     createResid,
     getServ,
-    updateResid
+    updateResid,
+    uploadFile
 };
