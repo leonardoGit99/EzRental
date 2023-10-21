@@ -249,6 +249,6 @@ const RentalForm = () => {
     </Form>
     </div>
   );
-};
 
+}
 export default RentalForm;

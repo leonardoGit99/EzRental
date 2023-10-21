@@ -1,0 +1,18 @@
+.offers-container{
+    display: flex;
+    /* justify-content: space-around; */
+    /* background-color: aquamarine; */
+    /* width: 50%; */
+}
+
+
+.list-offer-item p{
+    display: inline;
+}
+
+.list-items-offers-container{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
