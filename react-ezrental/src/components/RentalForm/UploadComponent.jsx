@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./rentalFormStyles.css";
-import { Upload, Modal, message, modal } from "antd";
+import { Upload, Modal, message, Button } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import axios from "axios";
 
@@ -48,7 +48,7 @@ function UploadComponent({urls}) {
   );
 
 
-  const uploadImage = options => {
+  const uploadImage = async (options) => {
 
     const { onSuccess, onError, file, onProgress } = options;
   
@@ -60,14 +60,20 @@ function UploadComponent({urls}) {
         onProgress({ percent: (event.loaded / event.total) * 100 },file);
       }
     };
-    fmData.append("image", file);
+
+    //Obtener base 64 y guardar en fmdata
+    const base64 = await getBase64(file);
+
+    fmData.append("imageData",base64);
+    console.log(fmData.get("imageData"));
+
     //llamar a peticion para subir archivo a drive y recibir url(ahora mismo con peticion de prueba)
     axios
-      .post("http://localhost/crudProductos/indexConsultaGeneral.php", fmData, config)
+      .post("http://localhost:4000/api/upload", fmData, config)
       .then(res => {
         onSuccess(file);
         //añadir url recibida del response al array urls
-        urls.push(file.name);
+        urls.push(`https://drive.google.com/uc?export=view&id=${res.data.fileId}`);
         console.log(res);
 
         fileList.length > 9 ? message.info("Solo puede subir 10 fotos") : "";
@@ -135,7 +141,12 @@ function UploadComponent({urls}) {
           }}
           src={previewImage}
         />
+
       </Modal>
+
+      <Button onClick={() => {console.log(fileList); console.log(urls);}}>
+        PRINT
+      </Button>
 
     </>
   );
