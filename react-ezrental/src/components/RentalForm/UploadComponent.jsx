@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./rentalFormStyles.css";
-import { Upload, Modal, Button } from "antd";
+import { Upload, Modal, message, modal } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import axios from "axios";
 
@@ -66,21 +66,42 @@ function UploadComponent({urls}) {
       .post("http://localhost/crudProductos/indexConsultaGeneral.php", fmData, config)
       .then(res => {
         onSuccess(file);
+        //añadir url recibida del response al array urls
         urls.push(file.name);
         console.log(res);
+
+        fileList.length > 9 ? message.info("Solo puede subir 10 fotos") : "";
       })
       .catch(err=>{
         const error = new Error('Some error');
         onError({event:error});
+        // return Upload.LIST_IGNORE;
       });
   }
   
-  const handleRemove = (file) => {
+  const handleRemove = (file, index) => {
 
     //hacer peticion para eliminar de drive y eliminar de array de urls
-    console.log(file.name);
+    console.log("Indice del elemento borrado:  "+index+" - Nombre del elemento borrado: "+urls[index]);
+    urls.splice(index, 1);
 
   }
+
+  const handleValidation = (file) => {
+
+    const validType = file.type === 'image/jpeg' || file.type === 'image/png';
+    if (!validType) {
+      message.error('Solo se admiten imágenes JPG o PNG');
+      return Upload.LIST_IGNORE;
+    }
+    
+    const validSize = file.size / 1024 / 1024 < 10;
+    if (!validSize) {
+      message.error('El peso máximo de la imagen no debe pasar 10MB');
+      return Upload.LIST_IGNORE;
+    }
+
+  } 
 
   return (
     <>
@@ -92,14 +113,14 @@ function UploadComponent({urls}) {
         fileList={fileList}
         onPreview={handlePreview}
         onChange={handleChange}
-        onRemove={file=>handleRemove(file)}
+        accept="image/png, image/jpeg"
+        beforeUpload={handleValidation}
+        onRemove={(file) => handleRemove(file, fileList.indexOf(file))}
       >
         {fileList.length >= 10 ? null : uploadButton}
-
       </Upload>
+
       {fileList.length >= 1 && fileList.length < 5 ? <p>Debe subir al menos 5 fotos</p> : ""}
-      {/* {fileList.length > 9 ? message.info("Solo puede subir 10 fotos") : ""} */}
-      {fileList.length > 9 ? <p>Solo puede subir 10 fotos</p> : ""}
       
       <Modal
         open={previewOpen}
@@ -115,10 +136,6 @@ function UploadComponent({urls}) {
           src={previewImage}
         />
       </Modal>
-
-      <Button onClick={() => {console.log(fileList); console.log(urls);}}>
-          Imprimir File list y array de urls drive
-      </Button>
 
     </>
   );
