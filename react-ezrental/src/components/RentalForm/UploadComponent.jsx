@@ -4,7 +4,7 @@ import { Upload, Modal, message, Button } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import axios from "axios";
 
-function UploadComponent({urls}) {
+function UploadComponent({urls, setUrls, fileList, setFileList}) {
 
   const getBase64 = (file) =>
     new Promise((resolve, reject) => {
@@ -17,7 +17,7 @@ function UploadComponent({urls}) {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
-  const [fileList, setFileList] = useState([]);
+  // const [fileList, setFileList] = useState([]);
 
   const handleCancel = () => setPreviewOpen(false);
 
@@ -49,43 +49,45 @@ function UploadComponent({urls}) {
 
 
   const uploadImage = async (options) => {
-
     const { onSuccess, onError, file, onProgress } = options;
-  
+
     const fmData = new FormData();
     const config = {
       headers: { "content-type": "multipart/form-data" },
-      onUploadProgress: event => {
+      onUploadProgress: (event) => {
         console.log((event.loaded / event.total) * 100);
-        onProgress({ percent: (event.loaded / event.total) * 100 },file);
-      }
+        onProgress({ percent: (event.loaded / event.total) * 100 }, file);
+      },
     };
 
-    fmData.append("image",file);
+    fmData.append("image", file);
     console.log(fmData.get("image"));
 
-    //llamar a peticion para subir archivo a drive y recibir url(ahora mismo con peticion de prueba)
-    axios
-      .post("http://localhost:4000/api/upload", fmData, config)
-      .then(res => {
-        onSuccess(file);
-        //añadir url recibida del response al array urls
-        urls.push(`https://drive.google.com/uc?export=view&id=${res.data.fileId}`);
-        console.log(res);
+    try {
+      //llamar a peticion para subir archivo a drive y recibir url(ahora mismo con peticion de prueba)
+      axios
+        .post("http://localhost:4000/api/upload", fmData, config)
+        .then((res) => {
+          onSuccess(file);
+          //añadir url recibida del response al array urls
+          // urls.push(`https://drive.google.com/uc?export=view&id=${res.data.fileId}`);
+          urls.push(res.data.imgUrl);
 
-        fileList.length > 9 ? message.info("Solo puede subir 10 fotos") : "";
-      })
-      .catch(err=>{
-        const error = new Error('Some error');
-        onError({event:error});
-        // return Upload.LIST_IGNORE;
-      });
-  }
+          fileList.length > 9 ? message.info("Solo puede subir 10 fotos") : "";
+        });
+    } catch {
+      (error) => {
+        const errorMessage = error.response ? error.response.data : "Error desconocido";
+        onError(errorMessage); // Llamar a onError con el mensaje de error
+        return Upload.LIST_IGNORE;
+      };
+    }
+  };
   
   const handleRemove = (file, index) => {
 
     //hacer peticion para eliminar de drive y eliminar de array de urls
-    console.log("Indice del elemento borrado:  "+index+" - Nombre del elemento borrado: "+urls[index]);
+    console.log("Indice del elemento borrado:  "+index+" - URL del elemento borrado: "+urls[index]);
     urls.splice(index, 1);
 
   }
@@ -123,7 +125,7 @@ function UploadComponent({urls}) {
         {fileList.length >= 10 ? null : uploadButton}
       </Upload>
 
-      {fileList.length >= 1 && fileList.length < 5 ? <p>Debe subir al menos 5 fotos</p> : ""}
+      {/* {fileList.length >= 1 && fileList.length < 5 ? <p>Debe subir al menos 5 fotos</p> : ""} */}
       
       <Modal
         open={previewOpen}
@@ -140,10 +142,6 @@ function UploadComponent({urls}) {
         />
 
       </Modal>
-
-      <Button onClick={() => {console.log(fileList); console.log(urls);}}>
-        PRINT
-      </Button>
 
     </>
   );
