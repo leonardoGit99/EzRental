@@ -1,14 +1,24 @@
-import React, { useState } from 'react';
-import { Form, Input, Button, Select, Checkbox, DatePicker } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Form, Input, Button, Select, Checkbox, DatePicker, message } from 'antd';
 import UploadComponent from './UploadComponent';
 import dayjs from "dayjs";
-import { createResidence } from '../../services/residences';
+import { createResidence, getOneResidence, updateResidence } from '../../services/residences';
 import './rentalFormStyles.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+import { faL } from '@fortawesome/free-solid-svg-icons';
 
 function RentalForm() {
   const { Option } = Select;
   const { RangePicker } = DatePicker;
   const [urls, setUrls] = useState([]);
+  const [fileList, setFileList] = useState([]);
+
+  let { id } = useParams();
+  const isEdit = useSelector((state) => state.editRentalForm);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [dataAd, setDataAd] = useState([]);
 
   const [body, setBody] = useState({
     tituloResid: '',
@@ -47,6 +57,8 @@ function RentalForm() {
     fechaFinEst: null
   });
 
+  const [editBody, setEditBody] = useState({});
+
   const validarinputmayor0 = (_, value) => {
     if (value < 0) {
       return Promise.reject('Debe ser mayor o igual a 0');
@@ -56,45 +68,150 @@ function RentalForm() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setBody({ ...body, [name]: value });
-    // console.log(body);
+    isEdit ? (
+      setEditBody({ ...editBody, [name]: value }),
+      console.log(editBody)
+    ) : (
+      setBody({ ...body, [name]: value })
+      // console.log(body);
+    )
   }
 
   const handleSelectChange = (value, name) => {
     /* console.log(value);
     console.log(name); */
     if (name === "tipoAlojam") {
-      body["tipoAlojam"] = value;
+      isEdit ? (
+        editBody["tipoAlojam"] = value
+      ) : (
+        body["tipoAlojam"] = value
+      )
     } else {
-      body["tipoResid"] = value;
+      isEdit ? (
+        editBody["tipoResid"] = value
+      ) : (
+        body["tipoResid"] = value
+      )
     }
     // console.log(body);
+    console.log(editBody);
   }
 
   const handleCheckedChange = (name) => {
-    setBody((prevBody) => ({
-      ...prevBody,
-      [name]: prevBody[name] === "true" ? "false" : "true",
-    }));
+    isEdit ? (
+      setEditBody((prevEditBody) => ({
+        ...prevEditBody,
+        [name]: prevEditBody[name] === "true" ? "false" : "true",
+      }))
+    ) : (
+      setBody((prevBody) => ({
+        ...prevBody,
+        [name]: prevBody[name] === "true" ? "false" : "true",
+      }))
+    )
   };
 
   const handleDateChange = (dates) => {
     const [initialDate, finalDate] = dates;
     const initialDateFormat = dayjs(initialDate).format('YYYY-MM-DD');
     const finalDateFormat = dayjs(finalDate).format('YYYY-MM-DD');
-    setBody({
-      ...body,
-      fechaIniEst: initialDateFormat,
-      fechaFinEst: finalDateFormat,
-    });
+    isEdit ? (
+      setEditBody({
+        ...editBody,
+        fechaIniEst: initialDateFormat,
+        fechaFinEst: finalDateFormat,
+      })
+    ) : (
+      setBody({
+        ...body,
+        fechaIniEst: initialDateFormat,
+        fechaFinEst: finalDateFormat,
+      })
+    )
   };
 
+
+  isEdit ? (
+    useEffect(() => {
+      getOneResidence(id).then((data) => setDataAd(data));
+    }, []),
+
+    useEffect(() => {
+      setEditBody({
+        tituloResid: dataAd.titulo_residencia,
+        tipoResid: dataAd.tipo_residencia,
+        paisResid: dataAd.pais_residencia,
+        ciudadResid: dataAd.ciudad_residencia,
+        direcResid: dataAd.direccion_residencia,
+        camaResid: dataAd.cama_residencia,
+        habitResid: dataAd.habitacion_residencia,
+        banioResid: dataAd.banio_residencia,
+        descripResid: dataAd.descripcion_residencia,
+        huesMaxResid: dataAd.huesped_max_residencia,
+        diasMaxResid: dataAd.dias_max_residencia,
+        diasMinResid: dataAd.dias_min_residencia,
+        precioResid: dataAd.precio_residencia,
+        reglaResid: dataAd.regla_residencia,
+        checkInResid: dataAd.check_in_residencia,
+        checkOutResid: dataAd.check_out_residencia,
+        tipoAlojam: dataAd.tipo_alojamiento,
+        wifi: dataAd.wifi_residencia,
+        lavadora: dataAd.cocina_residencia,
+        cocina: dataAd.televisor_residencia,
+        televisor: dataAd.lavadora_residencia,
+        aireAcond: dataAd.aire_acond_residencia,
+        psicina: dataAd.psicina_residencia,
+        jacuzzi: dataAd.jacuzzi_residencia,
+        estacionamiento: dataAd.estacionamiento_residencia,
+        gim: dataAd.gimnasio_residencia,
+        parrilla: dataAd.parrilla_residencia,
+        camaras: dataAd.camaras_segurid_residencia,
+        detectorHumo: dataAd.humo_segurid_residencia,
+        activo: dataAd.estado_publicado,
+        pausado: dataAd.estado_pausado,
+        inactivo: dataAd.estado_inactivo,
+        fechaIniciEst: dataAd.fecha_inicio_estado,
+        fechaFinEst: dataAd.fecha_fin_estado
+      })
+    }, [dataAd]),
+
+    useEffect(() => {
+      // Cambiar el estado global a falso cuando se presiona el botón atrás del navegador
+      window.addEventListener('popstate', () => {
+        dispatch(setIsEditingRentalForm(false));
+      });
+      // Limpiar el evento cuando el componente se desmonte
+      return () => {
+        window.removeEventListener('popstate', () => {
+        });
+      };
+    }, [dispatch])
+  ) : null
+
+  console.log(dataAd);
+  console.log(editBody);
   const onFinish = async () => {
     // const formData = new FormData();
     // formData.append(body);
-    await createResidence(body);
+    isEdit ? (
+      await updateResidence(editBody, id),
+      navigate("/mis-anuncios"),
+      message.success("Modificación exitosa!"),
+      dispatch(setIsEditingRentalForm(false))
+    ) : (
+      await createResidence(body),
+      message.success("Anuncio creado exitosamente!")
+    )
   };
 
+  const defaultValueRangePicker = [dayjs(editBody.fechaIniEst), dayjs(editBody.fechaFinEst)];
+
+
+  const deleteFiels = () => {
+    setFileList([]);
+    setUrls([]);
+  }
+  
   return (
     <div /*style={{display:"flex", flexDirection:"column",alignItems:"center",justifyContent:"space-between"}}*/>
       <h1 className="form-title">Registro</h1>
@@ -107,13 +224,12 @@ function RentalForm() {
       >
         <Form.Item
           label="Título de la Residencia"
-          name="tituloResid"
-
           rules={[{ required: true, message: 'Por favor, ingresa el título de la residencia.' }]
           }
         >
           <Input
             className="inputsize"
+            value={isEdit ? editBody.tituloResid : ""}
             name="tituloResid"
             placeholder="Introduce el título de la residencia"
             onChange={handleChange}
@@ -122,11 +238,11 @@ function RentalForm() {
 
         <Form.Item
           label="Precio"
-          name="precioResid"
           rules={[{ required: true, message: 'Por favor, ingresa el precio de la residencia.' }, { validator: validarinputmayor0 }]}
         >
           <Input
             className="inputsize"
+            value={isEdit ? editBody.precioResid : ""}
             name="precioResid"
             placeholder="Ingresa el precio de la residencia"
             type="number"
@@ -137,12 +253,12 @@ function RentalForm() {
 
         <Form.Item
           label="Tipo de Residencia"
-          name="tipoResid"
           rules={[{ required: true, message: 'Por favor, selecciona el tipo de residencia.' }]
           }
         >
           <Select
             name="tipoResid"
+            value={isEdit ? editBody.tipoResid : ""}
             placeholder="Selecciona el tipo de residencia"
             onChange={(value) => handleSelectChange(value, "tipoResid")}
           >
@@ -155,11 +271,11 @@ function RentalForm() {
 
         <Form.Item
           label="Tipo de Alojamiento"
-          name="tipoAlojam"
           rules={[{ required: true, message: 'Por favor, selecciona el tipo de alojamiento.' }]}
         >
           <Select
             name="tipoAlojam"
+            value={isEdit ? editBody.tipoAlojam : ""}
             placeholder="Selecciona el tipo de alojamiento"
             onChange={(value) => handleSelectChange(value, "tipoAlojam")}
           >
@@ -170,12 +286,12 @@ function RentalForm() {
 
         <Form.Item
           label="Número Máximo de Huéspedes"
-          name="huesMaxResid"
           rules={[{ required: true, message: 'Por favor, ingresa el numero maximo de Huesped.' }, { validator: validarinputmayor0 }]
           }
         >
           <Input
             className="inputsize"
+            value={isEdit ? editBody.huesMaxResid : ""}
             name="huesMaxResid"
             placeholder="Ingresa el número máximo de huéspedes"
             type="number"
@@ -185,13 +301,13 @@ function RentalForm() {
 
         <Form.Item
           label="Número Máximo de dias"
-          name="diasMaxResid"
           rules={[{ required: true, message: 'Por favor, ingresa el numero maximo de dias.' }, { validator: validarinputmayor0 }]
           }
         >
           <Input
             className="inputsize"
             name="diasMaxResid"
+            value={isEdit ? editBody.diasMaxResid : ""}
             placeholder="Ingresa el número máximo de dias"
             type="number"
             onChange={handleChange}
@@ -200,13 +316,13 @@ function RentalForm() {
 
         <Form.Item
           label="Número Mínimo de dias"
-          name="diasMinResid"
           rules={[{ required: true, message: 'Por favor, ingresa el numero minimo de dias.' }, { validator: validarinputmayor0 }]
           }
         >
           <Input
             className="inputsize"
             name="diasMinResid"
+            value={isEdit ? editBody.diasMinResid : ""}
             placeholder="Ingresa el número mínimo de dias"
             type="number"
             onChange={handleChange}
@@ -215,13 +331,13 @@ function RentalForm() {
 
         <Form.Item
           label="País"
-          name="paisResid"
           rules={[{ required: true, message: 'Por favor, ingresa el país.' }]
           }
         >
           <Input
             className="inputsize"
             name="paisResid"
+            value={isEdit ? editBody.paisResid : ""}
             placeholder="Ingresa el país"
             onChange={handleChange}
           />
@@ -229,13 +345,13 @@ function RentalForm() {
 
         <Form.Item
           label="Ciudad"
-          name="ciudadResid"
           rules={[{ required: true, message: 'Por favor, ingresa la ciudad.' }]
           }
         >
           <Input
             className="inputsize"
             name="ciudadResid"
+            value={isEdit ? editBody.ciudadResid : ""}
             placeholder="Ingresa la ciudad"
             onChange={handleChange}
           />
@@ -243,13 +359,13 @@ function RentalForm() {
 
         <Form.Item
           label="Dirección"
-          name="direcResid"
           rules={[{ required: true, message: 'Por favor, ingresa la dirección.' }]
           }
         >
           <Input
             className="inputsize"
             name="direcResid"
+            value={isEdit ? editBody.direcResid : ""}
             placeholder="Ingresa la dirección de la residencia"
             onChange={handleChange}
           />
@@ -257,13 +373,13 @@ function RentalForm() {
 
         <Form.Item
           label="Número de Camas"
-          name="camaResid"
           rules={[{ required: true, message: 'Por favor, ingresa el número de camas.' }, { validator: validarinputmayor0 }]
           }
         >
           <Input
             className="inputsize"
             name="camaResid"
+            value={isEdit ? editBody.camaResid : ""}
             placeholder="Ingresa el número de camas"
             type="number"
             onChange={handleChange}
@@ -272,13 +388,13 @@ function RentalForm() {
 
         <Form.Item
           label="Número de Habitaciones"
-          name="habitResid"
           rules={[{ required: true, message: 'Por favor, ingresa el número de habitaciones.' }, { validator: validarinputmayor0 }]
           }
         >
           <Input
             className="inputsize"
             name="habitResid"
+            value={isEdit ? editBody.habitResid : ""}
             placeholder="Ingresa el número de habitaciones"
             type="number"
             onChange={handleChange}
@@ -287,13 +403,13 @@ function RentalForm() {
 
         <Form.Item
           label="Número de Baños"
-          name="banioResid"
           rules={[{ required: true, message: 'Por favor, ingresa el número de baños.' }, { validator: validarinputmayor0 }]
           }
         >
           <Input
             className="inputsize"
             name="banioResid"
+            value={isEdit ? editBody.banioResid : ""}
             placeholder="Ingresa el número de baños"
             type="number"
             onChange={handleChange}
@@ -302,13 +418,13 @@ function RentalForm() {
 
         <Form.Item
           label="Descripción del Espacio"
-          name="descripResid"
           rules={[{ required: true, message: 'Por favor, ingresa una descripción del espacio.' }]
           }
         >
           <Input.TextArea
             className="inputsize"
             name="descripResid"
+            value={isEdit ? editBody.descripResid : ""}
             placeholder="Ingresa una descripción del espacio"
             showCount
             maxLength={1000}
@@ -320,14 +436,13 @@ function RentalForm() {
         <h2 className="form-title">Servicios</h2>
         <Form.Item
           label="Comodidades"
-          name="amenities"
         >
           <div className="amenities-group">
             <div className="amenities-row">
               <Checkbox
                 value="wifi"
                 name="wifi"
-                checked={body.wifi === "true"}
+                checked={isEdit ? (editBody.wifi === "true") : (body.wifi === "true")}
                 onChange={() => { handleCheckedChange("wifi") }}
               >
                 Wi-Fi
@@ -335,7 +450,7 @@ function RentalForm() {
               <Checkbox
                 value="lavadora"
                 name="lavadora"
-                checked={body.lavadora === "true"}
+                checked={isEdit ? (editBody.lavadora === "true") : (body.lavadora === "true")}
                 onChange={() => { handleCheckedChange("lavadora") }}
               >
                 Lavadora
@@ -343,7 +458,7 @@ function RentalForm() {
               <Checkbox
                 value="cocina"
                 name="cocina"
-                checked={body.cocina === "true"}
+                checked={isEdit ? (editBody.cocina === "true") : (body.cocina === "true")}
                 onChange={() => { handleCheckedChange("cocina") }}
               >
                 Cocina
@@ -351,7 +466,7 @@ function RentalForm() {
               <Checkbox
                 value="aireAcond"
                 name="aireAcond"
-                checked={body.aireAcond === "true"}
+                checked={isEdit ? (editBody.aireAcond === "true") : (body.aireAcond === "true")}
                 onChange={() => { handleCheckedChange("aireAcond") }}
               >
                 Aire Acondicionado
@@ -359,7 +474,7 @@ function RentalForm() {
               <Checkbox
                 value="televisor"
                 name="televisor"
-                checked={body.televisor === "true"}
+                checked={isEdit ? (editBody.televisor === "true") : (body.televisor === "true")}
                 onChange={() => { handleCheckedChange("televisor") }}
               >
                 Televisor
@@ -370,14 +485,13 @@ function RentalForm() {
 
         <Form.Item
           label="Caracteristicas"
-          name="features"
         >
           <div className="amenities-group">
             <div className="amenities-row">
               <Checkbox
                 value="psicina"
                 name="psicina"
-                checked={body.psicina === "true"}
+                checked={isEdit ? (editBody.psicina === "true") : (body.psicina === "true")}
                 onChange={() => { handleCheckedChange("psicina") }}
               >
                 Piscina
@@ -385,7 +499,7 @@ function RentalForm() {
               <Checkbox
                 value="jacuzzi"
                 name="jacuzzi"
-                checked={body.jacuzzi === "true"}
+                checked={isEdit ? (editBody.jacuzzi === "true") : (body.jacuzzi === "true")}
                 onChange={() => { handleCheckedChange("jacuzzi") }}
               >
                 Jacuzzi
@@ -393,7 +507,7 @@ function RentalForm() {
               <Checkbox
                 value="estacionamiento"
                 name="estacionamiento"
-                checked={body.estacionamiento === "true"}
+                checked={isEdit ? (editBody.estacionamiento === "true") : (body.estacionamiento === "true")}
                 onChange={() => { handleCheckedChange("estacionamiento") }}
               >
                 Estacionamiento
@@ -401,7 +515,7 @@ function RentalForm() {
               <Checkbox
                 value="gim"
                 name="gim"
-                checked={body.gim === "true"}
+                checked={isEdit ? (editBody.gim === "true") : (body.gim === "true")}
                 onChange={() => { handleCheckedChange("gim") }}
               >
                 Gimnasio
@@ -409,7 +523,7 @@ function RentalForm() {
               <Checkbox
                 value="parrilla"
                 name="parrilla"
-                checked={body.parrilla === "true"}
+                checked={isEdit ? (editBody.parrilla === "true") : (body.parrilla === "true")}
                 onChange={() => { handleCheckedChange("parrilla") }}
               >
                 Parrilla
@@ -421,14 +535,13 @@ function RentalForm() {
 
         <Form.Item
           label="Seguridad"
-          name="segurity"
         >
           <div className="amenities-group">
             <div className="amenities-row">
               <Checkbox
                 value="camaras"
                 name="camaras"
-                checked={body.camaras === "true"}
+                checked={isEdit ? (editBody.camaras === "true") : (body.camaras === "true")}
                 onChange={() => { handleCheckedChange("camaras") }}
               >
                 Cámara de seguridad
@@ -436,7 +549,7 @@ function RentalForm() {
               <Checkbox
                 value="detectorHumo"
                 name="detectorHumo"
-                checked={body.detectorHumo === "true"}
+                checked={isEdit ? (editBody.detectorHumo === "true") : (body.detectorHumo === "true")}
                 onChange={() => { handleCheckedChange("detectorHumo") }}
               >
                 Detector de humo
@@ -448,13 +561,13 @@ function RentalForm() {
 
         <Form.Item
           label="Fechas Inicio/Fin"
-          name="rentalDates"
           rules={[{ required: true, message: 'Por favor, ingresa las fechas de alquiler.' }]
           }
         >
           <RangePicker
             className="inputsize"
             placeholder={['Fecha Inicio', 'Fecha Fin']}
+            value={defaultValueRangePicker}
             onChange={handleDateChange}
           />
         </Form.Item>
@@ -463,7 +576,6 @@ function RentalForm() {
           <div className="amenities-row">
             <Form.Item
               label="Check In"
-              name="checkInResid"
               rules={[{ required: true, message: 'Por favor, ingresa la hora de check-in.' }]
               }
               className="check-in-item" // Agrega una clase aquí
@@ -471,6 +583,7 @@ function RentalForm() {
               <Input.TextArea
                 className="inputsize"
                 name="checkInResid"
+                value={isEdit ? editBody.checkInResid : ""}
                 placeholder="Ingresa la hora de check-in"
                 showCount
                 maxLength={1000}
@@ -483,13 +596,13 @@ function RentalForm() {
           <div className="amenities-row">
             <Form.Item
               label="Check Out"
-              name="checkOutResid"
               rules={[{ required: true, message: 'Por favor, ingresa la hora de check-out.' }]
               }
             >
               <Input.TextArea
                 className="inputsize"
                 name="checkOutResid"
+                value={isEdit ? editBody.checkOutResid : ""}
                 placeholder="Ingresa la hora de check-out"
                 showCount
                 maxLength={1000}
@@ -499,7 +612,12 @@ function RentalForm() {
             </Form.Item>
 
             <Form.Item>
-              <UploadComponent urls={urls} />
+              <UploadComponent
+                urls={urls}
+                setUrls={setUrls}
+                fileList={fileList}
+                setFileList={setFileList}
+              />
             </Form.Item>
 
           </div>
@@ -507,9 +625,9 @@ function RentalForm() {
 
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
           <Button type="primary" htmlType="submit">
-            Completar
+            {isEdit ? "Guardar Cambios" : "Completar"}
           </Button>
-          <Button htmlType="button">
+          <Button htmlType="button" onClick={deleteFiels}>
             Cancelar
           </Button>
         </Form.Item>
