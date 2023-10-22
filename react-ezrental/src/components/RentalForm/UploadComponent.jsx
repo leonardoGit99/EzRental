@@ -61,11 +61,8 @@ function UploadComponent({urls}) {
       }
     };
 
-    //Obtener base 64 y guardar en fmdata
-    const base64 = await getBase64(file);
-
-    fmData.append("imageData",base64);
-    console.log(fmData.get("imageData"));
+    fmData.append("image",file);
+    console.log(fmData.get("image"));
 
     //llamar a peticion para subir archivo a drive y recibir url(ahora mismo con peticion de prueba)
     axios
