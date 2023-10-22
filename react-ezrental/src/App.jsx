@@ -12,6 +12,7 @@ import MoreInfoAds from './pages/MoreInfoAds';
 import RentalFormPrueba from './components/RentalFormPrueba/RentalFormPrueba';
 import Addad from './pages/AddAd';
 import './App.css';
+import RentalForm from './components/RentalForm/RentalForm';
 
 
 function App() {
@@ -41,7 +42,7 @@ function App() {
               <Route path="/mis-anuncios" element={<MyAds />} />
               <Route path="/mis-anuncios/:id" element={<MoreInfoMyAds />} />
               <Route path="/:id" element={<MoreInfoAds />} />
-              <Route path="/editar-anuncio/:id" element={<RentalFormPrueba />} />
+              <Route path="/editar-anuncio/:id" element={<RentalForm />} />
             </Routes>
           </PagesContainer>
         </Content>
