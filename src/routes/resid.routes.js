@@ -9,11 +9,11 @@ const {
     createResid,
     getServ,
     updateResid,
-    uploadFile
+    uploadImg
 
 } = require("../controllers/resid.controller");
 
-router.post('/api/upload', uploadFile);
+router.post('/api/upload', uploadImg);
 
 router.get("/resid", getAllResid);
 router.get("/serv/:idResid", getServ);
