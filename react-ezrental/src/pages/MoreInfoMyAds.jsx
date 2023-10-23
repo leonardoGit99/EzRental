@@ -57,10 +57,8 @@ function MoreInfoMyAds() {
           city={detailAdd.ciudad_residencia}
           country={detailAdd.pais_residencia}
         >
-          <DetailsForHostOnly
-            estadoPublicado={detailAdd.estado_publicado}
-            estadoPausado={detailAdd.estado_pausado}
-            estadoInactivo={detailAdd.estado_inactivo}
+          <DetailsForHostOnly 
+            estadoResidencia={detailAdd.estado_residencia}
             direccionResidencia={detailAdd.direccion_residencia}
             precioResidencia={detailAdd.precio_residencia}
             fechaIni={detailAdd.fecha_inicio_estado ? detailAdd.fecha_inicio_estado.split('T')[0].toString() : 'Fecha inicio'}

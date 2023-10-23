@@ -73,9 +73,7 @@ function MyAds() {
               fechaIni={residence.fecha_inicio_estado ? residence.fecha_inicio_estado.split('T')[0].toString() : 'Fecha inicio'}
               fechaFin={residence.fecha_fin_estado ? residence.fecha_fin_estado.split('T')[0].toString() : 'Fecha fin'}
               precio={residence.precio_residencia}
-              estadoPublicado={residence.estado_publicado}
-              estadoPausado={residence.estado_pausado}
-              estadoInactivo={residence.estado_inactivo}
+              estadoResidencia={residence.estado_residencia}
               isRefresh={isRefresh}
               setRefresh={setRefresh}
             />
