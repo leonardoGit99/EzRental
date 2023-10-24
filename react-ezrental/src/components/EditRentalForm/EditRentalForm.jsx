@@ -66,13 +66,11 @@ function EditRentalForm() {
     /* console.log(value);
     console.log(name); */
     if (name === "tipoAlojam") {
-      console.log(value, name);
-      editBody["tipoAlojam"] = value;
-      setEditBody(editBody);
+      setEditBody({ ...editBody, [name]: value });
     } else if (name === "tipoResid") {
-      editBody["tipoResid"] = value;
+      setEditBody({ ...editBody, [name]: value });
     } else if (name === "estadoAnuncio") {
-      editBody["estado"] = value;
+      setEditBody({ ...editBody, ["estado"]: value });
     }
     console.log(editBody);
   }
