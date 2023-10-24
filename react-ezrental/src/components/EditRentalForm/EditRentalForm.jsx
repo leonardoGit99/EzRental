@@ -1,27 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Button, Select, Checkbox, DatePicker, message } from 'antd';
-import UploadComponent from './UploadComponent';
+import { Form, Input, Button, Select, Checkbox, DatePicker, message, Row, Col } from 'antd';
+import UploadComponent from '../RentalForm/UploadComponent';
 import dayjs from "dayjs";
-import { createResidence, getOneResidence, updateResidence } from '../../services/residences';
-import { useDispatch, useSelector } from 'react-redux';
+import { getOneResidence, updateResidence } from '../../services/residences';
 import { useNavigate, useParams } from 'react-router-dom';
-import { setIsEditingRentalForm } from '../../store/slices/editRentalFormSlice';
-import { faL } from '@fortawesome/free-solid-svg-icons';
-import './rentalFormStyles.css';
+// import '../RentalForm/rentalFormStyles.css';
 
-function RentalForm() {
+function EditRentalForm() {
   const { Option } = Select;
   const { RangePicker } = DatePicker;
+  let { id } = useParams();
   const [urls, setUrls] = useState([]);
   const [fileList, setFileList] = useState([]);
-
-  let { id } = useParams();
-  const isEdit = useSelector((state) => state.editRentalForm);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [dataAd, setDataAd] = useState([]);
-
-  const [body, setBody] = useState({
+  const [editBody, setEditBody] = useState({
     tituloResid: '',
     tipoResid: '',
     paisResid: '',
@@ -38,24 +30,24 @@ function RentalForm() {
     checkInResid: '',
     checkOutResid: '',
     tipoAlojam: '',
-    wifi: 'false',
-    lavadora: 'false',
-    cocina: 'false',
-    televisor: 'false',
-    aireAcond: 'false',
-    psicina: 'false',
-    jacuzzi: 'false',
-    estacionamiento: 'false',
-    gim: 'false',
-    parrilla: 'false',
-    camaras: 'false',
-    detectorHumo: 'false',
-    fechaIniciEst: null,
-    fechaFinEst: null,
-    imagen: urls,
+    wifi: '',
+    lavadora: '',
+    cocina: '',
+    televisor: '',
+    aireAcond: '',
+    psicina: '',
+    jacuzzi: '',
+    estacionamiento: '',
+    gim: '',
+    parrilla: '',
+    camaras: '',
+    detectorHumo: '',
+    estado: '',
+    fechaIniciEst: '',
+    fechaFinEst: ''
   });
-
-
+  const navigate = useNavigate();
+  const defaultValueRangePicker = [dayjs(editBody.fechaIniEst), dayjs(editBody.fechaFinEst)];
 
   const validarinputmayor0 = (_, value) => {
     if (value < 0) {
@@ -66,27 +58,29 @@ function RentalForm() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setBody({ ...body, [name]: value })
-    // console.log(body);
+    setEditBody({ ...editBody, [name]: value }),
+      console.log(editBody)
   }
 
   const handleSelectChange = (value, name) => {
     /* console.log(value);
     console.log(name); */
     if (name === "tipoAlojam") {
-      body["tipoAlojam"] = value
+      console.log(value, name);
+      editBody["tipoAlojam"] = value;
+      setEditBody(editBody);
     } else if (name === "tipoResid") {
-      body["tipoResid"] = value
+      editBody["tipoResid"] = value;
     } else if (name === "estadoAnuncio") {
-      body["estado"] = value
+      editBody["estado"] = value;
     }
-    // console.log(body);
+    console.log(editBody);
   }
 
   const handleCheckedChange = (name) => {
-    setBody((prevBody) => ({
-      ...prevBody,
-      [name]: prevBody[name] === "true" ? "false" : "true",
+    setEditBody((prevEditBody) => ({
+      ...prevEditBody,
+      [name]: prevEditBody[name] === "true" ? "false" : "true",
     }))
   };
 
@@ -94,21 +88,60 @@ function RentalForm() {
     const [initialDate, finalDate] = dates;
     const initialDateFormat = dayjs(initialDate).format('YYYY-MM-DD');
     const finalDateFormat = dayjs(finalDate).format('YYYY-MM-DD');
-    setBody({
-      ...body,
+    setEditBody({
+      ...editBody,
       fechaIniEst: initialDateFormat,
       fechaFinEst: finalDateFormat,
     })
   };
 
+  useEffect(() => {
+    getOneResidence(id).then((data) => setDataAd(data));
+  }, [])
+
+  useEffect(() => {
+    setEditBody({
+      tituloResid: dataAd.titulo_residencia,
+      tipoResid: dataAd.tipo_residencia,
+      paisResid: dataAd.pais_residencia,
+      ciudadResid: dataAd.ciudad_residencia,
+      direcResid: dataAd.direccion_residencia,
+      camaResid: dataAd.cama_residencia,
+      habitResid: dataAd.habitacion_residencia,
+      banioResid: dataAd.banio_residencia,
+      descripResid: dataAd.descripcion_residencia,
+      huesMaxResid: dataAd.huesped_max_residencia,
+      diasMaxResid: dataAd.dias_max_residencia,
+      diasMinResid: dataAd.dias_min_residencia,
+      precioResid: dataAd.precio_residencia,
+      checkInResid: dataAd.check_in_residencia,
+      checkOutResid: dataAd.check_out_residencia,
+      tipoAlojam: dataAd.tipo_alojamiento,
+      wifi: dataAd.wifi_residencia,
+      lavadora: dataAd.lavadora_residencia,
+      cocina: dataAd.cocina_residencia,
+      televisor: dataAd.televisor_residencia,
+      aireAcond: dataAd.aire_acond_residencia,
+      psicina: dataAd.psicina_residencia,
+      jacuzzi: dataAd.jacuzzi_residencia,
+      estacionamiento: dataAd.estacionamiento_residencia,
+      gim: dataAd.gimnasio_residencia,
+      parrilla: dataAd.parrilla_residencia,
+      camaras: dataAd.camaras_segurid_residencia,
+      detectorHumo: dataAd.humo_segurid_residencia,
+      estado: dataAd.estado_residencia,
+      fechaIniciEst: dataAd.fecha_inicio_estado,
+      fechaFinEst: dataAd.fecha_fin_estado
+    })
+  }, [dataAd]);
+
   console.log(dataAd);
+  console.log(editBody);
 
   const onFinish = async () => {
-    // const formData = new FormData();
-    // formData.append(body);
-    await createResidence(body);
-    console.log(body);
-    message.success("Anuncio creado exitosamente!");
+    await updateResidence(editBody, id);
+    navigate("/mis-anuncios");
+    message.success("Modificación exitosa!");
   };
 
   const deleteFiels = () => {
@@ -117,8 +150,8 @@ function RentalForm() {
   }
 
   return (
-    <div /*style={{display:"flex", flexDirection:"column",alignItems:"center",justifyContent:"space-between"}}*/>
-      <h1 className="form-title">Registro</h1>
+    <>
+      <h2>Formulario de Edición</h2>
       <Form
         name="basic"
         labelCol={{ span: 8 }}
@@ -126,13 +159,30 @@ function RentalForm() {
         // initialValues={{ remember: true }}
         onFinish={onFinish}
       >
+
+        <Form.Item
+          label="Estado del anuncio"
+          rules={[{ required: true, message: 'Por favor, selecciona un estado del anuncio.' }]}
+        >
+          <Select
+            name="estadoAnuncio"
+            value={editBody.estado}
+            placeholder="Selecciona el estado del anuncio"
+            onChange={(value) => handleSelectChange(value, "estadoAnuncio")}
+          >
+            <Option value="Publicado"> Publicado </Option>
+            <Option value="Pausado"> Pausado </Option>
+            <Option value="Inactivo"> Inactivo </Option>
+          </Select>
+        </Form.Item>
+
         <Form.Item
           label="Título de la Residencia"
           rules={[{ required: true, message: 'Por favor, ingresa el título de la residencia.' }]
           }
         >
           <Input
-            className="inputsize"
+            value={editBody.tituloResid}
             name="tituloResid"
             placeholder="Introduce el título de la residencia"
             onChange={handleChange}
@@ -144,7 +194,8 @@ function RentalForm() {
           rules={[{ required: true, message: 'Por favor, ingresa el precio de la residencia.' }, { validator: validarinputmayor0 }]}
         >
           <Input
-            className="inputsize"
+
+            value={editBody.precioResid}
             name="precioResid"
             placeholder="Ingresa el precio de la residencia"
             type="number"
@@ -160,6 +211,7 @@ function RentalForm() {
         >
           <Select
             name="tipoResid"
+            value={editBody.tipoResid}
             placeholder="Selecciona el tipo de residencia"
             onChange={(value) => handleSelectChange(value, "tipoResid")}
           >
@@ -176,6 +228,7 @@ function RentalForm() {
         >
           <Select
             name="tipoAlojam"
+            value={editBody.tipoAlojam}
             placeholder="Selecciona el tipo de alojamiento"
             onChange={(value) => handleSelectChange(value, "tipoAlojam")}
           >
@@ -190,7 +243,8 @@ function RentalForm() {
           }
         >
           <Input
-            className="inputsize"
+
+            value={editBody.huesMaxResid}
             name="huesMaxResid"
             placeholder="Ingresa el número máximo de huéspedes"
             type="number"
@@ -204,8 +258,9 @@ function RentalForm() {
           }
         >
           <Input
-            className="inputsize"
+
             name="diasMaxResid"
+            value={editBody.diasMaxResid}
             placeholder="Ingresa el número máximo de dias"
             type="number"
             onChange={handleChange}
@@ -218,8 +273,9 @@ function RentalForm() {
           }
         >
           <Input
-            className="inputsize"
+
             name="diasMinResid"
+            value={editBody.diasMinResid}
             placeholder="Ingresa el número mínimo de dias"
             type="number"
             onChange={handleChange}
@@ -232,8 +288,9 @@ function RentalForm() {
           }
         >
           <Input
-            className="inputsize"
+
             name="paisResid"
+            value={editBody.paisResid}
             placeholder="Ingresa el país"
             onChange={handleChange}
           />
@@ -245,8 +302,9 @@ function RentalForm() {
           }
         >
           <Input
-            className="inputsize"
+
             name="ciudadResid"
+            value={editBody.ciudadResid}
             placeholder="Ingresa la ciudad"
             onChange={handleChange}
           />
@@ -258,8 +316,9 @@ function RentalForm() {
           }
         >
           <Input
-            className="inputsize"
+
             name="direcResid"
+            value={editBody.direcResid}
             placeholder="Ingresa la dirección de la residencia"
             onChange={handleChange}
           />
@@ -271,8 +330,9 @@ function RentalForm() {
           }
         >
           <Input
-            className="inputsize"
+
             name="camaResid"
+            value={editBody.camaResid}
             placeholder="Ingresa el número de camas"
             type="number"
             onChange={handleChange}
@@ -285,8 +345,9 @@ function RentalForm() {
           }
         >
           <Input
-            className="inputsize"
+
             name="habitResid"
+            value={editBody.habitResid}
             placeholder="Ingresa el número de habitaciones"
             type="number"
             onChange={handleChange}
@@ -299,8 +360,9 @@ function RentalForm() {
           }
         >
           <Input
-            className="inputsize"
+
             name="banioResid"
+            value={editBody.banioResid}
             placeholder="Ingresa el número de baños"
             type="number"
             onChange={handleChange}
@@ -313,8 +375,9 @@ function RentalForm() {
           }
         >
           <Input.TextArea
-            className="inputsize"
+
             name="descripResid"
+            value={editBody.descripResid}
             placeholder="Ingresa una descripción del espacio"
             showCount
             maxLength={1000}
@@ -323,16 +386,16 @@ function RentalForm() {
           />
         </Form.Item>
 
-        <h2 className="form-title">Servicios</h2>
+        <h3 >Servicios</h3>
         <Form.Item
           label="Comodidades"
         >
-          <div className="amenities-group">
-            <div className="amenities-row">
+          <div>
+            <div>
               <Checkbox
                 value="wifi"
                 name="wifi"
-                checked={body.wifi === "true"}
+                checked={editBody.wifi === "true"}
                 onChange={() => { handleCheckedChange("wifi") }}
               >
                 Wi-Fi
@@ -340,7 +403,7 @@ function RentalForm() {
               <Checkbox
                 value="lavadora"
                 name="lavadora"
-                checked={body.lavadora === "true"}
+                checked={editBody.lavadora === "true"}
                 onChange={() => { handleCheckedChange("lavadora") }}
               >
                 Lavadora
@@ -348,7 +411,7 @@ function RentalForm() {
               <Checkbox
                 value="cocina"
                 name="cocina"
-                checked={body.cocina === "true"}
+                checked={editBody.cocina === "true"}
                 onChange={() => { handleCheckedChange("cocina") }}
               >
                 Cocina
@@ -356,7 +419,7 @@ function RentalForm() {
               <Checkbox
                 value="aireAcond"
                 name="aireAcond"
-                checked={body.aireAcond === "true"}
+                checked={editBody.aireAcond === "true"}
                 onChange={() => { handleCheckedChange("aireAcond") }}
               >
                 Aire Acondicionado
@@ -364,7 +427,7 @@ function RentalForm() {
               <Checkbox
                 value="televisor"
                 name="televisor"
-                checked={body.televisor === "true"}
+                checked={editBody.televisor === "true"}
                 onChange={() => { handleCheckedChange("televisor") }}
               >
                 Televisor
@@ -376,12 +439,12 @@ function RentalForm() {
         <Form.Item
           label="Caracteristicas"
         >
-          <div className="amenities-group">
-            <div className="amenities-row">
+          <div>
+            <div>
               <Checkbox
                 value="psicina"
                 name="psicina"
-                checked={body.psicina === "true"}
+                checked={editBody.psicina === "true"}
                 onChange={() => { handleCheckedChange("psicina") }}
               >
                 Piscina
@@ -389,7 +452,7 @@ function RentalForm() {
               <Checkbox
                 value="jacuzzi"
                 name="jacuzzi"
-                checked={body.jacuzzi === "true"}
+                checked={editBody.jacuzzi === "true"}
                 onChange={() => { handleCheckedChange("jacuzzi") }}
               >
                 Jacuzzi
@@ -397,7 +460,7 @@ function RentalForm() {
               <Checkbox
                 value="estacionamiento"
                 name="estacionamiento"
-                checked={body.estacionamiento === "true"}
+                checked={editBody.estacionamiento === "true"}
                 onChange={() => { handleCheckedChange("estacionamiento") }}
               >
                 Estacionamiento
@@ -405,7 +468,7 @@ function RentalForm() {
               <Checkbox
                 value="gim"
                 name="gim"
-                checked={body.gim === "true"}
+                checked={editBody.gim === "true"}
                 onChange={() => { handleCheckedChange("gim") }}
               >
                 Gimnasio
@@ -413,7 +476,7 @@ function RentalForm() {
               <Checkbox
                 value="parrilla"
                 name="parrilla"
-                checked={body.parrilla === "true"}
+                checked={editBody.parrilla === "true"}
                 onChange={() => { handleCheckedChange("parrilla") }}
               >
                 Parrilla
@@ -426,12 +489,12 @@ function RentalForm() {
         <Form.Item
           label="Seguridad"
         >
-          <div className="amenities-group">
-            <div className="amenities-row">
+          <div>
+            <div>
               <Checkbox
                 value="camaras"
                 name="camaras"
-                checked={body.camaras === "true"}
+                checked={editBody.camaras === "true"}
                 onChange={() => { handleCheckedChange("camaras") }}
               >
                 Cámara de seguridad
@@ -439,7 +502,7 @@ function RentalForm() {
               <Checkbox
                 value="detectorHumo"
                 name="detectorHumo"
-                checked={body.detectorHumo === "true"}
+                checked={editBody.detectorHumo === "true"}
                 onChange={() => { handleCheckedChange("detectorHumo") }}
               >
                 Detector de humo
@@ -449,17 +512,28 @@ function RentalForm() {
 
         </Form.Item>
 
-        <div className="amenities-group">
-          <div className="amenities-row">
+        <Form.Item
+          label="Fechas Inicio/Fin"
+          rules={[{ required: true, message: 'Por favor, ingresa las fechas de alquiler.' }]
+          }
+        >
+          <RangePicker
+            placeholder={['Fecha Inicio', 'Fecha Fin']}
+            value={defaultValueRangePicker}
+            onChange={handleDateChange}
+          />
+        </Form.Item>
+
+        <div>
+          <div>
             <Form.Item
               label="Check In"
               rules={[{ required: true, message: 'Por favor, ingresa la hora de check-in.' }]
               }
-              className="check-in-item" // Agrega una clase aquí
             >
               <Input.TextArea
-                className="inputsize"
                 name="checkInResid"
+                value={editBody.checkInResid}
                 placeholder="Ingresa la hora de check-in"
                 showCount
                 maxLength={1000}
@@ -469,15 +543,15 @@ function RentalForm() {
             </Form.Item>
 
           </div>
-          <div className="amenities-row">
+          <div>
             <Form.Item
               label="Check Out"
               rules={[{ required: true, message: 'Por favor, ingresa la hora de check-out.' }]
               }
             >
               <Input.TextArea
-                className="inputsize"
                 name="checkOutResid"
+                value={editBody.checkOutResid}
                 placeholder="Ingresa la hora de check-out"
                 showCount
                 maxLength={1000}
@@ -500,7 +574,7 @@ function RentalForm() {
 
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
           <Button type="primary" htmlType="submit">
-            Completar
+            Guardar Cambios
           </Button>
           <Button htmlType="button" onClick={deleteFiels}>
             Cancelar
@@ -508,8 +582,8 @@ function RentalForm() {
         </Form.Item>
 
       </Form>
-    </div>
+    </>
   );
 
 }
-export default RentalForm;
+export default EditRentalForm;

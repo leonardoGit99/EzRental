@@ -9,10 +9,9 @@ import Home from './pages/Home';
 import MyAds from './pages/MyAds';
 import MoreInfoMyAds from './pages/MoreInfoMyAds';
 import MoreInfoAds from './pages/MoreInfoAds';
-import RentalFormPrueba from './components/RentalFormPrueba/RentalFormPrueba';
 import Addad from './pages/AddAd';
+import EditMyAds from './pages/EditMyAds';
 import './App.css';
-import RentalForm from './components/RentalForm/RentalForm';
 
 
 function App() {
@@ -42,7 +41,7 @@ function App() {
               <Route path="/mis-anuncios" element={<MyAds />} />
               <Route path="/mis-anuncios/:id" element={<MoreInfoMyAds />} />
               <Route path="/:id" element={<MoreInfoAds />} />
-              <Route path="/editar-anuncio/:id" element={<RentalForm />} />
+              <Route path="/editar-anuncio/:id" element={<EditMyAds />} />
             </Routes>
           </PagesContainer>
         </Content>
