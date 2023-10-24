@@ -47,7 +47,7 @@ function EditRentalForm() {
     fechaFinEst: ''
   });
   const navigate = useNavigate();
-  const defaultValueRangePicker = [dayjs(editBody.fechaIniEst), dayjs(editBody.fechaFinEst)];
+  // const defaultValueRangePicker = [dayjs(editBody.fechaIniEst), dayjs(editBody.fechaFinEst)];
 
   const validarinputmayor0 = (_, value) => {
     if (value < 0) {
@@ -517,7 +517,7 @@ function EditRentalForm() {
         >
           <RangePicker
             placeholder={['Fecha Inicio', 'Fecha Fin']}
-            value={defaultValueRangePicker}
+            // value={defaultValueRangePicker}
             onChange={handleDateChange}
           />
         </Form.Item>
