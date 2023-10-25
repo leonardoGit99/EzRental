@@ -6,11 +6,12 @@ import DetailDescription from '../components/DetailDescription/DetailDescription
 import DetailOffers from '../components/DetailOffers/DetailOffers';
 import DetailCheckInOut from '../components/DetailCheckInOut/DetailCheckInOut';
 import DetailsForHostOnly from '../components/DetailsForHostOnly/DetailsForHostOnly';
-import { getOneResidence, getServicesByResidence } from '../services/residences';
+import { getImagesByResidence, getOneResidence, getServicesByResidence } from '../services/residences';
 
 function MoreInfoMyAds() {
   let { id } = useParams();
   const [detailAdd, setDetailAdd] = useState([]);
+  const [imgsResidence, setImgsResidence] = useState([]);
   const [detailServices, setDetailServices] = useState({});
   const [isRefresh, setIsRefresh] = useState(true);
 
@@ -32,6 +33,14 @@ function MoreInfoMyAds() {
     }
   }, [setRefresh, isRefresh]);
 
+  useEffect(() => {
+    if (isRefresh) {
+      getImagesByResidence(id).then((data) => setImgsResidence(data))
+      setRefresh(false);
+    }
+  }, [setRefresh, isRefresh]);
+
+    console.log(imgsResidence);
   return (
     <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
       <div style={{ display: 'flex', flexDirection: 'column', maxWidth: '1200px' }}>
@@ -52,7 +61,7 @@ function MoreInfoMyAds() {
         </DetailTitle>
 
         <DetailImgs
-          images={detailAdd.images}
+          images={imgsResidence.imagen_residencia}
           setRefresh={setRefresh}
         />
 

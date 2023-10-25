@@ -3,7 +3,7 @@ import { Carousel, Image } from 'antd';
 import './detailImgsStyles.css';
 
 function DetailImgs({ images }) {
-
+  console.log(images);
   return (
     <div className="img-flex-container">
       <div className="img-container">

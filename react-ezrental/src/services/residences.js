@@ -17,6 +17,11 @@ export const getServicesByResidence = async (id) => {
     return response.data;
 }
 
+export const getImagesByResidence = async (id) => {
+    const response = await axios.get(`${api}/image/${id}`);
+    return response.data.imagen_residencia;
+}
+
 export const createResidence = async (body) => {
     const response = await axios.post(`${api}/resid`, JSON.stringify(body), { headers });
     return response;

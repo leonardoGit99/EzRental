@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, Select, Checkbox, DatePicker, message, Row, Col, Modal } from 'antd';
 import UploadComponent from '../RentalForm/UploadComponent';
 import dayjs from "dayjs";
-import { getOneResidence, updateResidence } from '../../services/residences';
+import { getImagesByResidence, getOneResidence, updateResidence } from '../../services/residences';
 import { useNavigate, useParams } from 'react-router-dom';
 import "./editRentalFormStyles.css"
 
@@ -13,6 +13,8 @@ function EditRentalForm() {
   const [urls, setUrls] = useState([]);
   const [fileList, setFileList] = useState([]);
   const [dataAd, setDataAd] = useState([]);
+  const [imgsResidence, setImgsResidence] = useState([]);
+
   const [editBody, setEditBody] = useState({
     tituloResid: '',
     tipoResid: '',
@@ -44,7 +46,8 @@ function EditRentalForm() {
     detectorHumo: '',
     estado: '',
     fechaIniciEst: '',
-    fechaFinEst: ''
+    fechaFinEst: '',
+    imagen: urls
   });
   const navigate = useNavigate();
   // const defaultValueRangePicker = [dayjs(editBody.fechaIniEst), dayjs(editBody.fechaFinEst)];
@@ -96,6 +99,22 @@ function EditRentalForm() {
   useEffect(() => {
     getOneResidence(id).then((data) => setDataAd(data));
   }, [])
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getImagesByResidence(id);
+      setUrls(data);
+      setFileList(data.map((link, index) => ({
+        uid: `-1-${index}`,
+        name: `File ${index}`,
+        status: 'done',
+        url: link,
+      }))
+      )
+    }
+    fetchData();
+  }, [id]);
 
   useEffect(() => {
     setEditBody({
