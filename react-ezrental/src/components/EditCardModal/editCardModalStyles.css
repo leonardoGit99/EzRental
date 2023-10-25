@@ -7,6 +7,11 @@
   font-weight: 600;
 }
 
+
+
+
+
+
 @media only screen and (min-width: 280px) and (max-width: 320px) {
     .edit-modal{
         width: 75vw !important;
@@ -21,24 +26,30 @@
 
   @media only screen and (min-width: 480px) and (max-width: 768px) {
     .edit-modal{
-        width: 50vw !important;
+        width: 70vw !important;
     }
   }
 
   @media only screen and (min-width: 768px) and (max-width: 1024px) {
     .edit-modal{
-        width: 35vw !important;
+        width: 64vw !important;
     }
   }
 
   @media only screen and (min-width: 1024px) and (max-width: 1200px) {
     .edit-modal{
-        width: 30vw !important;
+        width: 48vw !important;
     }
   }
 
   @media only screen and (min-width: 1200px) and (max-width: 1440px) {
     .edit-modal{
-        width: 30vw !important;
+        width: 41vw !important;
+    }
+  }
+
+  @media only screen and (min-width: 1440px) and (max-width: 1800px) {
+    .edit-modal{
+        width: 20vw !important;
     }
   }

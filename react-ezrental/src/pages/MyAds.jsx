@@ -12,14 +12,6 @@ function MyAds() {
   const setRefresh = (status) => {
     setIsRefresh(status);
   }
-  // console.log(isRefresh);
-  /*   async function fetchAllResidencesByUser() {
-      //"http://localhost:4000/resid"
-      //`${process.env.REACT_APP_SERVERURL}/resid`
-      const response = await fetch(`http://localhost:4000/resid`);
-      const jsonData = await response.json();
-      setResidences(jsonData);
-    } */
 
   useEffect(() => {
     if (isRefresh) {
@@ -70,8 +62,8 @@ function MyAds() {
               titulo={residence.titulo_residencia}
               ciudad={residence.ciudad_residencia}
               pais={residence.pais_residencia}
-              fechaIni={residence.fecha_inicio_estado ? residence.fecha_inicio_estado.split('T')[0].toString() : 'Fecha inicio'}
-              fechaFin={residence.fecha_fin_estado ? residence.fecha_fin_estado.split('T')[0].toString() : 'Fecha fin'}
+              fechaIni={residence.fecha_inicio_estado ? residence.fecha_inicio_estado.split('T')[0].toString() : 'Pendiente...'}
+              fechaFin={residence.fecha_fin_estado ? residence.fecha_fin_estado.split('T')[0].toString() : 'Pendiente...'}
               precio={residence.precio_residencia}
               estadoResidencia={residence.estado_residencia}
               isRefresh={isRefresh}

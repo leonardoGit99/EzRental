@@ -1,0 +1,23 @@
+.select{
+    width: 20vw !important;
+}
+
+.input{
+    width: 20vw !important;
+}
+
+.textArea{
+    width: 20vw !important;
+}
+
+
+.amenities-group {
+    display: flex; /* Establecer el contenedor principal en flexbox */
+}
+
+.amenities-row {
+    display: flex; /* Establecer las filas en flexbox */
+    flex-direction: column; /* Establecer dirección en columna para elementos en cada fila */
+    align-items: flex-start; /* Alinear elementos en cada fila a la izquierda */
+    margin-right: 20px; /* Espacio entre las dos columnas */
+}

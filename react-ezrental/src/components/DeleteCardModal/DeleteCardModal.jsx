@@ -10,18 +10,8 @@ function DeleteCardModal({ visible, onClose, idResidencia, titulo, isRefresh, se
     cerrarModal();
     setRefresh(true);
     // window.location.reload();//Otra forma de recargar la pagina
-    message.success("La residencia '" + titulo + "' ha sido eliminado exitosamente.");
+    message.success("El anuncio '" + titulo + "' ha sido eliminado exitosamente.");
   };
-
-/*   const deleteResidenceDB = async () => {
-    //Ruta para server en localhost: `http://localhost:4000/resid/${idResidencia}` 
-    //Ruta para server deployado: `${process.env.REACT_APP_SERVERURL}/${idResidencia}`
-    const res = await fetch(`http://localhost:4000/resid/${idResidencia}`, {
-      method: "DELETE"
-    });
-    return res;
-  }
- */
 
   return (
     <>

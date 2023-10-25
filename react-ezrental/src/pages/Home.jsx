@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { List } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import homePageEnDesarrollo from '../assets/homePageEnDesarrollo.jpg';
 import GuestCard from '../components/GuestCard/GuestCard';
 import { getAllResidences } from '../services/residences';
 
@@ -12,14 +11,6 @@ function Home() {
   const setRefresh = (status) => {
     setIsRefresh(status);
   }
-
-  /*   async function fetchAllResidences() {
-      //"http://localhost:4000/resid"
-      //`${process.env.REACT_APP_SERVERURL}/resid`
-      const response = await fetch(`http://localhost:4000/resid`);
-      const jsonData = await response.json();
-      setResidences(jsonData);
-    } */
 
   useEffect(() => {
     if (isRefresh) {
@@ -71,8 +62,8 @@ function Home() {
               titulo={residence.titulo_residencia}
               ciudad={residence.ciudad_residencia}
               pais={residence.pais_residencia}
-              fechaIni={residence.fecha_inicio_estado ? residence.fecha_inicio_estado.split('T')[0].toString() : 'Fecha inicio'}
-              fechaFin={residence.fecha_fin_estado ? residence.fecha_fin_estado.split('T')[0].toString() : 'Fecha fin'}
+              fechaIni={residence.fecha_inicio_estado ? residence.fecha_inicio_estado.split('T')[0].toString() : 'Pendiente...'}
+              fechaFin={residence.fecha_fin_estado ? residence.fecha_fin_estado.split('T')[0].toString() : 'Pendiente...'}
               precio={residence.precio_residencia}
               setRefresh={setRefresh}
             />

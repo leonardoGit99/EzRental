@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, Button, Tooltip } from 'antd';
-import { EditOutlined, DeleteOutlined, CheckCircleTwoTone, CloseCircleTwoTone, PauseCircleTwoTone } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, CheckCircleTwoTone, CloseCircleTwoTone, PauseCircleTwoTone, EllipsisOutlined } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouseCircleCheck } from '@fortawesome/free-solid-svg-icons';
 import DeleteCardModal from '../DeleteCardModal/DeleteCardModal';
@@ -79,11 +79,12 @@ function HostCard({ idResidencia, imagen, titulo, ciudad, pais, fechaIni, fechaF
               title={`${ciudad}, ${pais}`}
               description={
                 <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {titulo} <br /> {fechaIni} / {fechaFin} <br /> Bs. {precio} <br />
-                  {estadoResidencia === "Publicado" ? <span style={{ fontWeight: '700' }}><CheckCircleTwoTone twoToneColor="#2AD06D" /> Publicado</span> : ''}
-                  {estadoResidencia === "Pausado" ? <span style={{ fontWeight: '700' }}><PauseCircleTwoTone twoToneColor="#F28808" /> Pausado</span> : ''}
-                  {estadoResidencia === "Inactivo" ? <span style={{ fontWeight: '700' }}><CloseCircleTwoTone twoToneColor="#FF4040" /> Inactivo</span> : ''}
-                  {estadoResidencia === "Alquilado" ? <span style={{ fontWeight: '700' }}><FontAwesomeIcon icon={faHouseCircleCheck} /> Alquilado</span> : ''}
+                  {titulo} <br /> {fechaIni && fechaFin === "Pendiente..." ? "Fechas por definir..." : `${fechaIni} / ${fechaFin}`} <br /> Bs. {precio} <br />
+                  {estadoResidencia === "Publicado" ? <span style={{ fontWeight: '700' }}><CheckCircleTwoTone twoToneColor="#2AD06D" /> Publicado </span> : ''}
+                  {estadoResidencia === "Pausado" ? <span style={{ fontWeight: '700' }}><PauseCircleTwoTone twoToneColor="#F28808" /> Pausado </span> : ''}
+                  {estadoResidencia === "Inactivo" ? <span style={{ fontWeight: '700' }}><CloseCircleTwoTone twoToneColor="#FF4040" /> Inactivo </span> : ''}
+                  {estadoResidencia === "Alquilado" ? <span style={{ fontWeight: '700' }}><FontAwesomeIcon icon={faHouseCircleCheck} /> Alquilado </span> : ''}
+                  {estadoResidencia === "Vista Previa" ? <span style={{ fontWeight: '700' }}><EllipsisOutlined /> Pendiente </span> : ''}
                 </div>
               }
             />

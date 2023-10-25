@@ -110,7 +110,7 @@ function UploadComponent({urls, setUrls, fileList, setFileList}) {
 
   return (
     <>
-      <h2>Agregue algunas fotos de su residencia</h2>
+      <h2 style={{textAlign:'center'}}>Agregue algunas fotos de su residencia</h2>
 
       <Upload
         customRequest={uploadImage}

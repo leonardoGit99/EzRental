@@ -17,29 +17,12 @@ function MoreInfoAds() {
     setIsRefresh(status);
   }
 
-  /*   async function fetchResidenceById() {
-      //`http://localhost:4000/resid/${id}`
-      //`${process.env.REACT_APP_SERVERURL}/resid/${id}`
-      const response = await fetch(`http://localhost:4000/resid/${id}`);
-      const jsonData = await response.json();
-      setDetailAdd(jsonData);
-    } */
-
   useEffect(() => {
     if (isRefresh) {
       getOneResidence(id).then((data) => setDetailAdd(data));
       setRefresh(false);
     }
   }, [setRefresh, isRefresh]);
-
-
-  /*   async function fetchServicesById() {
-      //`http://localhost:4000/resid/${id}`
-      //`${process.env.REACT_APP_SERVERURL}/resid/${id}`
-      const response = await fetch(`http://localhost:4000/serv/${id}`);
-      const jsonData = await response.json();
-      setDetailServices(jsonData);
-    } */
 
   useEffect(() => {
     if (isRefresh) {
@@ -52,16 +35,17 @@ function MoreInfoAds() {
   return (
     <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
       <div style={{ display: 'flex', flexDirection: 'column', maxWidth: '1200px' }}>
-        {/* Mas info de card guest {id} */}
         <DetailTitle
           title={detailAdd.titulo_residencia}
           city={detailAdd.ciudad_residencia}
           country={detailAdd.pais_residencia}
         />
+
         <DetailImgs
           images={detailAdd.images}
           setRefresh={setRefresh}
         />
+
         <DetailDescription
           residenceType={detailAdd.tipo_residencia}
           spaceType={detailAdd.tipo_alojamiento}
@@ -71,13 +55,16 @@ function MoreInfoAds() {
           numberOfBeds={detailAdd.cama_residencia}
           numberOfBathrooms={detailAdd.banio_residencia}
         />
+
         <DetailOffers
           services={detailServices}
         />
+
         <DetailCheckInOut
           checkIn={detailAdd.check_in_residencia}
           checkOut={detailAdd.check_out_residencia}
         />
+
       </div>
     </div>
   )
