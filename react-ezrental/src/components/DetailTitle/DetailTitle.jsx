@@ -10,9 +10,7 @@ function DetailTitle({ children, title, city, country }) {
           <h2>{title}</h2>
           <p> {city}, {country}</p>
         </div>
-        <div>
           {children}
-        </div>
       </div>
       <Divider />
     </div>

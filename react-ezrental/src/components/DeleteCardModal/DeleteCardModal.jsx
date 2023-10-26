@@ -6,11 +6,15 @@ import { deleteResidence } from '../../services/residences';
 
 function DeleteCardModal({ visible, onClose, idResidencia, titulo, isRefresh, setRefresh, cerrarModal }) {
   const handleOk = async () => {
-    await deleteResidence(idResidencia);
-    cerrarModal();
-    setRefresh(true);
-    // window.location.reload();//Otra forma de recargar la pagina
-    message.success("El anuncio '" + titulo + "' ha sido eliminado exitosamente.");
+    try {
+      await deleteResidence(idResidencia);
+      cerrarModal();
+      setRefresh(true);
+      // window.location.reload();//Otra forma de recargar la pagina
+      message.success("El anuncio '" + titulo + "' ha sido eliminado exitosamente.");
+    } catch (error) {
+      message.error("Algo salió mal. Inténtelo más tarde")
+    }
   };
 
   return (

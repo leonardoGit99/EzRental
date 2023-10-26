@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Divider, Modal } from 'antd';
 import { CheckCircleTwoTone, CloseCircleTwoTone, PauseCircleTwoTone } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLock, faHouseCircleCheck } from '@fortawesome/free-solid-svg-icons';
+import { faLock, faHouseCircleCheck, faTv, faBrush } from '@fortawesome/free-solid-svg-icons';
 
 function DetailsForHostOnly({ estadoResidencia, direccionResidencia, precioResidencia, fechaIni, fechaFin }) {
   const [privateModal, setPrivateModal] = useState(false);
@@ -32,7 +32,9 @@ function DetailsForHostOnly({ estadoResidencia, direccionResidencia, precioResid
           {estadoResidencia === "Publicado" ? <span style={{ fontWeight: '600' }}><CheckCircleTwoTone twoToneColor="#2AD06D" /> Publicado</span> : ''}
           {estadoResidencia === "Pausado" ? <span style={{ fontWeight: '600' }}><PauseCircleTwoTone twoToneColor="#F28808" /> Pausado</span> : ''}
           {estadoResidencia === "Inactivo" ? <span style={{ fontWeight: '600' }}><CloseCircleTwoTone twoToneColor="#FF4040" /> Inactivo</span> : ''}
-          {estadoResidencia === "Alquilado" ? <span style={{ fontWeight: '600' }}><FontAwesomeIcon icon={faHouseCircleCheck} /> Alquilado</span> : ''} <Divider />
+          {estadoResidencia === "Alquilado" ? <span style={{ fontWeight: '600' }}><FontAwesomeIcon icon={faHouseCircleCheck} /> Alquilado</span> : ''} 
+          {estadoResidencia === "Previsualización" ? <span style={{ fontWeight: '700' }}><FontAwesomeIcon icon={faTv} /> Previsualización </span> : ''} 
+          {estadoResidencia === "En construcción" ? <span style={{ fontWeight: '700' }}><FontAwesomeIcon icon={faBrush} /> En construcción </span> : ''} <Divider />
         </div>
       </Modal>
     </div>

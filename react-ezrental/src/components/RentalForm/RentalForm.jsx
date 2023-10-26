@@ -106,6 +106,7 @@ function RentalForm() {
   const onFinish = async () => {
     // const formData = new FormData();
     // formData.append(body);
+    console.log(body);
     await createResidence(body);
     console.log(body);
     message.success("Anuncio creado exitosamente!");

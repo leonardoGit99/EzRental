@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Button, Select, Checkbox, DatePicker, message, Row, Col, Modal } from 'antd';
-import UploadComponent from '../RentalForm/UploadComponent';
-import dayjs from "dayjs";
+import { Form, Input, Button, Select, Checkbox, DatePicker, message } from 'antd';
 import { getImagesByResidence, getOneResidence, updateResidence } from '../../services/residences';
+import UploadComponent from '../RentalForm/UploadComponent';
 import { useNavigate, useParams } from 'react-router-dom';
+import dayjs from "dayjs";
 import "./editRentalFormStyles.css"
 
 function EditRentalForm() {
+  let { id } = useParams();
+  const navigate = useNavigate();
   const { Option } = Select;
   const { RangePicker } = DatePicker;
-  let { id } = useParams();
   const [urls, setUrls] = useState([]);
   const [fileList, setFileList] = useState([]);
   const [dataAd, setDataAd] = useState([]);
   const [imgsResidence, setImgsResidence] = useState([]);
-
+  const [form] = Form.useForm();
   const [editBody, setEditBody] = useState({
     tituloResid: '',
     tipoResid: '',
@@ -45,12 +46,11 @@ function EditRentalForm() {
     camaras: '',
     detectorHumo: '',
     estado: '',
-    fechaIniciEst: '',
+    fechaIniEst: '',
     fechaFinEst: '',
     imagen: urls
   });
-  const navigate = useNavigate();
-  // const defaultValueRangePicker = [dayjs(editBody.fechaIniEst), dayjs(editBody.fechaFinEst)];
+  const defaultValueRangePicker = [dayjs(editBody.fechaIniEst), dayjs(editBody.fechaFinEst)];
 
   const validarinputmayor0 = (_, value) => {
     if (value < 0) {
@@ -66,8 +66,6 @@ function EditRentalForm() {
   }
 
   const handleSelectChange = (value, name) => {
-    /* console.log(value);
-    console.log(name); */
     if (name === "tipoAlojam") {
       setEditBody({ ...editBody, [name]: value });
     } else if (name === "tipoResid") {
@@ -148,45 +146,56 @@ function EditRentalForm() {
       detectorHumo: dataAd.humo_segurid_residencia,
       estado: dataAd.estado_residencia,
       fechaIniciEst: dataAd.fecha_inicio_estado,
-      fechaFinEst: dataAd.fecha_fin_estado
+      fechaFinEst: dataAd.fecha_fin_estado,
+      imagen: urls
     })
+
   }, [dataAd]);
+
+  useEffect(() => {
+    form.setFieldsValue(editBody);
+  }, [editBody]);
 
   console.log(dataAd);
   console.log(editBody);
 
   const onFinish = async () => {
-    await updateResidence(editBody, id);
-    navigate("/mis-anuncios");
-    message.success("Modificación exitosa!");
+    try {
+      await updateResidence(editBody, id);
+      navigate("/mis-anuncios");
+      message.success("Modificación exitosa!");
+    } catch (error) {
+      message.error("Algo salió mal. Inténtelo más tarde");
+    }
   };
 
   const onCancel = () => {
     navigate("/mis-anuncios");
+    message.info("No se realizó ninguna modificación", 2);
   }
 
   return (
     <>
-      <div style={{ border: 'solid 2px #000', borderRadius: '20px', margin: '10px 70px' }}>
-        <h2 style={{ textAlign: 'center' }}>Formulario de Edición</h2>
+      <div className="edit-form-container">
+        <h2>Formulario de Edición</h2>
         <Form
-          name="basic"
-          labelCol={{ span: 10 }}
+          name="formularioEdicion"
+          labelCol={{ span: 9 }}
           // wrapperCol={{ span: 16 }}
-          // initialValues={{ remember: true }}
+          initialValues={{ remember: true }}
+          autoComplete="off"
+          form={form}
           onFinish={onFinish}
         >
-
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '40px', flexWrap: 'wrap' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', flex: '1 1' }}>
+          <div className="flex-container-col-1-2-edit-form">
+            <div className='col-1-edit-form'>
               <Form.Item
                 label="Estado del anuncio"
+                name="estado"
                 rules={[{ required: true, message: 'Por favor, selecciona un estado del anuncio.' }]}
               >
                 <Select
-                  name="estadoAnuncio"
                   className="select"
-                  value={editBody.estado}
                   placeholder="Selecciona el estado del anuncio"
                   onChange={(value) => handleSelectChange(value, "estadoAnuncio")}
                 >
@@ -195,30 +204,30 @@ function EditRentalForm() {
                   <Option value="Inactivo"> Inactivo </Option>
                 </Select>
               </Form.Item>
-
+              <h3>Datos de la residencia</h3>
               <Form.Item
+                name="tituloResid"
                 label="Título de la Residencia"
-                rules={[{ required: true, message: 'Por favor, ingresa el título de la residencia.' }]
+                rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa el título de la residencia.' }]
                 }
               >
                 <Input
                   name="tituloResid"
                   className='input'
                   placeholder="Introduce el título de la residencia"
-                  value={editBody.tituloResid}
                   onChange={handleChange}
                 />
               </Form.Item>
 
               <Form.Item
                 label="Descripción del Espacio"
-                rules={[{ required: true, message: 'Por favor, ingresa una descripción del espacio.' }]
+                name="descripResid"
+                rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa una descripción del espacio.' }]
                 }
               >
                 <Input.TextArea
                   name="descripResid"
                   className='textArea'
-                  value={editBody.descripResid}
                   placeholder="Ingresa una descripción del espacio"
                   showCount
                   maxLength={1000}
@@ -228,53 +237,53 @@ function EditRentalForm() {
               </Form.Item>
 
               <Form.Item
+                name="direcResid"
                 label="Dirección"
-                rules={[{ required: true, message: 'Por favor, ingresa la dirección.' }]
+                rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa la dirección.' }]
                 }
               >
                 <Input
                   name="direcResid"
                   className='input'
-                  value={editBody.direcResid}
                   placeholder="Ingresa la dirección de la residencia"
                   onChange={handleChange}
                 />
               </Form.Item>
 
               <Form.Item
+                name="paisResid"
                 label="País"
-                rules={[{ required: true, message: 'Por favor, ingresa el país.' }]
+                rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa el país.' }]
                 }
               >
                 <Input
                   name="paisResid"
                   className='input'
-                  value={editBody.paisResid}
                   placeholder="Ingresa el país"
                   onChange={handleChange}
                 />
               </Form.Item>
 
               <Form.Item
+                name="ciudadResid"
                 label="Ciudad"
-                rules={[{ required: true, message: 'Por favor, ingresa la ciudad.' }]
+                rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa la ciudad.' }]
                 }
               >
                 <Input
                   name="ciudadResid"
                   className='input'
-                  value={editBody.ciudadResid}
                   placeholder="Ingresa la ciudad"
                   onChange={handleChange}
                 />
               </Form.Item>
 
               <Form.Item
+                name="precioResid"
                 label="Precio"
-                rules={[{ required: true, message: 'Por favor, ingresa el precio de la residencia.' }, { validator: validarinputmayor0 }]}
+                rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa el precio de la residencia.' }, { validator: validarinputmayor0 }]}
               >
                 <Input
-                  value={editBody.precioResid}
                   name="precioResid"
                   className="input"
                   placeholder="Ingresa el precio de la residencia"
@@ -285,14 +294,13 @@ function EditRentalForm() {
               </Form.Item>
 
               <Form.Item
+                name="tipoResid"
                 label="Tipo de Residencia"
-                rules={[{ required: true, message: 'Por favor, selecciona el tipo de residencia.' }]
+                rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, selecciona el tipo de residencia.' }]
                 }
               >
                 <Select
-                  name="tipoResid"
                   className="select"
-                  value={editBody.tipoResid}
                   placeholder="Selecciona el tipo de residencia"
                   onChange={(value) => handleSelectChange(value, "tipoResid")}
                 >
@@ -304,13 +312,12 @@ function EditRentalForm() {
               </Form.Item>
 
               <Form.Item
+                name="tipoAlojam"
                 label="Tipo de Alojamiento"
-                rules={[{ required: true, message: 'Por favor, selecciona el tipo de alojamiento.' }]}
+                rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, selecciona el tipo de alojamiento.' }]}
               >
                 <Select
-                  name="tipoAlojam"
                   className="select"
-                  value={editBody.tipoAlojam}
                   placeholder="Selecciona el tipo de alojamiento"
                   onChange={(value) => handleSelectChange(value, "tipoAlojam")}
                 >
@@ -321,14 +328,14 @@ function EditRentalForm() {
 
 
               <Form.Item
+                name="diasMaxResid"
                 label="Número Máximo de dias"
-                rules={[{ required: true, message: 'Por favor, ingresa el numero maximo de dias.' }, { validator: validarinputmayor0 }]
+                rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa el numero maximo de dias.' }, { validator: validarinputmayor0 }]
                 }
               >
                 <Input
                   name="diasMaxResid"
                   className='input'
-                  value={editBody.diasMaxResid}
                   placeholder="Ingresa el número máximo de dias"
                   type="number"
                   onChange={handleChange}
@@ -336,22 +343,23 @@ function EditRentalForm() {
               </Form.Item>
 
               <Form.Item
+                name="diasMinResid"
                 label="Número Mínimo de dias"
-                rules={[{ required: true, message: 'Por favor, ingresa el numero minimo de dias.' }, { validator: validarinputmayor0 }]
+                rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa el numero minimo de dias.' }, { validator: validarinputmayor0 }]
                 }
               >
                 <Input
                   name="diasMinResid"
                   className='input'
-                  value={editBody.diasMinResid}
                   placeholder="Ingresa el número mínimo de dias"
                   type="number"
                   onChange={handleChange}
                 />
               </Form.Item>
               <Form.Item
+                name="huesMaxResid"
                 label="Número Máximo de Huéspedes"
-                rules={[{ required: true, message: 'Por favor, ingresa el numero maximo de Huesped.' }, { validator: validarinputmayor0 }]
+                rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa el numero maximo de Huesped.' }, { validator: validarinputmayor0 }]
                 }
               >
                 <Input
@@ -359,20 +367,19 @@ function EditRentalForm() {
                   className='input'
                   placeholder="Ingresa el número máximo de huéspedes"
                   type="number"
-                  value={editBody.huesMaxResid}
                   onChange={handleChange}
                 />
               </Form.Item>
 
               <Form.Item
+                name="camaResid"
                 label="Número de Camas"
-                rules={[{ required: true, message: 'Por favor, ingresa el número de camas.' }, { validator: validarinputmayor0 }]
+                rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa el número de camas.' }, { validator: validarinputmayor0 }]
                 }
               >
                 <Input
                   name="camaResid"
                   className='input'
-                  value={editBody.camaResid}
                   placeholder="Ingresa el número de camas"
                   type="number"
                   onChange={handleChange}
@@ -380,14 +387,14 @@ function EditRentalForm() {
               </Form.Item>
 
               <Form.Item
+                name="habitResid"
                 label="Número de Habitaciones"
-                rules={[{ required: true, message: 'Por favor, ingresa el número de habitaciones.' }, { validator: validarinputmayor0 }]
+                rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa el número de habitaciones.' }, { validator: validarinputmayor0 }]
                 }
               >
                 <Input
                   name="habitResid"
                   className='input'
-                  value={editBody.habitResid}
                   placeholder="Ingresa el número de habitaciones"
                   type="number"
                   onChange={handleChange}
@@ -395,14 +402,14 @@ function EditRentalForm() {
               </Form.Item>
 
               <Form.Item
+                name="banioResid"
                 label="Número de Baños"
-                rules={[{ required: true, message: 'Por favor, ingresa el número de baños.' }, { validator: validarinputmayor0 }]
+                rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa el número de baños.' }, { validator: validarinputmayor0 }]
                 }
               >
                 <Input
                   name="banioResid"
                   className='input'
-                  value={editBody.banioResid}
                   placeholder="Ingresa el número de baños"
                   type="number"
                   onChange={handleChange}
@@ -410,10 +417,13 @@ function EditRentalForm() {
               </Form.Item>
 
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', flex: '1 1' }}>
-              <h3 style={{ textAlign: 'center' }}>Servicios</h3>
+            <div className="col-2-edit-form">
+              <h3>Servicios</h3>
               <Form.Item
+                name="wifi"
                 label="Comodidades"
+                rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa el número de baños.' }, { validator: validarinputmayor0 }]
+                }
               >
                 <div className="amenities-group">
                   <div className="amenities-row">
@@ -537,63 +547,66 @@ function EditRentalForm() {
                 </div>
 
               </Form.Item>
-              <div style={{ marginTop: '5vh' }}>
-                <h3 style={{ textAlign: 'center' }}>Fechas de duracion del anuncio</h3>
+
+              <div className="dates-edit-form-container">
+                <h3>Fechas de duracion del anuncio</h3>
                 <Form.Item
                   label="Fechas Inicio/Fin"
-                  rules={[{ required: true, message: 'Por favor, ingresa las fechas de alquiler.' }]
-                  }
                 >
                   <RangePicker
                     placeholder={['Fecha Inicio', 'Fecha Fin']}
-                    // value={defaultValueRangePicker}
+                    // defaultValue={defaultValueRangePicker}
                     onChange={handleDateChange}
                   />
                 </Form.Item>
               </div>
 
-
-              <div style={{ marginTop: '5vh' }}>
-                <h3 style={{ textAlign: 'center' }}> Instrucciones de Check In y Check Out</h3>
+              <div className="checkin-checkout-edit-form-container">
+                <h3> Instrucciones de Check In y Check Out</h3>
                 <Form.Item
+                  name="checkInResid"
                   label="Check In"
-                  rules={[{ required: true, message: 'Por favor, ingresa la hora de check-in.' }]
+                  rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa la hora de check-in.' }]
                   }
                 >
                   <Input.TextArea
                     name="checkInResid"
                     className='textArea'
-                    value={editBody.checkInResid}
                     placeholder="Ingresa la hora de check-in"
                     showCount
                     maxLength={1000}
-                    autoSize={{ minRows: 5, maxRows: 20 }}
+                    autoSize={{ minRows: 8, maxRows: 7 }}
                     onChange={handleChange}
                   />
                 </Form.Item>
-                <div>
-                  <Form.Item
-                    label="Check Out"
-                    rules={[{ required: true, message: 'Por favor, ingresa la hora de check-out.' }]
-                    }
-                  >
-                    <Input.TextArea
-                      name="checkOutResid"
-                      className='textArea'
-                      value={editBody.checkOutResid}
-                      placeholder="Ingresa la hora de check-out"
-                      showCount
-                      maxLength={1000}
-                      autoSize={{ minRows: 5, maxRows: 20 }}
-                      onChange={handleChange}
-                    />
-                  </Form.Item>
-                </div>
+                <Form.Item
+                  name="checkOutResid"
+                  label="Check Out"
+                  rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa la hora de check-out.' }]
+                  }
+                >
+                  <Input.TextArea
+                    name="checkOutResid"
+                    className='textArea'
+                    placeholder="Ingresa la hora de check-out"
+                    showCount
+                    maxLength={1000}
+                    autoSize={{ minRows: 8, maxRows: 7 }}
+                    onChange={handleChange}
+                  />
+                </Form.Item>
               </div>
             </div>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <Form.Item>
+
+          <div className="imgs-edit-form-flex-container">
+            <Form.Item
+              name="imagen"
+              rules={[{
+                min: 5,
+                message: "Ingrese al menos 5 imagenes",
+              }]}
+            >
               <UploadComponent
                 urls={urls}
                 setUrls={setUrls}
@@ -604,7 +617,7 @@ function EditRentalForm() {
           </div>
 
           <Form.Item>
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <div className="btns-edit-form-flex-container">
               <div>
                 <Button type="primary" htmlType="submit">
                   Guardar Cambios
@@ -616,7 +629,6 @@ function EditRentalForm() {
                 </Button>
               </div>
             </div>
-
           </Form.Item>
 
         </Form>

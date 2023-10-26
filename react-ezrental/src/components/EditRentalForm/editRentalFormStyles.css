@@ -1,23 +1,90 @@
-.select{
-    width: 20vw !important;
+.edit-form-container {
+  border: solid 2px #000;
+  border-radius: 20px;
+  margin: 10px 100px; 
 }
 
-.input{
-    width: 20vw !important;
+.edit-form-container>h2 {
+  text-align: center;
 }
 
-.textArea{
-    width: 20vw !important;
+.flex-container-col-1-2-edit-form {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+
+.col-1-edit-form {
+  flex: 1 1;
+}
+
+.col-1-edit-form > h3 {
+  text-align: center;
+}
+
+.col-2-edit-form{
+  flex: 1 1;
+}
+
+.col-2-edit-form > h3 {
+  text-align: center;
+  margin-top: 0;
+}
+
+.dates-edit-form-container{
+  margin-top: 6vh;
+}
+
+.dates-edit-form-container > h3{
+  text-align: center;
+}
+
+.checkin-checkout-edit-form-container{
+  margin-top: 5vh;
+}
+
+.checkin-checkout-edit-form-container > h3{
+  text-align: center;
+}
+
+.imgs-edit-form-flex-container{
+  display: flex;
+  justify-content: center;
+}
+
+.btns-edit-form-flex-container{
+  display: flex;
+  justify-content: center;
+}
+
+.select {
+  width: 20vw !important;
+}
+
+.input {
+  width: 20vw !important;
+}
+
+.textArea {
+  width: 20vw !important;
 }
 
 
 .amenities-group {
-    display: flex; /* Establecer el contenedor principal en flexbox */
+  display: flex;
+  /* Establecer el contenedor principal en flexbox */
 }
 
 .amenities-row {
-    display: flex; /* Establecer las filas en flexbox */
-    flex-direction: column; /* Establecer dirección en columna para elementos en cada fila */
-    align-items: flex-start; /* Alinear elementos en cada fila a la izquierda */
-    margin-right: 20px; /* Espacio entre las dos columnas */
+  display: flex;
+  /* Establecer las filas en flexbox */
+  flex-direction: column;
+  /* Establecer dirección en columna para elementos en cada fila */
+  align-items: flex-start;
+  /* Alinear elementos en cada fila a la izquierda */
+  margin-right: 20px;
+  /* Espacio entre las dos columnas */
 }

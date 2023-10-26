@@ -63,8 +63,8 @@ function Home() {
               titulo={residence.titulo_residencia}
               ciudad={residence.ciudad_residencia}
               pais={residence.pais_residencia}
-              fechaIni={residence.fecha_inicio_estado ? residence.fecha_inicio_estado.split('T')[0].toString() : 'Pendiente...'}
-              fechaFin={residence.fecha_fin_estado ? residence.fecha_fin_estado.split('T')[0].toString() : 'Pendiente...'}
+              fechaIni={residence.fecha_inicio_estado ? residence.fecha_inicio_estado.split('T')[0].toString() : 'Sin fecha'}
+              fechaFin={residence.fecha_fin_estado ? residence.fecha_fin_estado.split('T')[0].toString() : 'Sin fecha'}
               precio={residence.precio_residencia}
               setRefresh={setRefresh}
             />
