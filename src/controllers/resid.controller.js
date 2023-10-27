@@ -32,10 +32,40 @@ const uploadImg = (req, res, next) => {
 
 
 
-const getAllResid = async (req, res) =>{
-    const result = await pool.query("select * from residencia r, servicio s, estado e WHERE r.id_residencia = s.id_residencia and r.id_residencia = e.id_residencia ");
-  res.json(result.rows);
-  };
+const getAllResid = async (req, res) => {
+  try {
+    const result = await pool.query(`
+    SELECT 
+    r.id_residencia, r.titulo_residencia, r.tipo_residencia, r.pais_residencia, r.ciudad_residencia, r.direccion_residencia, r.cama_residencia, r.habitacion_residencia, r.banio_residencia, r.descripcion_residencia, r.huesped_max_residencia, r.dias_max_residencia, r.dias_min_residencia, r.precio_residencia, r.check_in_residencia, r.check_out_residencia, r.tipo_alojamiento,
+    array_agg(i.imagen_residencia) AS imagenes,
+    array_agg(s.wifi_residencia) AS wifi_residencia,
+    array_agg(s.cocina_residencia) AS cocina_residencia,
+    array_agg(s.televisor_residencia) AS televisor_residencia,
+    array_agg(s.lavadora_residencia) AS lavadora_residencia,
+    array_agg(s.aire_acond_residencia) AS aire_acond_residencia,
+    array_agg(s.psicina_residencia) AS psicina_residencia,
+    array_agg(s.jacuzzi_residencia) AS jacuzzi_residencia,
+    array_agg(s.estacionamiento_residencia) AS estacionamiento_residencia,
+    array_agg(s.gimnasio_residencia) AS gimnasio_residencia,
+    array_agg(s.parrilla_residencia) AS parrilla_residencia,
+    array_agg(s.camaras_segurid_residencia) AS camaras_segurid_residencia,
+    array_agg(s.humo_segurid_residencia) AS humo_segurid_residencia,
+    array_agg(e.estado_residencia) AS estado_residencia,
+    array_agg(e.fecha_inicio_estado) AS fecha_inicio_estado,
+    array_agg(e.fecha_fin_estado) AS fecha_fin_estado
+FROM residencia r
+LEFT JOIN imagen i ON r.id_residencia = i.id_residencia
+LEFT JOIN servicio s ON r.id_residencia = s.id_residencia
+LEFT JOIN estado e ON r.id_residencia = e.id_residencia
+GROUP BY r.id_residencia;
+      `);
+    
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).send("Error obteniendo la información de las residencias");
+  }
+};
+
 
 
 const getResid = async (req, res) =>{
@@ -130,7 +160,7 @@ const createResid = async (req, res) =>{
     }
     const newServ = await pool.query(
       "INSERT INTO servicio (id_residencia, wifi_residencia, cocina_residencia, televisor_residencia, lavadora_residencia, aire_acond_residencia, psicina_residencia, jacuzzi_residencia, estacionamiento_residencia, gimnasio_residencia, parrilla_residencia, camaras_segurid_residencia, humo_segurid_residencia ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)",
-      [id_nuevoResid, wifi, lavadora, cocina, televisor, aireAcond, psicina, jacuzzi, estacionamiento, gim, parrilla, camaras, detectorHumo]
+      [id_nuevoResid, wifi, cocina, televisor, lavadora, aireAcond, psicina, jacuzzi, estacionamiento, gim, parrilla, camaras, detectorHumo]
     );
 
     let algunCampoEsNull = false;
