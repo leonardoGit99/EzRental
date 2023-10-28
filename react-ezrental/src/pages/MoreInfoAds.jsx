@@ -17,7 +17,7 @@ function MoreInfoAds() {
   const setRefresh = (status) => {
     setIsRefresh(status);
   }
-
+ 
   useEffect(() => {
     if (isRefresh) {
       getOneResidence(id).then((data) => setDetailAdd(data));
@@ -42,7 +42,7 @@ function MoreInfoAds() {
 
   return (
     <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
-      <div style={{ display: 'flex', flexDirection: 'column', maxWidth: '1200px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column',width: '1200px', maxWidth: '1200px' }}>
         <DetailTitle
           title={detailAdd.titulo_residencia}
           city={detailAdd.ciudad_residencia}

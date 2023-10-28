@@ -16,7 +16,7 @@ function GuestCard({ idResidencia, imagen, titulo, ciudad, pais, fechaIni, fecha
             <Tooltip title={/* description */ `Clic para ver más detalles`} placement="right">
               <img
                 className="img-guest-card-carousel"
-                src={/* imagen === "Sin imagen" ? defaultLogo : */imagen}
+                src={/* imagen === "Sin imagen" ? defaultLogo : */imagen[0]}
                 alt="Algo salió mal..."
               />
               {/* <ImgCarouselCard imagen={imagen}/> */}

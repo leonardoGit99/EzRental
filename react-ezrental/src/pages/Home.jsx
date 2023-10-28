@@ -45,7 +45,7 @@ function Home() {
           }, pageSize: 15,
         }}
         locale={customEmptyMessage}
-        dataSource={residences.filter(residence => residence.estado_residencia === "Publicado")}
+        dataSource={residences.filter(residence => residence.estado_residencia[0] === "Publicado")}
         renderItem={(residence) => (
           <List.Item
             style={
@@ -59,12 +59,12 @@ function Home() {
           >
             <GuestCard
               idResidencia={residence.id_residencia}
-              imagen={residence.imagen}
+              imagen={residence.imagenes}
               titulo={residence.titulo_residencia}
               ciudad={residence.ciudad_residencia}
               pais={residence.pais_residencia}
-              fechaIni={residence.fecha_inicio_estado ? residence.fecha_inicio_estado.split('T')[0].toString() : 'Sin fecha'}
-              fechaFin={residence.fecha_fin_estado ? residence.fecha_fin_estado.split('T')[0].toString() : 'Sin fecha'}
+              fechaIni={residence.fecha_inicio_estado[0] ? residence.fecha_inicio_estado[0].split('T')[0].toString() : 'Sin fecha'}
+              fechaFin={residence.fecha_fin_estado[0] ? residence.fecha_fin_estado[0].split('T')[0].toString() : 'Sin fecha'}
               precio={residence.precio_residencia}
               setRefresh={setRefresh}
             />

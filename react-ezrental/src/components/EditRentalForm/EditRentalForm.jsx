@@ -274,8 +274,8 @@ function EditRentalForm() {
                   className='textArea'
                   placeholder="Ingresa una descripción del espacio"
                   showCount
-                  maxLength={1000}
-                  autoSize={{ minRows: 5, maxRows: 20 }}
+                  maxLength={150}
+                  autoSize={{ minRows: 5, maxRows: 5 }}
                   onChange={handleChange}
                 />
               </Form.Item>
@@ -639,40 +639,46 @@ function EditRentalForm() {
 
               </Form.Item>
 
-              <div className="dates-edit-form-container">
-                <h3>Fechas de duracion del anuncio</h3>
-                <Form.Item
-                  name="rangeDates"
-                  label="Fechas Inicio/Fin"
-                  rules={[
-                    { required: editBody.estado === "Publicado", message: "" },
-                    {
-                      validator: (_, values) => {
-                        if ((rangeDatesBody[0] && rangeDatesBody[1]) !== null) {
-                          editBody.fechaIniEst = rangeDatesBody[0];
-                          editBody.fechaFinEst = rangeDatesBody[1];
-                          if ((editBody.fechaIniEst && editBody.fechaFinEst) !== null) {
-                            return Promise.resolve();
-                          } else {
-                            return Promise.reject("Por favor, seleccione fechas");
-                          }
-                        } else if ((editBody.fechaIniEst && editBody.fechaFinEst) !== null) {
-                          return Promise.resolve();
-                        } else {
-                          return Promise.reject("Por favor, seleccione fechas");
-                        }
+              {editBody.estado === "Inactivo" ? null:
+                (
+                  <div className="dates-edit-form-container">
+                    <h3>Fechas de duracion del anuncio</h3>
+                    <Form.Item
+                      name="rangeDates"
+                      label="Fechas Inicio/Fin"
 
-                      }
-                    }
-                  ]}
-                >
-                  <RangePicker
-                    placeholder={['Fecha Inicio', 'Fecha Fin']}
-                    onChange={handleDateChange}
-                    defaultValue={rangeDatesBody}
-                  />
-                </Form.Item>
-              </div>
+                      rules={[
+                        { required: editBody.estado === "Publicado", message: "" },
+                        {
+                          validator: (_, values) => {
+                            if ((rangeDatesBody[0] && rangeDatesBody[1]) !== null) {
+                              editBody.fechaIniEst = rangeDatesBody[0];
+                              editBody.fechaFinEst = rangeDatesBody[1];
+                              if ((editBody.fechaIniEst && editBody.fechaFinEst) !== null) {
+                                return Promise.resolve();
+                              } else {
+                                return Promise.reject("Por favor, seleccione fechas");
+                              }
+                            } else if ((editBody.fechaIniEst && editBody.fechaFinEst) !== null) {
+                              return Promise.resolve();
+                            } else {
+                              return Promise.reject("Por favor, seleccione fechas");
+                            }
+
+                          }
+                        }
+                      ]}
+                      hasFeedback
+                    >
+                      <RangePicker
+                        placeholder={['Fecha Inicio', 'Fecha Fin']}
+                        onChange={handleDateChange}
+                        defaultValue={rangeDatesBody}
+                      />
+                    </Form.Item>
+                  </div>
+                )}
+
 
               <div className="checkin-checkout-edit-form-container">
                 <h3> Instrucciones de Check In y Check Out</h3>
