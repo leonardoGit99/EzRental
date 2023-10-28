@@ -1,7 +1,12 @@
 .edit-form-container {
-  border: solid 2px #000;
-  border-radius: 20px;
   margin: 10px 100px; 
+  background-color: rgba(255, 255, 255, 0.33);
+  box-shadow: 0px 8px 32px 0 rbga(0, 0, 255, 0.3);
+  backdrop-filter: blur(3px);
+  border: 2px outset #01c38e;
+  border-radius: 15px;
+  position: relative;
+  z-index: 1;
 }
 
 .edit-form-container>h2 {

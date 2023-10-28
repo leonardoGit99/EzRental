@@ -3,6 +3,7 @@ import { Button, Divider, Modal } from 'antd';
 import { CheckCircleTwoTone, CloseCircleTwoTone, PauseCircleTwoTone } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLock, faHouseCircleCheck, faTv, faBrush } from '@fortawesome/free-solid-svg-icons';
+import './detailsForHostOnlyStyles.css';
 
 function DetailsForHostOnly({ estadoResidencia, direccionResidencia, precioResidencia, fechaIni, fechaFin }) {
   const [privateModal, setPrivateModal] = useState(false);
@@ -16,7 +17,7 @@ function DetailsForHostOnly({ estadoResidencia, direccionResidencia, precioResid
 
   return (
     <div>
-      <Button type='primary' onClick={() => openPrivateInfoModal()}> <FontAwesomeIcon icon={faLock} /> <span>Ver Info Privada</span></Button>
+      <Button className="button-detail-for-host-only" type='primary' onClick={() => openPrivateInfoModal()}> <FontAwesomeIcon icon={faLock} /> <span>{`Detalles Privados`}</span></Button>
       <Modal
         open={privateModal}
         onCancel={() => closePrivateInfoModal()}

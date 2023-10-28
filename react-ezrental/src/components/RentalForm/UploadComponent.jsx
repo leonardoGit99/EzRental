@@ -4,7 +4,7 @@ import { Upload, Modal, message} from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import axios from "axios";
 
-function UploadComponent({urls, setUrls, fileList, setFileList}) {
+function UploadComponent({urls, setUrls, fileList, setFileList, setImageUploaded}) {
 
   const getBase64 = (file) =>
     new Promise((resolve, reject) => {
@@ -68,11 +68,12 @@ function UploadComponent({urls, setUrls, fileList, setFileList}) {
       axios
         .post("http://localhost:4000/api/upload", fmData, config)
         .then((res) => {
+          setImageUploaded(true);
           onSuccess(file);
           //añadir url recibida del response al array urls
           // urls.push(`https://drive.google.com/uc?export=view&id=${res.data.fileId}`);
           urls.push(res.data.imgUrl);
-
+          
           fileList.length > 9 ? message.info("Solo puede subir 10 fotos") : "";
         });
     } catch {
@@ -89,7 +90,7 @@ function UploadComponent({urls, setUrls, fileList, setFileList}) {
     //hacer peticion para eliminar de drive y eliminar de array de urls
     console.log("Indice del elemento borrado:  "+index+" - URL del elemento borrado: "+urls[index]);
     urls.splice(index, 1);
-
+    setImageUploaded(urls.length > 0);
   }
 
   const handleValidation = (file) => {

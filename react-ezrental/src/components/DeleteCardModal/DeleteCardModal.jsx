@@ -28,17 +28,18 @@ function DeleteCardModal({ visible, onClose, idResidencia, titulo, isRefresh, se
         }
         open={visible}
         onCancel={onClose}
-        footer={[
-          <Button id="boton" form="editForm" key="edit" danger type="primary" onClick={handleOk}>
-            Ok
-          </Button>,
-          <Button key="cancel" onClick={onClose}>
-            Cancelar
-          </Button>
-        ]}
+        footer={null}
         destroyOnClose="true"
       >
         <p>¿Está seguro que desea eliminar <span className="modal-delete-title">"{titulo}"</span>?</p>
+        <div className="buttons-modal-delete-container">
+          <Button id="boton" form="editForm" key="edit" danger type="primary" onClick={handleOk}>
+            Ok
+          </Button>
+          <Button key="cancel" onClick={onClose}>
+            Cancelar
+          </Button>
+        </div>
       </Modal>
     </>
   );

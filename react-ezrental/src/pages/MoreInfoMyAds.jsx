@@ -43,7 +43,7 @@ function MoreInfoMyAds() {
     console.log(imgsResidence);
   return (
     <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
-      <div style={{ display: 'flex', flexDirection: 'column', maxWidth: '1200px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', width: '1200px', maxWidth: '1200px' }}>
         <DetailTitle
           title={detailAdd.titulo_residencia}
           city={detailAdd.ciudad_residencia}

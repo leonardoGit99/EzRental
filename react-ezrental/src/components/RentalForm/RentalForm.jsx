@@ -14,6 +14,10 @@ function RentalForm() {
   const { RangePicker } = DatePicker;
   const [urls, setUrls] = useState([]);
   const [fileList, setFileList] = useState([]);
+  const [isImageUploaded, setIsImageUploaded] = useState(false);
+  const setImageUploaded=(status)=>{
+    setIsImageUploaded(status)
+  }
 
   let { id } = useParams();
   const isEdit = useSelector((state) => state.editRentalForm);
@@ -493,6 +497,7 @@ function RentalForm() {
                 setUrls={setUrls}
                 fileList={fileList}
                 setFileList={setFileList}
+                setImageUploaded={setImageUploaded}
               />
             </Form.Item>
 

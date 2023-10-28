@@ -3,7 +3,7 @@
     justify-content: center;
 }
 .img-container{
-    width: 55vw;
+    width: 40vw;
 }
 
 .carousel-detail-img{
@@ -11,9 +11,9 @@
 }
 
 .carousel-detail__img{
-    object-fit: cover !important;
+    object-fit: fill !important;
     margin: auto !important;
-    width: 55vw !important;
+    width: 40vw !important;
     height: 40vh !important;
 }
 
@@ -65,20 +65,20 @@
 
 @media (1024px <= width <=1200px) {
     .img-container{
-        width: 70vw;
+        width: 50vw;
     }
     .carousel-detail__img{
-        width: 90vw !important;
-        height: 42vh !important;
+        width: 50vw !important;
+        height: 50vh !important;
     }
 }
 
 @media (1200px <= width <=1440px) {
     .img-container{
-        width: 70vw;
+        width: 40vw;
     }
     .carousel-detail__img{
-        width: 70vw !important;
-        height: 45vh !important;
+        width: 40vw !important;
+        height: 40vh !important;
     }
 }

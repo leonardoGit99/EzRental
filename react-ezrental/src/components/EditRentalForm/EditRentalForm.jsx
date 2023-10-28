@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Button, Select, Checkbox, DatePicker, message } from 'antd';
+import { Form, Input, Button, Select, Checkbox, DatePicker, message, Divider } from 'antd';
 import { getImagesByResidence, getOneResidence, updateResidence } from '../../services/residences';
 import UploadComponent from '../RentalForm/UploadComponent';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -16,8 +16,17 @@ function EditRentalForm() {
   const [dataAd, setDataAd] = useState([]);
   const [imgsResidence, setImgsResidence] = useState([]);
   const [form] = Form.useForm();
+  const [isAtLeastOneChecked, setIsAtLeastOneChecked] = useState(false);
+  const [rangeDatesBody, setRangeDatesBody] = useState([null, null]);
+  const [isImageUploaded, setIsImageUploaded] = useState(false);
+  const setImageUploaded = (status) => {
+    setIsImageUploaded(status)
+  }
+  const [defaultDateRange, setDefaultDateRange] = useState([null, null]);
+  console.log(defaultDateRange);
+  console.log(rangeDatesBody);
   const [editBody, setEditBody] = useState({
-    tituloResid: '',
+    /* tituloResid: '',
     tipoResid: '',
     paisResid: '',
     ciudadResid: '',
@@ -48,9 +57,8 @@ function EditRentalForm() {
     estado: '',
     fechaIniEst: '',
     fechaFinEst: '',
-    imagen: urls
+    imagen: urls */
   });
-  const defaultValueRangePicker = [dayjs(editBody.fechaIniEst), dayjs(editBody.fechaFinEst)];
 
   const validarinputmayor0 = (_, value) => {
     if (value < 0) {
@@ -77,30 +85,54 @@ function EditRentalForm() {
   }
 
   const handleCheckedChange = (name) => {
-    setEditBody((prevEditBody) => ({
-      ...prevEditBody,
-      [name]: prevEditBody[name] === "true" ? "false" : "true",
-    }))
+    setEditBody((prevEditBody) => {
+      const updatedEditBody = {
+        ...prevEditBody,
+        [name]: prevEditBody[name] === "true" ? "false" : "true",
+      };
+      console.log(updatedEditBody);
+      const atLeastOneChecked = Object.values(updatedEditBody).some((value) => value === "true");
+      setIsAtLeastOneChecked(atLeastOneChecked);
+
+      return updatedEditBody;
+    });
   };
+
 
   const handleDateChange = (dates) => {
     const [initialDate, finalDate] = dates;
-    const initialDateFormat = dayjs(initialDate).format('YYYY-MM-DD');
-    const finalDateFormat = dayjs(finalDate).format('YYYY-MM-DD');
-    setEditBody({
-      ...editBody,
-      fechaIniEst: initialDateFormat,
-      fechaFinEst: finalDateFormat,
+    console.log(initialDate);
+    const rangeDatesFormat = [dayjs(initialDate, 'YYYY-MM-DD'), dayjs(finalDate, 'YYYY-MM-DD')]
+    /* const initialDateFormat = initialDate ? dayjs(initialDate).format('YYYY-MM-DD') : null;
+    const finalDateFormat = finalDate ? dayjs(finalDate).format('YYYY-MM-DD') : null; */
+    setEditBody((prevEditBody) => {
+      const updatedEditBody = {
+        ...prevEditBody, rangeDates: rangeDatesFormat,
+      }
+      setRangeDatesBody(updatedEditBody.rangeDates);
+      /*       console.log(updatedEditBody);
+      
+            const existInitialDate = updatedEditBody.fechaIniEst !== null ? true : false;
+            const existFinalDate = updatedEditBody.fechaFinEst !== null ? true : false;
+            if (existInitialDate === true && existFinalDate === true) {
+              setExistDates(true);
+            } */
+      return updatedEditBody;
     })
   };
 
   useEffect(() => {
-    getOneResidence(id).then((data) => setDataAd(data));
-  }, [])
+    const fetchData = async () => {
+      const data = await getOneResidence(id);
+      setDefaultDateRange([dayjs(data.fecha_inicio_estado), dayjs(data.fecha_fin_estado)]);
+      setDataAd(data);
+    }
+    fetchData();
+  }, [id])
 
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchImgs = async () => {
       const data = await getImagesByResidence(id);
       setUrls(data);
       setFileList(data.map((link, index) => ({
@@ -111,7 +143,8 @@ function EditRentalForm() {
       }))
       )
     }
-    fetchData();
+    fetchImgs();
+    setIsImageUploaded(true);
   }, [id]);
 
   useEffect(() => {
@@ -145,11 +178,12 @@ function EditRentalForm() {
       camaras: dataAd.camaras_segurid_residencia,
       detectorHumo: dataAd.humo_segurid_residencia,
       estado: dataAd.estado_residencia,
-      fechaIniciEst: dataAd.fecha_inicio_estado,
+      fechaIniEst: dataAd.fecha_inicio_estado,
       fechaFinEst: dataAd.fecha_fin_estado,
+      rangeDates: [dayjs(dataAd.fecha_inicio_estado), dayjs(dataAd.fecha_fin_estado)],
       imagen: urls
     })
-
+    setIsAtLeastOneChecked(true);
   }, [dataAd]);
 
   useEffect(() => {
@@ -161,6 +195,12 @@ function EditRentalForm() {
 
   const onFinish = async () => {
     try {
+      if ((rangeDatesBody[0] && rangeDatesBody[1]) !== null) {
+        editBody.fechaIniEst = rangeDatesBody[0];
+        editBody.fechaFinEst = rangeDatesBody[1];
+      }
+      delete editBody.rangeDates;
+      console.log(editBody);
       await updateResidence(editBody, id);
       navigate("/mis-anuncios");
       message.success("Modificación exitosa!");
@@ -178,6 +218,7 @@ function EditRentalForm() {
     <>
       <div className="edit-form-container">
         <h2>Formulario de Edición</h2>
+        <Divider dashed />
         <Form
           name="formularioEdicion"
           labelCol={{ span: 9 }}
@@ -193,6 +234,7 @@ function EditRentalForm() {
                 label="Estado del anuncio"
                 name="estado"
                 rules={[{ required: true, message: 'Por favor, selecciona un estado del anuncio.' }]}
+                hasFeedback
               >
                 <Select
                   className="select"
@@ -210,6 +252,7 @@ function EditRentalForm() {
                 label="Título de la Residencia"
                 rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa el título de la residencia.' }]
                 }
+                hasFeedback
               >
                 <Input
                   name="tituloResid"
@@ -224,6 +267,7 @@ function EditRentalForm() {
                 name="descripResid"
                 rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa una descripción del espacio.' }]
                 }
+                hasFeedback
               >
                 <Input.TextArea
                   name="descripResid"
@@ -241,6 +285,7 @@ function EditRentalForm() {
                 label="Dirección"
                 rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa la dirección.' }]
                 }
+                hasFeedback
               >
                 <Input
                   name="direcResid"
@@ -255,6 +300,7 @@ function EditRentalForm() {
                 label="País"
                 rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa el país.' }]
                 }
+                hasFeedback
               >
                 <Input
                   name="paisResid"
@@ -269,6 +315,7 @@ function EditRentalForm() {
                 label="Ciudad"
                 rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa la ciudad.' }]
                 }
+                hasFeedback
               >
                 <Input
                   name="ciudadResid"
@@ -282,6 +329,7 @@ function EditRentalForm() {
                 name="precioResid"
                 label="Precio"
                 rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa el precio de la residencia.' }, { validator: validarinputmayor0 }]}
+                hasFeedback
               >
                 <Input
                   name="precioResid"
@@ -298,6 +346,7 @@ function EditRentalForm() {
                 label="Tipo de Residencia"
                 rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, selecciona el tipo de residencia.' }]
                 }
+                hasFeedback
               >
                 <Select
                   className="select"
@@ -315,6 +364,7 @@ function EditRentalForm() {
                 name="tipoAlojam"
                 label="Tipo de Alojamiento"
                 rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, selecciona el tipo de alojamiento.' }]}
+                hasFeedback
               >
                 <Select
                   className="select"
@@ -332,6 +382,7 @@ function EditRentalForm() {
                 label="Número Máximo de dias"
                 rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa el numero maximo de dias.' }, { validator: validarinputmayor0 }]
                 }
+                hasFeedback
               >
                 <Input
                   name="diasMaxResid"
@@ -347,6 +398,7 @@ function EditRentalForm() {
                 label="Número Mínimo de dias"
                 rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa el numero minimo de dias.' }, { validator: validarinputmayor0 }]
                 }
+                hasFeedback
               >
                 <Input
                   name="diasMinResid"
@@ -361,6 +413,7 @@ function EditRentalForm() {
                 label="Número Máximo de Huéspedes"
                 rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa el numero maximo de Huesped.' }, { validator: validarinputmayor0 }]
                 }
+                hasFeedback
               >
                 <Input
                   name="huesMaxResid"
@@ -376,6 +429,7 @@ function EditRentalForm() {
                 label="Número de Camas"
                 rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa el número de camas.' }, { validator: validarinputmayor0 }]
                 }
+                hasFeedback
               >
                 <Input
                   name="camaResid"
@@ -391,6 +445,7 @@ function EditRentalForm() {
                 label="Número de Habitaciones"
                 rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa el número de habitaciones.' }, { validator: validarinputmayor0 }]
                 }
+                hasFeedback
               >
                 <Input
                   name="habitResid"
@@ -406,6 +461,7 @@ function EditRentalForm() {
                 label="Número de Baños"
                 rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa el número de baños.' }, { validator: validarinputmayor0 }]
                 }
+                hasFeedback
               >
                 <Input
                   name="banioResid"
@@ -420,16 +476,25 @@ function EditRentalForm() {
             <div className="col-2-edit-form">
               <h3>Servicios</h3>
               <Form.Item
-                name="wifi"
+                name="servicios"
                 label="Comodidades"
-                rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa el número de baños.' }, { validator: validarinputmayor0 }]
-                }
+                rules={[
+                  { required: editBody.estado === "Publicado" && !isAtLeastOneChecked },
+                  {
+                    validator: (_, values) => {
+                      if (isAtLeastOneChecked) {
+                        return Promise.resolve();
+                      } else {
+                        return Promise.reject();
+                      }
+                    }
+                  }
+                ]}
               >
                 <div className="amenities-group">
                   <div className="amenities-row">
                     <Checkbox
                       value="wifi"
-                      name="wifi"
                       checked={editBody.wifi === "true"}
                       onChange={() => { handleCheckedChange("wifi") }}
                     >
@@ -473,7 +538,20 @@ function EditRentalForm() {
               </Form.Item>
 
               <Form.Item
+                name="servicios"
                 label="Caracteristicas"
+                rules={[
+                  { required: editBody.estado === "Publicado" && !isAtLeastOneChecked },
+                  {
+                    validator: (_, values) => {
+                      if (isAtLeastOneChecked) {
+                        return Promise.resolve();
+                      } else {
+                        return Promise.reject();
+                      }
+                    }
+                  }
+                ]}
               >
                 <div className="amenities-group">
                   <div className="amenities-row">
@@ -523,7 +601,20 @@ function EditRentalForm() {
               </Form.Item>
 
               <Form.Item
+                name="servicios"
                 label="Seguridad"
+                rules={[
+                  { required: editBody.estado === "Publicado" && !isAtLeastOneChecked },
+                  {
+                    validator: (_, values) => {
+                      if (isAtLeastOneChecked) {
+                        return Promise.resolve();
+                      } else {
+                        return Promise.reject("Por favor, seleccione al menos un servicio");
+                      }
+                    }
+                  }
+                ]}
               >
                 <div className="amenities-group">
                   <div className="amenities-row">
@@ -551,12 +642,34 @@ function EditRentalForm() {
               <div className="dates-edit-form-container">
                 <h3>Fechas de duracion del anuncio</h3>
                 <Form.Item
+                  name="rangeDates"
                   label="Fechas Inicio/Fin"
+                  rules={[
+                    { required: editBody.estado === "Publicado", message: "" },
+                    {
+                      validator: (_, values) => {
+                        if ((rangeDatesBody[0] && rangeDatesBody[1]) !== null) {
+                          editBody.fechaIniEst = rangeDatesBody[0];
+                          editBody.fechaFinEst = rangeDatesBody[1];
+                          if ((editBody.fechaIniEst && editBody.fechaFinEst) !== null) {
+                            return Promise.resolve();
+                          } else {
+                            return Promise.reject("Por favor, seleccione fechas");
+                          }
+                        } else if ((editBody.fechaIniEst && editBody.fechaFinEst) !== null) {
+                          return Promise.resolve();
+                        } else {
+                          return Promise.reject("Por favor, seleccione fechas");
+                        }
+
+                      }
+                    }
+                  ]}
                 >
                   <RangePicker
                     placeholder={['Fecha Inicio', 'Fecha Fin']}
-                    // defaultValue={defaultValueRangePicker}
                     onChange={handleDateChange}
+                    defaultValue={rangeDatesBody}
                   />
                 </Form.Item>
               </div>
@@ -568,13 +681,14 @@ function EditRentalForm() {
                   label="Check In"
                   rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa la hora de check-in.' }]
                   }
+                  hasFeedback
                 >
                   <Input.TextArea
                     name="checkInResid"
                     className='textArea'
                     placeholder="Ingresa la hora de check-in"
                     showCount
-                    maxLength={1000}
+                    maxLength={150}
                     autoSize={{ minRows: 8, maxRows: 7 }}
                     onChange={handleChange}
                   />
@@ -584,13 +698,14 @@ function EditRentalForm() {
                   label="Check Out"
                   rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa la hora de check-out.' }]
                   }
+                  hasFeedback
                 >
                   <Input.TextArea
                     name="checkOutResid"
                     className='textArea'
                     placeholder="Ingresa la hora de check-out"
                     showCount
-                    maxLength={1000}
+                    maxLength={150}
                     autoSize={{ minRows: 8, maxRows: 7 }}
                     onChange={handleChange}
                   />
@@ -602,20 +717,29 @@ function EditRentalForm() {
           <div className="imgs-edit-form-flex-container">
             <Form.Item
               name="imagen"
-              rules={[{
-                min: 5,
-                message: "Ingrese al menos 5 imagenes",
-              }]}
+              rules={[
+                { required: editBody.estado === "Publicado" && !isImageUploaded },
+                {
+                  validator: (_, value) => {
+                    if (isImageUploaded) {
+                      return Promise.resolve();
+                    } else {
+                      return Promise.reject("Por favor, suba una imagen");
+                    }
+                  }
+                }
+              ]}
             >
               <UploadComponent
                 urls={urls}
                 setUrls={setUrls}
                 fileList={fileList}
                 setFileList={setFileList}
+                setImageUploaded={setImageUploaded}
               />
             </Form.Item>
           </div>
-
+          <Divider dashed />
           <Form.Item>
             <div className="btns-edit-form-flex-container">
               <div>
@@ -624,15 +748,15 @@ function EditRentalForm() {
                 </Button>
               </div>
               <div>
-                <Button htmlType="button" onClick={onCancel}>
+                <Button style={{ width: '10vw' }} htmlType="button" onClick={onCancel}>
                   Cancelar
                 </Button>
               </div>
             </div>
           </Form.Item>
 
-        </Form>
-      </div>
+        </Form >
+      </div >
     </>
   );
 

@@ -30,7 +30,7 @@ function EditCardModal({ visible, onClose, idResidencia, titulo, setRefresh, clo
         destroyOnClose="true"
       >
         <p>¿Está seguro que desea editar <span className='modal-delete-title'>"{titulo}"</span>?</p>
-        <div style={{display:"flex", justifyContent:"space-between"}}>
+        <div className="buttons-modal-edit-container">
           <Button id="boton" form="editForm" key="edit" type="primary" onClick={handleOk}>
             Ok
           </Button>
