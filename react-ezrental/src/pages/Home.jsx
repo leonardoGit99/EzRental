@@ -59,7 +59,7 @@ function Home() {
           >
             <GuestCard
               idResidencia={residence.id_residencia}
-              imagen={residence.imagenes}
+              imagen={residence.imagenes[0]}
               titulo={residence.titulo_residencia}
               ciudad={residence.ciudad_residencia}
               pais={residence.pais_residencia}
