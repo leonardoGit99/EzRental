@@ -22,42 +22,40 @@ function EditRentalForm() {
   const setImageUploaded = (status) => {
     setIsImageUploaded(status)
   }
-  const [defaultDateRange, setDefaultDateRange] = useState([null, null]);
-  console.log(defaultDateRange);
   console.log(rangeDatesBody);
   const [editBody, setEditBody] = useState({
-    /* tituloResid: '',
-    tipoResid: '',
-    paisResid: '',
-    ciudadResid: '',
-    direcResid: '',
-    camaResid: '',
-    habitResid: '',
-    banioResid: '',
-    descripResid: '',
-    huesMaxResid: '',
-    diasMaxResid: '',
-    diasMinResid: '',
-    precioResid: '',
-    checkInResid: '',
-    checkOutResid: '',
-    tipoAlojam: '',
-    wifi: '',
-    lavadora: '',
-    cocina: '',
-    televisor: '',
-    aireAcond: '',
-    psicina: '',
-    jacuzzi: '',
-    estacionamiento: '',
-    gim: '',
-    parrilla: '',
-    camaras: '',
-    detectorHumo: '',
-    estado: '',
-    fechaIniEst: '',
-    fechaFinEst: '',
-    imagen: urls */
+    /*     tituloResid: '',
+        tipoResid: '',
+        paisResid: '',
+        ciudadResid: '',
+        direcResid: '',
+        camaResid: '',
+        habitResid: '',
+        banioResid: '',
+        descripResid: '',
+        huesMaxResid: '',
+        diasMaxResid: '',
+        diasMinResid: '',
+        precioResid: '',
+        checkInResid: '',
+        checkOutResid: '',
+        tipoAlojam: '',
+        wifi: '',
+        lavadora: '',
+        cocina: '',
+        televisor: '',
+        aireAcond: '',
+        psicina: '',
+        jacuzzi: '',
+        estacionamiento: '',
+        gim: '',
+        parrilla: '',
+        camaras: '',
+        detectorHumo: '',
+        estado: '',
+        fechaIniEst: '',
+        fechaFinEst: '',
+        imagen: urls */
   });
 
   const validarinputmayor0 = (_, value) => {
@@ -93,7 +91,6 @@ function EditRentalForm() {
       console.log(updatedEditBody);
       const atLeastOneChecked = Object.values(updatedEditBody).some((value) => value === "true");
       setIsAtLeastOneChecked(atLeastOneChecked);
-
       return updatedEditBody;
     });
   };
@@ -121,14 +118,15 @@ function EditRentalForm() {
     })
   };
 
+
   useEffect(() => {
     const fetchData = async () => {
       const data = await getOneResidence(id);
-      setDefaultDateRange([dayjs(data.fecha_inicio_estado), dayjs(data.fecha_fin_estado)]);
       setDataAd(data);
     }
     fetchData();
   }, [id])
+
 
 
   useEffect(() => {
@@ -143,8 +141,8 @@ function EditRentalForm() {
       }))
       )
     }
-    fetchImgs();
     setIsImageUploaded(true);
+    fetchImgs();
   }, [id]);
 
   useEffect(() => {
@@ -180,27 +178,27 @@ function EditRentalForm() {
       estado: dataAd.estado_residencia,
       fechaIniEst: dataAd.fecha_inicio_estado,
       fechaFinEst: dataAd.fecha_fin_estado,
+      imagen: urls,
       rangeDates: [dayjs(dataAd.fecha_inicio_estado), dayjs(dataAd.fecha_fin_estado)],
-      imagen: urls
     })
     setIsAtLeastOneChecked(true);
-  }, [dataAd]);
+  }, [dataAd, urls]);
 
   useEffect(() => {
     form.setFieldsValue(editBody);
   }, [editBody]);
 
-  console.log(dataAd);
-  console.log(editBody);
 
   const onFinish = async () => {
     try {
-      if ((rangeDatesBody[0] && rangeDatesBody[1]) !== null) {
+      if (editBody.estado === "Inactivo") {
+        editBody.fechaIniEst = null;
+        editBody.fechaFinEst = null;
+      } else if ((rangeDatesBody[0] && rangeDatesBody[1]) !== null) {
         editBody.fechaIniEst = rangeDatesBody[0];
         editBody.fechaFinEst = rangeDatesBody[1];
       }
       delete editBody.rangeDates;
-      console.log(editBody);
       await updateResidence(editBody, id);
       navigate("/mis-anuncios");
       message.success("Modificación exitosa!");
@@ -234,7 +232,7 @@ function EditRentalForm() {
                 label="Estado del anuncio"
                 name="estado"
                 rules={[{ required: true, message: 'Por favor, selecciona un estado del anuncio.' }]}
-                hasFeedback
+
               >
                 <Select
                   className="select"
@@ -250,7 +248,7 @@ function EditRentalForm() {
               <Form.Item
                 name="tituloResid"
                 label="Título de la Residencia"
-                rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa el título de la residencia.' }]
+                rules={[{ required: ((editBody.estado === "Publicado") || (editBody.estado === "En Construcción") || (editBody.estado === "Previsualización") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, ingresa el título de la residencia.' }]
                 }
                 hasFeedback
               >
@@ -265,7 +263,7 @@ function EditRentalForm() {
               <Form.Item
                 label="Descripción del Espacio"
                 name="descripResid"
-                rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa una descripción del espacio.' }]
+                rules={[{ required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, ingresa una descripción del espacio.' }]
                 }
                 hasFeedback
               >
@@ -283,7 +281,7 @@ function EditRentalForm() {
               <Form.Item
                 name="direcResid"
                 label="Dirección"
-                rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa la dirección.' }]
+                rules={[{ required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, ingresa la dirección.' }]
                 }
                 hasFeedback
               >
@@ -298,7 +296,7 @@ function EditRentalForm() {
               <Form.Item
                 name="paisResid"
                 label="País"
-                rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa el país.' }]
+                rules={[{ required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, ingresa el país.' }]
                 }
                 hasFeedback
               >
@@ -313,7 +311,7 @@ function EditRentalForm() {
               <Form.Item
                 name="ciudadResid"
                 label="Ciudad"
-                rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa la ciudad.' }]
+                rules={[{ required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, ingresa la ciudad.' }]
                 }
                 hasFeedback
               >
@@ -328,7 +326,7 @@ function EditRentalForm() {
               <Form.Item
                 name="precioResid"
                 label="Precio"
-                rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa el precio de la residencia.' }, { validator: validarinputmayor0 }]}
+                rules={[{ required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, ingresa el precio de la residencia.' }, { validator: validarinputmayor0 }]}
                 hasFeedback
               >
                 <Input
@@ -344,7 +342,7 @@ function EditRentalForm() {
               <Form.Item
                 name="tipoResid"
                 label="Tipo de Residencia"
-                rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, selecciona el tipo de residencia.' }]
+                rules={[{ required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, selecciona el tipo de residencia.' }]
                 }
                 hasFeedback
               >
@@ -363,7 +361,7 @@ function EditRentalForm() {
               <Form.Item
                 name="tipoAlojam"
                 label="Tipo de Alojamiento"
-                rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, selecciona el tipo de alojamiento.' }]}
+                rules={[{ required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, selecciona el tipo de alojamiento.' }]}
                 hasFeedback
               >
                 <Select
@@ -380,7 +378,7 @@ function EditRentalForm() {
               <Form.Item
                 name="diasMaxResid"
                 label="Número Máximo de dias"
-                rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa el numero maximo de dias.' }, { validator: validarinputmayor0 }]
+                rules={[{ required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, ingresa el numero maximo de dias.' }, { validator: validarinputmayor0 }]
                 }
                 hasFeedback
               >
@@ -396,7 +394,7 @@ function EditRentalForm() {
               <Form.Item
                 name="diasMinResid"
                 label="Número Mínimo de dias"
-                rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa el numero minimo de dias.' }, { validator: validarinputmayor0 }]
+                rules={[{ required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, ingresa el numero minimo de dias.' }, { validator: validarinputmayor0 }]
                 }
                 hasFeedback
               >
@@ -411,7 +409,7 @@ function EditRentalForm() {
               <Form.Item
                 name="huesMaxResid"
                 label="Número Máximo de Huéspedes"
-                rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa el numero maximo de Huesped.' }, { validator: validarinputmayor0 }]
+                rules={[{ required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, ingresa el numero maximo de Huesped.' }, { validator: validarinputmayor0 }]
                 }
                 hasFeedback
               >
@@ -427,7 +425,7 @@ function EditRentalForm() {
               <Form.Item
                 name="camaResid"
                 label="Número de Camas"
-                rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa el número de camas.' }, { validator: validarinputmayor0 }]
+                rules={[{ required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, ingresa el número de camas.' }, { validator: validarinputmayor0 }]
                 }
                 hasFeedback
               >
@@ -443,7 +441,7 @@ function EditRentalForm() {
               <Form.Item
                 name="habitResid"
                 label="Número de Habitaciones"
-                rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa el número de habitaciones.' }, { validator: validarinputmayor0 }]
+                rules={[{ required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo") || (editBody.estado === "Inactivo")), message: 'Por favor, ingresa el número de habitaciones.' }, { validator: validarinputmayor0 }]
                 }
                 hasFeedback
               >
@@ -459,7 +457,7 @@ function EditRentalForm() {
               <Form.Item
                 name="banioResid"
                 label="Número de Baños"
-                rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa el número de baños.' }, { validator: validarinputmayor0 }]
+                rules={[{ required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, ingresa el número de baños.' }, { validator: validarinputmayor0 }]
                 }
                 hasFeedback
               >
@@ -479,7 +477,7 @@ function EditRentalForm() {
                 name="servicios"
                 label="Comodidades"
                 rules={[
-                  { required: editBody.estado === "Publicado" && !isAtLeastOneChecked },
+                  { required: ((editBody.estado === "Publicado") || (editBody.estado === "En Construcción") || (editBody.estado === "Previsualización") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")) && !isAtLeastOneChecked },
                   {
                     validator: (_, values) => {
                       if (isAtLeastOneChecked) {
@@ -541,7 +539,7 @@ function EditRentalForm() {
                 name="servicios"
                 label="Caracteristicas"
                 rules={[
-                  { required: editBody.estado === "Publicado" && !isAtLeastOneChecked },
+                  { required: ((editBody.estado === "Publicado") || (editBody.estado === "En Construcción") || (editBody.estado === "Previsualización") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")) && !isAtLeastOneChecked },
                   {
                     validator: (_, values) => {
                       if (isAtLeastOneChecked) {
@@ -604,7 +602,7 @@ function EditRentalForm() {
                 name="servicios"
                 label="Seguridad"
                 rules={[
-                  { required: editBody.estado === "Publicado" && !isAtLeastOneChecked },
+                  { required: ((editBody.estado === "Publicado") || (editBody.estado === "En Construcción") || (editBody.estado === "Previsualización") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")) && !isAtLeastOneChecked },
                   {
                     validator: (_, values) => {
                       if (isAtLeastOneChecked) {
@@ -639,16 +637,15 @@ function EditRentalForm() {
 
               </Form.Item>
 
-              {editBody.estado === "Inactivo" ? null:
+              {editBody.estado !== "En Construcción" && editBody.estado !== "Previsualización" && editBody.estado !== "Inactivo" ?
                 (
                   <div className="dates-edit-form-container">
                     <h3>Fechas de duracion del anuncio</h3>
                     <Form.Item
                       name="rangeDates"
                       label="Fechas Inicio/Fin"
-
                       rules={[
-                        { required: editBody.estado === "Publicado", message: "" },
+                        { required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado")), message: "" },
                         {
                           validator: (_, values) => {
                             if ((rangeDatesBody[0] && rangeDatesBody[1]) !== null) {
@@ -673,11 +670,14 @@ function EditRentalForm() {
                       <RangePicker
                         placeholder={['Fecha Inicio', 'Fecha Fin']}
                         onChange={handleDateChange}
-                        defaultValue={rangeDatesBody}
+                        disabledDate={(current) => {
+                          return dayjs().add(-1, 'days') >= current;
+                        }}
                       />
                     </Form.Item>
                   </div>
-                )}
+                ) : null
+              }
 
 
               <div className="checkin-checkout-edit-form-container">
@@ -685,7 +685,7 @@ function EditRentalForm() {
                 <Form.Item
                   name="checkInResid"
                   label="Check In"
-                  rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa la hora de check-in.' }]
+                  rules={[{ required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, ingresa la hora de check-in.' }]
                   }
                   hasFeedback
                 >
@@ -695,14 +695,14 @@ function EditRentalForm() {
                     placeholder="Ingresa la hora de check-in"
                     showCount
                     maxLength={150}
-                    autoSize={{ minRows: 8, maxRows: 7 }}
+                    autoSize={{ minRows: 8, maxRows: 8 }}
                     onChange={handleChange}
                   />
                 </Form.Item>
                 <Form.Item
                   name="checkOutResid"
                   label="Check Out"
-                  rules={[{ required: editBody.estado === "Publicado", message: 'Por favor, ingresa la hora de check-out.' }]
+                  rules={[{ required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, ingresa la hora de check-out.' }]
                   }
                   hasFeedback
                 >
@@ -712,7 +712,7 @@ function EditRentalForm() {
                     placeholder="Ingresa la hora de check-out"
                     showCount
                     maxLength={150}
-                    autoSize={{ minRows: 8, maxRows: 7 }}
+                    autoSize={{ minRows: 8, maxRows: 8 }}
                     onChange={handleChange}
                   />
                 </Form.Item>
@@ -724,7 +724,7 @@ function EditRentalForm() {
             <Form.Item
               name="imagen"
               rules={[
-                { required: editBody.estado === "Publicado" && !isImageUploaded },
+                { required: ((editBody.estado === "Publicado") || (editBody.estado === "En Construcción") || (editBody.estado === "Previsualización") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")) && !isImageUploaded },
                 {
                   validator: (_, value) => {
                     if (isImageUploaded) {

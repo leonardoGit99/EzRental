@@ -2,11 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, Select, Checkbox, DatePicker, message } from 'antd';
 import UploadComponent from './UploadComponent';
 import dayjs from "dayjs";
-import { createResidence, getOneResidence, updateResidence } from '../../services/residences';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
-import { setIsEditingRentalForm } from '../../store/slices/editRentalFormSlice';
-import { faL } from '@fortawesome/free-solid-svg-icons';
+import { createResidence } from '../../services/residences';
 import './rentalFormStyles.css';
 
 function RentalForm() {
@@ -18,11 +14,6 @@ function RentalForm() {
   const setImageUploaded=(status)=>{
     setIsImageUploaded(status)
   }
-
-  let { id } = useParams();
-  const isEdit = useSelector((state) => state.editRentalForm);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [dataAd, setDataAd] = useState([]);
 
   const [body, setBody] = useState({
