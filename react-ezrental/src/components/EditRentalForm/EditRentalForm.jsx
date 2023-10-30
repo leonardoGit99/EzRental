@@ -78,6 +78,10 @@ function EditRentalForm() {
       setEditBody({ ...editBody, [name]: value });
     } else if (name === "estadoAnuncio") {
       setEditBody({ ...editBody, ["estado"]: value });
+    } else if (name === "paisResid") {
+      setEditBody({ ...editBody, [name]: value, ciudadResid: null });
+    } else if (name === "ciudadResid") {
+      setEditBody({ ...editBody, [name]: value });
     }
     console.log(editBody);
   }
@@ -100,24 +104,20 @@ function EditRentalForm() {
     const [initialDate, finalDate] = dates;
     console.log(initialDate);
     const rangeDatesFormat = [dayjs(initialDate, 'YYYY-MM-DD'), dayjs(finalDate, 'YYYY-MM-DD')]
-    /* const initialDateFormat = initialDate ? dayjs(initialDate).format('YYYY-MM-DD') : null;
-    const finalDateFormat = finalDate ? dayjs(finalDate).format('YYYY-MM-DD') : null; */
     setEditBody((prevEditBody) => {
       const updatedEditBody = {
         ...prevEditBody, rangeDates: rangeDatesFormat,
       }
       setRangeDatesBody(updatedEditBody.rangeDates);
-      /*       console.log(updatedEditBody);
-      
-            const existInitialDate = updatedEditBody.fechaIniEst !== null ? true : false;
-            const existFinalDate = updatedEditBody.fechaFinEst !== null ? true : false;
-            if (existInitialDate === true && existFinalDate === true) {
-              setExistDates(true);
-            } */
       return updatedEditBody;
     })
   };
 
+  const countryToCities = {
+    Bolivia: ["La Paz", "Oruro", "Potosí", "Chuquisaca", "Cochabamba", "Tarija", "Santa Cruz", "Beni", "Pando"],
+    Perú: ["Amazonas", "Arequipa", "Ayacucho", "Cusco", "Junin", "Puno", "San Martín", "Piura", "Tacna", "Lima"],
+    Chile: ["Santiago de Chile", "Iquique", "Antofagasta", "Valparaíso", "Concepción", "Temuco", "Punta Arenas"]
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -178,7 +178,7 @@ function EditRentalForm() {
       estado: dataAd.estado_residencia,
       fechaIniEst: dataAd.fecha_inicio_estado,
       fechaFinEst: dataAd.fecha_fin_estado,
-      imagen: urls,
+      imagen: urls, 
       rangeDates: [dayjs(dataAd.fecha_inicio_estado), dayjs(dataAd.fecha_fin_estado)],
     })
     setIsAtLeastOneChecked(true);
@@ -272,7 +272,7 @@ function EditRentalForm() {
                   className='textArea'
                   placeholder="Ingresa una descripción del espacio"
                   showCount
-                  maxLength={150}
+                  maxLength={350}
                   autoSize={{ minRows: 5, maxRows: 5 }}
                   onChange={handleChange}
                 />
@@ -294,6 +294,48 @@ function EditRentalForm() {
               </Form.Item>
 
               <Form.Item
+                name="paisResid"
+                label="País"
+                rules={[{ required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, seleccione un país.' }]
+                }
+                hasFeedback
+              >
+                <Select
+                  className="select"
+                  placeholder="Selecciona tu país"
+                  options={Object.keys(countryToCities).map((country) => {
+                    return {
+                      label: `${country}`,
+                      value: `${country}`,
+                    };
+                  })}
+                  onChange={(value) => handleSelectChange(value, "paisResid")}
+                >
+                </Select>
+              </Form.Item>
+
+              <Form.Item
+                name="ciudadResid"
+                label="Ciudad"
+                rules={[{ required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, seleccione una ciudad.' }]
+                }
+                hasFeedback
+              >
+                <Select
+                  className="select"
+                  placeholder="Selecciona tu ciudad"
+                  options={
+                    countryToCities[editBody.paisResid]?.map((city) => ({
+                      label: `${city}`,
+                      value: `${city}`
+                    }))
+                  }
+                  onChange={(value) => handleSelectChange(value, "ciudadResid")}
+                >
+                </Select>
+              </Form.Item>
+
+              {/* <Form.Item
                 name="paisResid"
                 label="País"
                 rules={[{ required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, ingresa el país.' }]
@@ -321,7 +363,7 @@ function EditRentalForm() {
                   placeholder="Ingresa la ciudad"
                   onChange={handleChange}
                 />
-              </Form.Item>
+              </Form.Item> */}
 
               <Form.Item
                 name="precioResid"
@@ -637,7 +679,7 @@ function EditRentalForm() {
 
               </Form.Item>
 
-              {editBody.estado !== "En Construcción" && editBody.estado !== "Previsualización" && editBody.estado !== "Inactivo" ?
+              { editBody.estado !== "En Construcción" && editBody.estado !== "Previsualización" && editBody.estado !== "Inactivo" ?
                 (
                   <div className="dates-edit-form-container">
                     <h3>Fechas de duracion del anuncio</h3>
@@ -668,6 +710,7 @@ function EditRentalForm() {
                       hasFeedback
                     >
                       <RangePicker
+                        className="range-picker-edit-form"
                         placeholder={['Fecha Inicio', 'Fecha Fin']}
                         onChange={handleDateChange}
                         disabledDate={(current) => {
@@ -694,7 +737,7 @@ function EditRentalForm() {
                     className='textArea'
                     placeholder="Ingresa la hora de check-in"
                     showCount
-                    maxLength={150}
+                    maxLength={800}
                     autoSize={{ minRows: 8, maxRows: 8 }}
                     onChange={handleChange}
                   />
@@ -711,7 +754,7 @@ function EditRentalForm() {
                     className='textArea'
                     placeholder="Ingresa la hora de check-out"
                     showCount
-                    maxLength={150}
+                    maxLength={800}
                     autoSize={{ minRows: 8, maxRows: 8 }}
                     onChange={handleChange}
                   />

@@ -21,6 +21,7 @@
 .app-header-container {
   margin: 0 !important;
   padding: 0 !important;
+  height: 61px;
   font-family: 'Lato', sans-serif;
   /* background-color: rgb(163, 249, 77); *//
 }

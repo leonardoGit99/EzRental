@@ -1,6 +1,5 @@
 import React from 'react';
-import logoLizardTech from '../../assets/logoLizardTech.png';
-import EzRentalLogo from '../../assets/EzRental Transparente.png'
+import EzRentalLogo from '../../assets/EzRental Transparente v2.png'
 import './logoStyles.css';
 
 function Logo() {
