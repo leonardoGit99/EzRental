@@ -3,7 +3,7 @@ import RentalForm from "../components/RentalForm/RentalForm";
 
 
 function Addad() {
-
+ 
   return (
     <>
       <RentalForm />

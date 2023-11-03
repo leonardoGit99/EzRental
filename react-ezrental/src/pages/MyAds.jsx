@@ -3,23 +3,17 @@ import { List } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import homePageEnDesarrollo from '../assets/homePageEnDesarrollo.jpg';
 import HostCard from '../components/HostCard/HostCard';
-import { getAllResidences } from '../services/residences';
+import { getAllResidences, getImagesByResidence } from '../services/residences';
 
 function MyAds() {
   const [residences, setResidences] = useState([]);
   const [isRefresh, setIsRefresh] = useState(true);
+/*   const [urls, setUrls] = useState([]);
+  const [fileList, setFileList] = useState([]); */
 
   const setRefresh = (status) => {
     setIsRefresh(status);
   }
-  // console.log(isRefresh);
-  /*   async function fetchAllResidencesByUser() {
-      //"http://localhost:4000/resid"
-      //`${process.env.REACT_APP_SERVERURL}/resid`
-      const response = await fetch(`http://localhost:4000/resid`);
-      const jsonData = await response.json();
-      setResidences(jsonData);
-    } */
 
   useEffect(() => {
     if (isRefresh) {
@@ -27,6 +21,21 @@ function MyAds() {
       setRefresh(false);
     }
   }, [setRefresh, isRefresh]);
+
+   useEffect(() => {
+    const fetchData = async () => {
+      const data = await getImagesByResidence(8);
+      setUrls(data);
+      setFileList(data.map((link, index) => ({
+        uid: `-1-${index}`,
+        name: `File ${index}`,
+        status: 'done',
+        url: link,
+      }))
+      )
+    }
+    fetchData();
+  }, [residences.id]); 
 
   const customEmptyMessage = {
     emptyText: (
@@ -66,16 +75,14 @@ function MyAds() {
             }>
             <HostCard
               idResidencia={residence.id_residencia}
-              imagen={residence.imagen}
+              imagen={""/* urls */}
               titulo={residence.titulo_residencia}
               ciudad={residence.ciudad_residencia}
               pais={residence.pais_residencia}
-              fechaIni={residence.fecha_inicio_estado ? residence.fecha_inicio_estado.split('T')[0].toString() : 'Fecha inicio'}
-              fechaFin={residence.fecha_fin_estado ? residence.fecha_fin_estado.split('T')[0].toString() : 'Fecha fin'}
+              fechaIni={residence.fecha_inicio_estado ? residence.fecha_inicio_estado.split('T')[0].toString() : 'Sin fecha'}
+              fechaFin={residence.fecha_fin_estado ? residence.fecha_fin_estado.split('T')[0].toString() : 'Sin fecha'}
               precio={residence.precio_residencia}
-              estadoPublicado={residence.estado_publicado}
-              estadoPausado={residence.estado_pausado}
-              estadoInactivo={residence.estado_inactivo}
+              estadoResidencia={residence.estado_residencia}
               isRefresh={isRefresh}
               setRefresh={setRefresh}
             />

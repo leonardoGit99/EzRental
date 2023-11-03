@@ -1,44 +1,18 @@
-.edit-modal{
-    width: 30vw !important;
-    text-align: center;
+.edit-modal {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 34vw !important;
+  text-align: center;
 }
 
-.modal-delete-title{
+.modal-delete-title {
   font-weight: 600;
 }
 
-@media only screen and (min-width: 280px) and (max-width: 320px) {
-    .edit-modal{
-        width: 75vw !important;
-    }
-  }
+ 
 
-@media only screen and (min-width: 320px) and (max-width: 480px) {
-    .edit-modal{
-        width: 75vw !important;
-    }
-  }
-
-  @media only screen and (min-width: 480px) and (max-width: 768px) {
-    .edit-modal{
-        width: 50vw !important;
-    }
-  }
-
-  @media only screen and (min-width: 768px) and (max-width: 1024px) {
-    .edit-modal{
-        width: 35vw !important;
-    }
-  }
-
-  @media only screen and (min-width: 1024px) and (max-width: 1200px) {
-    .edit-modal{
-        width: 30vw !important;
-    }
-  }
-
-  @media only screen and (min-width: 1200px) and (max-width: 1440px) {
-    .edit-modal{
-        width: 30vw !important;
-    }
-  }
+.buttons-modal-edit-container {
+  display: flex;
+  justify-content: center;
+}

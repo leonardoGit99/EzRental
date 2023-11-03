@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { Button, Divider, Modal } from 'antd';
 import { CheckCircleTwoTone, CloseCircleTwoTone, PauseCircleTwoTone } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLock } from '@fortawesome/free-solid-svg-icons';
+import { faLock, faHouseCircleCheck, faTv, faBrush } from '@fortawesome/free-solid-svg-icons';
+import './detailsForHostOnlyStyles.css';
 
-function DetailsForHostOnly({ estadoPublicado, estadoPausado, estadoInactivo, direccionResidencia, precioResidencia, fechaIni, fechaFin }) {
+function DetailsForHostOnly({ estadoResidencia, direccionResidencia, precioResidencia, fechaIni, fechaFin }) {
   const [privateModal, setPrivateModal] = useState(false);
   const openPrivateInfoModal = () => {
     setPrivateModal(true);
@@ -16,7 +17,7 @@ function DetailsForHostOnly({ estadoPublicado, estadoPausado, estadoInactivo, di
 
   return (
     <div>
-      <Button type='primary' onClick={() => openPrivateInfoModal()}> <FontAwesomeIcon icon={faLock} /> <span>Ver Info Privada</span></Button>
+      <Button className="button-detail-for-host-only" type='primary' onClick={() => openPrivateInfoModal()}> <FontAwesomeIcon icon={faLock} /> <span>{`Detalles Privados`}</span></Button>
       <Modal
         open={privateModal}
         onCancel={() => closePrivateInfoModal()}
@@ -29,9 +30,12 @@ function DetailsForHostOnly({ estadoPublicado, estadoPausado, estadoInactivo, di
           <b>Fecha Fin</b> <br /> {fechaFin}  <Divider />
           <b>Precio</b> <br /> Bs. {precioResidencia} <Divider />
           <b>Estado del anuncio</b><br />
-          {estadoPublicado === 'true' ? <span style={{ fontWeight: '600' }}><CheckCircleTwoTone twoToneColor="#2AD06D" /> Publicado</span> : ''}
-          {estadoPausado === 'true' ? <span style={{ fontWeight: '600' }}><PauseCircleTwoTone twoToneColor="#F28808" /> Pausado</span> : ''}
-          {estadoInactivo === 'true' ? <span style={{ fontWeight: '600' }}><CloseCircleTwoTone twoToneColor="#FF4040" /> Inactivo</span> : ''} <Divider />
+          {estadoResidencia === "Publicado" ? <span style={{ fontWeight: '600' }}><CheckCircleTwoTone twoToneColor="#2AD06D" /> Publicado</span> : ''}
+          {estadoResidencia === "Pausado" ? <span style={{ fontWeight: '600' }}><PauseCircleTwoTone twoToneColor="#F28808" /> Pausado</span> : ''}
+          {estadoResidencia === "Inactivo" ? <span style={{ fontWeight: '600' }}><CloseCircleTwoTone twoToneColor="#FF4040" /> Inactivo</span> : ''}
+          {estadoResidencia === "Alquilado" ? <span style={{ fontWeight: '600' }}><FontAwesomeIcon icon={faHouseCircleCheck} /> Alquilado</span> : ''} 
+          {estadoResidencia === "Previsualización" ? <span style={{ fontWeight: '700' }}><FontAwesomeIcon icon={faTv} /> Previsualización </span> : ''} 
+          {estadoResidencia === "En construcción" ? <span style={{ fontWeight: '700' }}><FontAwesomeIcon icon={faBrush} /> En construcción </span> : ''} <Divider />
         </div>
       </Modal>
     </div>

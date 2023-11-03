@@ -1,0 +1,10 @@
+.button-detail-for-host-only{
+    margin-top: 2vh;
+    margin-right: 0;
+    padding: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    white-space: break-spaces;
+    height: 6vh;
+}

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, Tooltip } from 'antd';
-import ImgCarouselCard from '../ImgCarouselCard/ImgCarouselCard';
 import './guestCardStyles.css';
 
 function GuestCard({ idResidencia, imagen, titulo, ciudad, pais, fechaIni, fechaFin, precio, setRefresh }) {
