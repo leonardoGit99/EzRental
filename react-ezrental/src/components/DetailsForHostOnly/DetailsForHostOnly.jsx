@@ -35,7 +35,7 @@ function DetailsForHostOnly({ estadoResidencia, direccionResidencia, precioResid
           {estadoResidencia === "Inactivo" ? <span style={{ fontWeight: '600' }}><CloseCircleTwoTone twoToneColor="#FF4040" /> Inactivo</span> : ''}
           {estadoResidencia === "Alquilado" ? <span style={{ fontWeight: '600' }}><FontAwesomeIcon icon={faHouseCircleCheck} /> Alquilado</span> : ''} 
           {estadoResidencia === "Previsualización" ? <span style={{ fontWeight: '700' }}><FontAwesomeIcon icon={faTv} /> Previsualización </span> : ''} 
-          {estadoResidencia === "En construcción" ? <span style={{ fontWeight: '700' }}><FontAwesomeIcon icon={faBrush} /> En construcción </span> : ''} <Divider />
+          {estadoResidencia === "En Construcción" ? <span style={{ fontWeight: '600' }}><FontAwesomeIcon icon={faBrush} /> En Construcción </span> : ''} <Divider />
         </div>
       </Modal>
     </div>

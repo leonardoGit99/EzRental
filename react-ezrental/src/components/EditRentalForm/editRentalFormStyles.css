@@ -16,7 +16,6 @@
 .flex-container-col-1-2-edit-form {
   display: flex;
   justify-content: space-around;
-  align-items: center;
   margin-bottom: 40px;
   flex-wrap: wrap;
 }
@@ -92,4 +91,8 @@
   /* Alinear elementos en cada fila a la izquierda */
   margin-right: 20px;
   /* Espacio entre las dos columnas */
+}
+
+.range-picker-edit-form{
+  width: 20vw !important;
 }

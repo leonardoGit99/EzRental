@@ -12,7 +12,7 @@ function EditCardModal({ visible, onClose, idResidencia, titulo, setRefresh, clo
   const navigate = useNavigate();
   const handleOk = () => {
     /*     dispatch(setIsEditingRentalForm(true)); // Cambiar el estado global de editRentalFormSlice */
-    navigate(`/editar-anuncio/${idResidencia}`);
+    navigate(`/mis-anuncios/editar-anuncio/${idResidencia}`);
   }
 
   return (

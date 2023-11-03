@@ -9,7 +9,7 @@ import DetailsForHostOnly from '../components/DetailsForHostOnly/DetailsForHostO
 import { getImagesByResidence, getOneResidence, getServicesByResidence } from '../services/residences';
 
 function MoreInfoMyAds() {
-  let { id } = useParams();
+  let { idMyAd } = useParams();
   const [detailAdd, setDetailAdd] = useState([]);
   const [imgsResidence, setImgsResidence] = useState([]);
   const [detailServices, setDetailServices] = useState({});
@@ -21,21 +21,21 @@ function MoreInfoMyAds() {
 
   useEffect(() => {
     if (isRefresh) {
-      getOneResidence(id).then((data) => setDetailAdd(data));
+      getOneResidence(idMyAd).then((data) => setDetailAdd(data));
       setRefresh(false);
     }
   }, [setRefresh, isRefresh]);
 
   useEffect(() => {
     if (isRefresh) {
-      getServicesByResidence(id).then((data) => setDetailServices(data));
+      getServicesByResidence(idMyAd).then((data) => setDetailServices(data));
       setRefresh(false);
     }
   }, [setRefresh, isRefresh]);
 
   useEffect(() => {
     if (isRefresh) {
-      getImagesByResidence(id).then((data) => setImgsResidence(data))
+      getImagesByResidence(idMyAd).then((data) => setImgsResidence(data))
       setRefresh(false);
     }
   }, [setRefresh, isRefresh]);
@@ -43,18 +43,18 @@ function MoreInfoMyAds() {
     console.log(imgsResidence);
   return (
     <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
-      <div style={{ display: 'flex', flexDirection: 'column', width: '1200px', maxWidth: '1200px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', width: '1200px', maxWidth: '1200px'}}>
         <DetailTitle
           title={detailAdd.titulo_residencia}
           city={detailAdd.ciudad_residencia}
           country={detailAdd.pais_residencia}
-        >
+        > 
 
           <DetailsForHostOnly
             estadoResidencia={detailAdd.estado_residencia}
             direccionResidencia={detailAdd.direccion_residencia}
             precioResidencia={detailAdd.precio_residencia}
-            fechaIni={detailAdd.fecha_inicio_estado ? detailAdd.fecha_inicio_estado.split('T')[0].toString() : 'Sin fecha'}
+            fechaIni={detailAdd.fecha_inicio_estado? detailAdd.fecha_inicio_estado.split('T')[0].toString() : 'Sin fecha'}
             fechaFin={detailAdd.fecha_fin_estado ? detailAdd.fecha_fin_estado.split('T')[0].toString() : 'Sin fecha'}
           />
 

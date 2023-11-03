@@ -22,7 +22,7 @@ function MyAds() {
     }
   }, [setRefresh, isRefresh]);
 
-   useEffect(() => {
+/*    useEffect(() => {
     const fetchData = async () => {
       const data = await getImagesByResidence(8);
       setUrls(data);
@@ -35,7 +35,7 @@ function MyAds() {
       )
     }
     fetchData();
-  }, [residences.id]); 
+  }, [residences.id]);  */
 
   const customEmptyMessage = {
     emptyText: (
@@ -75,14 +75,14 @@ function MyAds() {
             }>
             <HostCard
               idResidencia={residence.id_residencia}
-              imagen={""/* urls */}
+              imagen={residence.imagenes[0]}
               titulo={residence.titulo_residencia}
               ciudad={residence.ciudad_residencia}
               pais={residence.pais_residencia}
-              fechaIni={residence.fecha_inicio_estado ? residence.fecha_inicio_estado.split('T')[0].toString() : 'Sin fecha'}
-              fechaFin={residence.fecha_fin_estado ? residence.fecha_fin_estado.split('T')[0].toString() : 'Sin fecha'}
+              fechaIni={residence.fecha_inicio_estado[0] ? residence.fecha_inicio_estado[0].split('T')[0].toString() : 'Sin fecha'}
+              fechaFin={residence.fecha_fin_estado[0] ? residence.fecha_fin_estado[0].split('T')[0].toString() : 'Sin fecha'}
               precio={residence.precio_residencia}
-              estadoResidencia={residence.estado_residencia}
+              estadoResidencia={residence.estado_residencia[0]}
               isRefresh={isRefresh}
               setRefresh={setRefresh}
             />

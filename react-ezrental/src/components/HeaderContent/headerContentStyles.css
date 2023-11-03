@@ -3,6 +3,7 @@
     justify-content: space-between;
     align-items: center;
     background-color: lightskyblue;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
     color: #fff;
     font-size: 14px;
     font-weight: bold;

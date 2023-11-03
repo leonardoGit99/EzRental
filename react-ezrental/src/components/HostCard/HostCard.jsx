@@ -39,7 +39,7 @@ function HostCard({ idResidencia, imagen, titulo, ciudad, pais, fechaIni, fechaF
           <img
             className='img-host-card'
             alt="Algo salio mal..."
-            src={/* imagen === "Sin imagen" ? defaultLogo : */ imagen[0]}
+            src={/* imagen === "Sin imagen" ? defaultLogo : */ imagen}
           />
         }
         actions={[
@@ -85,7 +85,7 @@ function HostCard({ idResidencia, imagen, titulo, ciudad, pais, fechaIni, fechaF
                   {estadoResidencia === "Inactivo" ? <span style={{ fontWeight: '700' }}><CloseCircleTwoTone twoToneColor="#FF4040" /> Inactivo </span> : ''}
                   {estadoResidencia === "Alquilado" ? <span style={{ fontWeight: '700' }}><FontAwesomeIcon icon={faHouseCircleCheck} /> Alquilado </span> : ''}
                   {estadoResidencia === "Previsualización" ? <span style={{ fontWeight: '700' }}><FontAwesomeIcon icon={faTv} /> Previsualización </span> : ''}
-                  {estadoResidencia === "En construcción" ? <span style={{ fontWeight: '700' }}><FontAwesomeIcon icon={faBrush} /> En construcción </span> : ''}
+                  {estadoResidencia === "En Construcción" ? <span style={{ fontWeight: '700' }}><FontAwesomeIcon icon={faBrush} /> En Construcción </span> : ''}
                 </div>
               }
             />
