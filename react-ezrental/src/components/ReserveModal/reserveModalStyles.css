@@ -1,0 +1,23 @@
+.reserve-modal {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 22vw !important;
+  text-align: center;
+}
+
+
+.range-picker-reserve {
+  width: 20vw !important;
+}
+
+.select-number-max-guests-reserve {
+  width: 20vw !important;
+}
+
+.btns-reserve-form-flex-container{
+  display: flex;
+  justify-content: space-between;
+  padding: 0;
+  margin: 0;
+}

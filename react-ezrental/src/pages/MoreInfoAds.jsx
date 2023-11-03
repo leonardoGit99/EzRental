@@ -6,35 +6,37 @@ import DetailDescription from '../components/DetailDescription/DetailDescription
 import DetailOffers from '../components/DetailOffers/DetailOffers';
 import DetailCheckInOut from '../components/DetailCheckInOut/DetailCheckInOut';
 import { getImagesByResidence, getOneResidence, getServicesByResidence } from '../services/residences';
+import DetailsForGuestOnly from '../components/DetailsForGuestOnly/DetailsForGuestOnly';
 
 function MoreInfoAds() {
-  let { id } = useParams();
+  let { idAd } = useParams();
   const [detailAdd, setDetailAdd] = useState([]);
   const [detailServices, setDetailServices] = useState({});
   const [imgsResidence, setImgsResidence] = useState([]);
   const [isRefresh, setIsRefresh] = useState(true);
 
+
   const setRefresh = (status) => {
     setIsRefresh(status);
   }
- 
+
   useEffect(() => {
     if (isRefresh) {
-      getOneResidence(id).then((data) => setDetailAdd(data));
+      getOneResidence(idAd).then((data) => setDetailAdd(data));
       setRefresh(false);
     }
   }, [setRefresh, isRefresh]);
 
   useEffect(() => {
     if (isRefresh) {
-      getServicesByResidence(id).then((data) => setDetailServices(data))
+      getServicesByResidence(idAd).then((data) => setDetailServices(data))
       setRefresh(false);
     }
   }, [setRefresh, isRefresh]);
 
   useEffect(() => {
     if (isRefresh) {
-      getImagesByResidence(id).then((data) => setImgsResidence(data))
+      getImagesByResidence(idAd).then((data) => setImgsResidence(data))
       setRefresh(false);
     }
   }, [setRefresh, isRefresh]);
@@ -42,12 +44,21 @@ function MoreInfoAds() {
 
   return (
     <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
-      <div style={{ display: 'flex', flexDirection: 'column',width: '1200px', maxWidth: '1200px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', width: '1200px', maxWidth: '1200px' }}>
         <DetailTitle
           title={detailAdd.titulo_residencia}
           city={detailAdd.ciudad_residencia}
           country={detailAdd.pais_residencia}
-        />
+          >
+          <DetailsForGuestOnly
+            numberMaxOfGuests={detailAdd.huesped_max_residencia}
+            initialDate = {detailAdd.fecha_inicio_estado? detailAdd.fecha_inicio_estado.split('T')[0].toString():null}
+            finalDate = {detailAdd.fecha_fin_estado? detailAdd.fecha_fin_estado.split('T')[0].toString():null}
+            daysMin = {detailAdd.dias_min_residencia}
+            daysMax = {detailAdd.dias_max_residencia}
+          />
+
+        </DetailTitle>
 
         <DetailImgs
           images={imgsResidence}

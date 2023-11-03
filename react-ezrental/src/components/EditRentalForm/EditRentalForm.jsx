@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 import "./editRentalFormStyles.css"
 
 function EditRentalForm() {
-  let { id } = useParams();
+  let { idMyAd } = useParams();
   const navigate = useNavigate();
   const { Option } = Select;
   const { RangePicker } = DatePicker;
@@ -121,17 +121,17 @@ function EditRentalForm() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getOneResidence(id);
+      const data = await getOneResidence(idMyAd);
       setDataAd(data);
     }
     fetchData();
-  }, [id])
+  }, [idMyAd])
 
 
 
   useEffect(() => {
     const fetchImgs = async () => {
-      const data = await getImagesByResidence(id);
+      const data = await getImagesByResidence(idMyAd);
       setUrls(data);
       setFileList(data.map((link, index) => ({
         uid: `-1-${index}`,
@@ -143,7 +143,7 @@ function EditRentalForm() {
     }
     setIsImageUploaded(true);
     fetchImgs();
-  }, [id]);
+  }, [idMyAd]);
 
   useEffect(() => {
     setEditBody({
@@ -199,7 +199,7 @@ function EditRentalForm() {
         editBody.fechaFinEst = rangeDatesBody[1];
       }
       delete editBody.rangeDates;
-      await updateResidence(editBody, id);
+      await updateResidence(editBody, idMyAd);
       navigate("/mis-anuncios");
       message.success("Modificación exitosa!");
     } catch (error) {

@@ -9,7 +9,7 @@ import DetailsForHostOnly from '../components/DetailsForHostOnly/DetailsForHostO
 import { getImagesByResidence, getOneResidence, getServicesByResidence } from '../services/residences';
 
 function MoreInfoMyAds() {
-  let { id } = useParams();
+  let { idMyAd } = useParams();
   const [detailAdd, setDetailAdd] = useState([]);
   const [imgsResidence, setImgsResidence] = useState([]);
   const [detailServices, setDetailServices] = useState({});
@@ -21,21 +21,21 @@ function MoreInfoMyAds() {
 
   useEffect(() => {
     if (isRefresh) {
-      getOneResidence(id).then((data) => setDetailAdd(data));
+      getOneResidence(idMyAd).then((data) => setDetailAdd(data));
       setRefresh(false);
     }
   }, [setRefresh, isRefresh]);
 
   useEffect(() => {
     if (isRefresh) {
-      getServicesByResidence(id).then((data) => setDetailServices(data));
+      getServicesByResidence(idMyAd).then((data) => setDetailServices(data));
       setRefresh(false);
     }
   }, [setRefresh, isRefresh]);
 
   useEffect(() => {
     if (isRefresh) {
-      getImagesByResidence(id).then((data) => setImgsResidence(data))
+      getImagesByResidence(idMyAd).then((data) => setImgsResidence(data))
       setRefresh(false);
     }
   }, [setRefresh, isRefresh]);
