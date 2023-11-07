@@ -5,8 +5,14 @@
     /* width: 50%; */
 }
 
+.list-offer-item {
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   width: 20vw;
+}
 
-.list-offer-item p{
+.list-offer-item > p{
     display: inline;
 }
 

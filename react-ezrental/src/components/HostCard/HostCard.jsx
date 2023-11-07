@@ -74,12 +74,12 @@ function HostCard({ idResidencia, imagen, titulo, ciudad, pais, fechaIni, fechaF
 
       >
         <Link to={`/mis-anuncios/${idResidencia}`}>
-          <Tooltip title={/* descripcion */`Clic para más detalles`} placement="right">
+          <Tooltip title={/* descripcion */`Clic para vista previa`} placement="top">
             <Meta
               title={`${ciudad}, ${pais}`}
               description={
                 <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {titulo} <br /> {fechaIni && fechaFin === "Sin fecha" ? "Sin fecha" : `${fechaIni} / ${fechaFin}`} <br /> Bs. {precio} <br />
+                  {titulo} <br /> {fechaIni && fechaFin === "Sin fecha" ? "Sin fecha" : `${fechaIni} / ${fechaFin}`} <br /> <span style={{fontWeight:'700'}}>Bs. {precio}</span> noche<br />
                   {estadoResidencia === "Publicado" ? <span style={{ fontWeight: '700' }}><CheckCircleTwoTone twoToneColor="#2AD06D" /> Publicado </span> : ''}
                   {estadoResidencia === "Pausado" ? <span style={{ fontWeight: '700' }}><PauseCircleTwoTone twoToneColor="#F28808" /> Pausado </span> : ''}
                   {estadoResidencia === "Inactivo" ? <span style={{ fontWeight: '700' }}><CloseCircleTwoTone twoToneColor="#FF4040" /> Inactivo </span> : ''}

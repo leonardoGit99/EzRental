@@ -18,9 +18,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    flex: 1 1;
+    flex: 1 0;
     height: 100%;
     /* background-color: blue; */
+}
+
+
+.switch-mode-container{
+    flex: 0;
 }
 
 .header__menu-btn--inactive {
@@ -32,13 +37,14 @@
 @media (280px <= width <=1024px) {
     .header__menu-btn--inactive {
         display: block;
-        margin: 0 10px;
+        margin: 0 10px!important;
+        padding: 0 !important;
         height: 43px;
         width: 50px;
     }
 
     .title-web-site-container {
-        font-size: 0.5em;
+        font-size: 0.6em;
     }
 }
 /* @media only screen and (max-width: 1000px) {

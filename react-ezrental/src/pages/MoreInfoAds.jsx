@@ -8,14 +8,13 @@ import DetailCheckInOut from '../components/DetailCheckInOut/DetailCheckInOut';
 import { getImagesByResidence, getOneResidence, getServicesByResidence } from '../services/residences';
 import DetailsForGuestOnly from '../components/DetailsForGuestOnly/DetailsForGuestOnly';
 
+
 function MoreInfoAds() {
   let { idAd } = useParams();
   const [detailAdd, setDetailAdd] = useState([]);
   const [detailServices, setDetailServices] = useState({});
   const [imgsResidence, setImgsResidence] = useState([]);
   const [isRefresh, setIsRefresh] = useState(true);
-
-
   const setRefresh = (status) => {
     setIsRefresh(status);
   }
@@ -41,7 +40,6 @@ function MoreInfoAds() {
     }
   }, [setRefresh, isRefresh]);
 
-
   return (
     <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
       <div style={{ display: 'flex', flexDirection: 'column', width: '1200px', maxWidth: '1200px' }}>
@@ -55,7 +53,10 @@ function MoreInfoAds() {
             initialDate = {detailAdd.fecha_inicio_estado? detailAdd.fecha_inicio_estado.split('T')[0].toString():null}
             finalDate = {detailAdd.fecha_fin_estado? detailAdd.fecha_fin_estado.split('T')[0].toString():null}
             daysMin = {detailAdd.dias_min_residencia}
-            daysMax = {detailAdd.dias_max_residencia}
+            daysMax = {detailAdd.dias_max_residencia -1}
+            isRefresh={isRefresh}
+            setRefresh={setRefresh}
+            priceResidence = {detailAdd.precio_residencia}
           />
 
         </DetailTitle>

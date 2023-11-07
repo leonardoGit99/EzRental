@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Divider, Modal } from 'antd';
 import { CheckCircleTwoTone, CloseCircleTwoTone, PauseCircleTwoTone } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLock, faHouseCircleCheck, faTv, faBrush } from '@fortawesome/free-solid-svg-icons';
+import { faHouseCircleCheck, faTv, faBrush, faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import './detailsForHostOnlyStyles.css';
 
 function DetailsForHostOnly({ estadoResidencia, direccionResidencia, precioResidencia, fechaIni, fechaFin }) {
@@ -17,7 +17,7 @@ function DetailsForHostOnly({ estadoResidencia, direccionResidencia, precioResid
 
   return (
     <div>
-      <Button className="button-detail-for-host-only" type='primary' onClick={() => openPrivateInfoModal()}> <FontAwesomeIcon icon={faLock} /> <span>{`Detalles Privados`}</span></Button>
+      <Button className="button-detail-for-host-only" type='primary' onClick={() => openPrivateInfoModal()}> <FontAwesomeIcon icon={faCircleInfo} /> <span>{`Más detalles`}</span></Button>
       <Modal
         open={privateModal}
         onCancel={() => closePrivateInfoModal()}
@@ -25,7 +25,7 @@ function DetailsForHostOnly({ estadoResidencia, direccionResidencia, precioResid
       >
         <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
 
-          <b>Dirección (Vista por el huesped cuando reserve) <br /></b> {direccionResidencia} <Divider />
+          <b>Dirección <br /></b> {direccionResidencia} <Divider />
           <b>Fecha Inicio</b> <br /> {fechaIni} <Divider />
           <b>Fecha Fin</b> <br /> {fechaFin}  <Divider />
           <b>Precio</b> <br /> Bs. {precioResidencia} <Divider />
@@ -35,7 +35,7 @@ function DetailsForHostOnly({ estadoResidencia, direccionResidencia, precioResid
           {estadoResidencia === "Inactivo" ? <span style={{ fontWeight: '600' }}><CloseCircleTwoTone twoToneColor="#FF4040" /> Inactivo</span> : ''}
           {estadoResidencia === "Alquilado" ? <span style={{ fontWeight: '600' }}><FontAwesomeIcon icon={faHouseCircleCheck} /> Alquilado</span> : ''} 
           {estadoResidencia === "Previsualización" ? <span style={{ fontWeight: '700' }}><FontAwesomeIcon icon={faTv} /> Previsualización </span> : ''} 
-          {estadoResidencia === "En Construcción" ? <span style={{ fontWeight: '600' }}><FontAwesomeIcon icon={faBrush} /> En Construcción </span> : ''} <Divider />
+          {estadoResidencia === "En Construcción" ? <span style={{ fontWeight: '600' }}><FontAwesomeIcon icon={faBrush} /> En Construcción </span> : ''} <Divider style={{marginBottom:'0'}}/>
         </div>
       </Modal>
     </div>

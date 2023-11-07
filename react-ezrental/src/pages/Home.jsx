@@ -7,7 +7,6 @@ import { getAllResidences } from '../services/residences';
 function Home() {
   const [residences, setResidences] = useState([]);
   const [isRefresh, setIsRefresh] = useState(true);
-
   const setRefresh = (status) => {
     setIsRefresh(status);
   }
