@@ -296,8 +296,7 @@ function EditRentalForm() {
               <Form.Item
                 name="paisResid"
                 label="País"
-                rules={[{ required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, seleccione un país.' }]
-                }
+                
                 hasFeedback
               >
                 <Select
@@ -317,9 +316,8 @@ function EditRentalForm() {
               <Form.Item
                 name="ciudadResid"
                 label="Ciudad"
-                rules={[{ required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, seleccione una ciudad.' }]
-                }
-                hasFeedback
+               
+                
               >
                 <Select
                   className="select"

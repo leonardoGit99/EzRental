@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Button, Select, Checkbox, DatePicker, message } from 'antd';
+import { Form, Input, Button, Select, Checkbox, DatePicker, message, Divider } from 'antd';
 import UploadComponent from './UploadComponent';
 import dayjs from "dayjs";
 import { createResidence } from '../../services/residences';
@@ -15,7 +15,8 @@ function RentalForm() {
     setIsImageUploaded(status)
   }
   const [dataAd, setDataAd] = useState([]);
-
+  const [form] = Form.useForm();
+  const [isAtLeastFiveChecked, setIsAtLeastFiveChecked] = useState(false);
   const [body, setBody] = useState({
     tituloResid: '',
     tipoResid: '',
@@ -51,38 +52,41 @@ function RentalForm() {
   });
 
 
-
-  const validarinputmayor0 = (_, value) => {
-    if (value < 0) {
-      return Promise.reject('Debe ser mayor o igual a 0');
-    }
-    return Promise.resolve();
-  };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setBody({ ...body, [name]: value })
     // console.log(body);
   }
 
-  const handleSelectChange = (value, name) => {
-    /* console.log(value);
-    console.log(name); */
-    if (name === "tipoAlojam") {
-      body["tipoAlojam"] = value
-    } else if (name === "tipoResid") {
-      body["tipoResid"] = value
-    } else if (name === "estadoAnuncio") {
-      body["estado"] = value
-    }
-    // console.log(body);
+const handleSelectChange = (value, name) => {
+  
+
+  if (name === "tipoAlojam") {
+    setBody({...body,[name]:value});
+  } else if (name === "tipoResid") {
+    setBody({...body,[name]:value});
+  } else if (name === "paisResid") {
+    setBody({...body,[name]:value,ciudadResid:null});
+  } else if (name === "ciudadResid") {
+    setBody({...body,[name]:value});
   }
 
+  
+};
+  
+  
+
   const handleCheckedChange = (name) => {
-    setBody((prevBody) => ({
-      ...prevBody,
-      [name]: prevBody[name] === "true" ? "false" : "true",
-    }))
+    setBody((prevBody) => {
+      const updatedBody = {
+        ...prevBody,
+        [name]: prevBody[name] === "true" ? "false" : "true",
+      };
+      console.log(updatedBody);
+      const atLeastFiveChecked = Object.values(updatedBody).filter(((value) => value === "true")).length >=5; //Object.values(updatedEditBody).some((value) => value === "true");
+      setIsAtLeastFiveChecked(atLeastFiveChecked);
+      return updatedBody;
+    });
   };
 
   const handleDateChange = (dates) => {
@@ -106,39 +110,98 @@ function RentalForm() {
     console.log(body);
     message.success("Anuncio creado exitosamente!");
   };
-
+  
+  useEffect(() => {
+    form.setFieldsValue(body);
+  }, [body]);
   const deleteFiels = () => {
     setFileList([]);
     setUrls([]);
   }
 
+  const countryToCities = {
+    Bolivia: ["La Paz", "Oruro", "Potosí", "Chuquisaca", "Cochabamba", "Tarija", "Santa Cruz", "Beni", "Pando"],
+    Perú: ["Amazonas", "Arequipa", "Ayacucho", "Cusco", "Junin", "Puno", "San Martín", "Piura", "Tacna", "Lima"],
+    Chile: ["Santiago de Chile", "Iquique", "Antofagasta", "Valparaíso", "Concepción", "Temuco", "Punta Arenas"]
+  };
+
   return (
-    <div /*style={{display:"flex", flexDirection:"column",alignItems:"center",justifyContent:"space-between"}}*/>
+    <div className="margen">
       <h1 className="form-title">Registro</h1>
+      <Divider dashed />
       <Form
         name="basic"
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
         // initialValues={{ remember: true }}
         onFinish={onFinish}
+        form={form}
       >
+        <h3 class="subtitulos">Datos de la residencia</h3>
         <Form.Item
           label="Título de la Residencia"
-          rules={[{ required: true, message: 'Por favor, ingresa el título de la residencia.' }]
-          }
+          name="tituloResid"
+          rules={[
+            {
+              validator: (_, value) => {
+                if (value) {
+                  if (/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$/.test(value)) {
+                    return Promise.resolve();
+                  } else {
+                    return Promise.reject("Debe ingresar solo letras");
+                  }
+                }
+              },
+            },
+            {
+              required: true,
+              message: "Por favor, ingresa el título de la residencia.",
+            },
+            {
+              whitespace: true,
+              message: "No puede dejar en blanco este campo",
+            },
+            {
+              min: 10,
+              message: "Debe ingresar mínimo 10 caracteres",
+            },
+            {
+              max: 50,
+              message: "Solo puede ingresar 50 caracteres",
+            },
+          ]}
+        hasFeedback    
         >
           <Input
             className="inputsize"
             name="tituloResid"
             placeholder="Introduce el título de la residencia"
             onChange={handleChange}
+            showCount
           />
         </Form.Item>
 
         <Form.Item
           label="Precio"
-          rules={[{ required: true, message: 'Por favor, ingresa el precio de la residencia.' }, { validator: validarinputmayor0 }]}
-        >
+          name="precioResid"
+          rules={[
+            {
+              required: true,
+              message: "Por favor, ingresa el precio de la residencia.",
+            },
+            {
+              validator: (_, value) =>
+                value && /^\d+$/.test(value) && parseInt(value, 10) <= 10000
+                  ? Promise.resolve()
+                  : Promise.reject(
+                      new Error(
+                        "Debe ingresar solo números y un valor igual o menor a 10,000"
+                      )
+                    ),
+            },
+          ]}
+          hasFeedback        
+          >
           <Input
             className="inputsize"
             name="precioResid"
@@ -150,9 +213,15 @@ function RentalForm() {
         </Form.Item>
 
         <Form.Item
+          name="tipoResid"
           label="Tipo de Residencia"
-          rules={[{ required: true, message: 'Por favor, selecciona el tipo de residencia.' }]
-          }
+          rules={[
+            {
+              required: true,
+              message: "Por favor, selecciona el tipo de residencia.",
+            },
+          ]}
+        hasFeedback  
         >
           <Select
             name="tipoResid"
@@ -167,8 +236,10 @@ function RentalForm() {
         </Form.Item>
 
         <Form.Item
+          name="tipoAlojam"
           label="Tipo de Alojamiento"
           rules={[{ required: true, message: 'Por favor, selecciona el tipo de alojamiento.' }]}
+          hasFeedback  
         >
           <Select
             name="tipoAlojam"
@@ -181,9 +252,29 @@ function RentalForm() {
         </Form.Item>
 
         <Form.Item
+          name="huesMaxResid"
           label="Número Máximo de Huéspedes"
-          rules={[{ required: true, message: 'Por favor, ingresa el numero maximo de Huesped.' }, { validator: validarinputmayor0 }]
-          }
+          rules={[
+            {
+              required: true,
+              message: "Por favor, ingresa el numero maximo de Huesped.",
+            },
+            {
+              validator: (_, value) => {
+                const max = 10; // Establece el valor máximo permitido aquí
+                if (value && value.match("^0*[1-9][0-9]*") && parseInt(value, 10) <= max) {
+                  return Promise.resolve();
+                } else {
+                  return Promise.reject(
+                    new Error(
+                      `Debe ingresar solo números y un valor mayor a cero, pero no mayor que ${max}`
+                    )
+                  );
+                }
+              },
+            },
+          ]}
+          hasFeedback 
         >
           <Input
             className="inputsize"
@@ -195,9 +286,29 @@ function RentalForm() {
         </Form.Item>
 
         <Form.Item
+          name="diasMaxResid"
           label="Número Máximo de dias"
-          rules={[{ required: true, message: 'Por favor, ingresa el numero maximo de dias.' }, { validator: validarinputmayor0 }]
-          }
+          rules={[
+            {
+              required: true,
+              message: "Por favor, ingresa el número máximo de días.",
+            },
+            {
+              validator: (_, value) => {
+                const max = 10; // Establece el valor máximo permitido aquí
+                if (value && value.match("^0*[1-9][0-9]*") && parseInt(value, 10) <= max) {
+                  return Promise.resolve();
+                } else {
+                  return Promise.reject(
+                    new Error(
+                      `Debe ingresar solo números y un valor mayor a cero, pero no mayor que ${max} días`
+                    )
+                  );
+                }
+              },
+            },
+          ]}
+          hasFeedback 
         >
           <Input
             className="inputsize"
@@ -209,9 +320,39 @@ function RentalForm() {
         </Form.Item>
 
         <Form.Item
+          name="diasMinResid"
           label="Número Mínimo de dias"
-          rules={[{ required: true, message: 'Por favor, ingresa el numero minimo de dias.' }, { validator: validarinputmayor0 }]
-          }
+          rules={[
+            {
+              required: true,
+              message: "Por favor, ingresa el número de días.",
+            },
+            {
+              validator: (_, value) => {
+                const min = 1; // Valor mínimo permitido
+                const max = 10; // Valor máximo permitido
+                if (value && value.match("^0*[1-9][0-9]*")) {
+                  const numericValue = parseInt(value, 10);
+                  if (numericValue >= min && numericValue <= max) {
+                    return Promise.resolve();
+                  } else {
+                    return Promise.reject(
+                      new Error(
+                        `Debe ingresar solo números y un valor entre ${min} y ${max} días.`
+                      )
+                    );
+                  }
+                } else {
+                  return Promise.reject(
+                    new Error(
+                      "Debe ingresar solo números y un valor mayor a cero."
+                    )
+                  );
+                }
+              },
+            },
+          ]}
+          hasFeedback
         >
           <Input
             className="inputsize"
@@ -223,35 +364,54 @@ function RentalForm() {
         </Form.Item>
 
         <Form.Item
+          name="paisResid"
           label="País"
-          rules={[{ required: true, message: 'Por favor, ingresa el país.' }]
-          }
+          rules={[{ required: true, message: 'Por favor, selecciona el pais.' }]}
+          hasFeedback  
         >
-          <Input
-            className="inputsize"
-            name="paisResid"
-            placeholder="Ingresa el país"
-            onChange={handleChange}
-          />
-        </Form.Item>
+        <Select
+        
+        placeholder="Selecciona tu país"
+        options={Object.keys(countryToCities).map((country) => {
+        return {
+         label: `${country}`,
+         value: `${country}`,
+        };
+        })}
+        onChange={(value) => handleSelectChange(value, "paisResid")}
+        >
+        </Select>
+       </Form.Item>
+
+        <Form.Item 
+        name="ciudadResid" 
+        label="Ciudad"
+        rules={[{ required: true, message: 'Por favor, selecciona el pais.' }]}
+        hasFeedback 
+        >
+        <Select
+        placeholder="Selecciona tu ciudad"
+        value={body.ciudadResid}
+        options={countryToCities[body.paisResid]?.map((city) => ({
+          label: city,
+          value: city,
+        }))}
+        onChange={(value) => handleSelectChange(value, "ciudadResid")}
+      >
+          </Select>
+      </Form.Item>
 
         <Form.Item
-          label="Ciudad"
-          rules={[{ required: true, message: 'Por favor, ingresa la ciudad.' }]
-          }
-        >
-          <Input
-            className="inputsize"
-            name="ciudadResid"
-            placeholder="Ingresa la ciudad"
-            onChange={handleChange}
-          />
-        </Form.Item>
-
-        <Form.Item
+          name="direcResid"
           label="Dirección"
-          rules={[{ required: true, message: 'Por favor, ingresa la dirección.' }]
-          }
+          rules={[
+            { required: true, message: "Por favor, ingresa la dirección." },
+            {
+              whitespace: true,
+              message: "No puede dejar este espacio en blanco",
+            },
+          ]}
+          hasFeedback
         >
           <Input
             className="inputsize"
@@ -262,9 +422,29 @@ function RentalForm() {
         </Form.Item>
 
         <Form.Item
+          name="camaResid"
           label="Número de Camas"
-          rules={[{ required: true, message: 'Por favor, ingresa el número de camas.' }, { validator: validarinputmayor0 }]
-          }
+          rules={[
+            {
+              required: true,
+              message: "Por favor, ingresa el número de camas.",
+            },
+            {
+              validator: (_, value) => {
+                const max = 100; // Establece el valor máximo permitido aquí
+                if (value && value.match("^0*[1-9][0-9]*") && parseInt(value, 10) <= max) {
+                  return Promise.resolve();
+                } else {
+                  return Promise.reject(
+                    new Error(
+                      `Debe ingresar solo números, un valor mayor a cero y no mayor que ${max}.`
+                    )
+                  );
+                }
+              },
+            },
+          ]}
+        hasFeedback 
         >
           <Input
             className="inputsize"
@@ -276,9 +456,29 @@ function RentalForm() {
         </Form.Item>
 
         <Form.Item
+          name="habitResid"
           label="Número de Habitaciones"
-          rules={[{ required: true, message: 'Por favor, ingresa el número de habitaciones.' }, { validator: validarinputmayor0 }]
-          }
+          rules={[
+            {
+              required: true,
+              message: "Por favor, ingresa el número de habitaciones.",
+            },
+            {
+              validator: (_, value) => {
+                const max = 100; // Establece el valor máximo permitido aquí
+                if (value && value.match("^0*[1-9][0-9]*") && parseInt(value, 10) <= max) {
+                  return Promise.resolve();
+                } else {
+                  return Promise.reject(
+                    new Error(
+                      `Debe ingresar solo números, un valor mayor a cero y no mayor que ${max}.`
+                    )
+                  );
+                }
+              },
+            },
+          ]}
+          hasFeedback
         >
           <Input
             className="inputsize"
@@ -290,9 +490,29 @@ function RentalForm() {
         </Form.Item>
 
         <Form.Item
+          name="banioResid"
           label="Número de Baños"
-          rules={[{ required: true, message: 'Por favor, ingresa el número de baños.' }, { validator: validarinputmayor0 }]
-          }
+          rules={[
+            {
+              required: true,
+              message: "Por favor, ingresa el número de baños.",
+            },
+            {
+              validator: (_, value) => {
+                const max = 10; // Establece el valor máximo permitido aquí
+                if (value && value.match("^0*[1-9][0-9]*") && parseInt(value, 10) <= max) {
+                  return Promise.resolve();
+                } else {
+                  return Promise.reject(
+                    new Error(
+                      `Debe ingresar solo números, un valor mayor a cero y no mayor que ${max}.`
+                    )
+                  );
+                }
+              },
+            },
+          ]}
+          hasFeedback
         >
           <Input
             className="inputsize"
@@ -304,27 +524,49 @@ function RentalForm() {
         </Form.Item>
 
         <Form.Item
+          name="descripResid"
           label="Descripción del Espacio"
-          rules={[{ required: true, message: 'Por favor, ingresa una descripción del espacio.' }]
-          }
+          rules={[
+            {
+              required: true,
+              message: "Por favor, ingresa una descripción del espacio.",
+            },{
+              whitespace:true,
+              message: "No puede dejar en blanco este campo"
+            },
+          ]}
+          hasFeedback
         >
           <Input.TextArea
             className="inputsize"
             name="descripResid"
             placeholder="Ingresa una descripción del espacio"
             showCount
-            maxLength={1000}
+            maxLength={200}
             autoSize={{ minRows: 5, maxRows: 20 }}
             onChange={handleChange}
           />
         </Form.Item>
 
-        <h2 className="form-title">Servicios</h2>
+        <h3 className="subtitulos">Servicios</h3>
         <Form.Item
           label="Comodidades"
+          name="servicios"
+          rules={[
+            { required:  !isAtLeastFiveChecked ,message:""},
+            {
+              validator: (_, values) => {
+                if (isAtLeastFiveChecked) {
+                  return Promise.resolve();
+                } else {
+                  return Promise.reject();
+                }
+              }
+            }
+          ]}
         >
-          <div className="amenities-group">
-            <div className="amenities-row">
+          <div className="fila-checkbox">
+            <div className="columna-checkbox">
               <Checkbox
                 value="wifi"
                 name="wifi"
@@ -371,9 +613,22 @@ function RentalForm() {
 
         <Form.Item
           label="Caracteristicas"
+          name="servicios"
+          rules={[
+            { required:  !isAtLeastFiveChecked ,message:""},
+            {
+              validator: (_, values) => {
+                if (isAtLeastFiveChecked) {
+                  return Promise.resolve();
+                } else {
+                  return Promise.reject();
+                }
+              }
+            }
+          ]}
         >
-          <div className="amenities-group">
-            <div className="amenities-row">
+          <div className="fila-checkbox">
+            <div className="columna-checkbox">
               <Checkbox
                 value="psicina"
                 name="psicina"
@@ -421,9 +676,22 @@ function RentalForm() {
 
         <Form.Item
           label="Seguridad"
+          name="servicios"
+          rules={[
+            { required:  !isAtLeastFiveChecked ,message:""},
+            {
+              validator: (_, values) => {
+                if (isAtLeastFiveChecked) {
+                  return Promise.resolve();
+                } else {
+                  return Promise.reject("Por favor seleccione al menos cinco servicios");
+                }
+              }
+            }
+          ]}
         >
-          <div className="amenities-group">
-            <div className="amenities-row">
+          <div className="fila-checkbox">
+            <div className="columna-checkbox">
               <Checkbox
                 value="camaras"
                 name="camaras"
@@ -444,45 +712,80 @@ function RentalForm() {
           </div>
 
         </Form.Item>
-
-        <div className="amenities-group">
-          <div className="amenities-row">
+        <h3 className="subtitulos">Instrucciones de Check In y Check Out</h3> 
+        <div className="fila-check-input">
+          <div className="columna-check-input">
             <Form.Item
+              name="checkInResid"
               label="Check In"
-              rules={[{ required: true, message: 'Por favor, ingresa la hora de check-in.' }]
-              }
+              rules={[
+                {
+                  required: true,
+                  message: "Por favor, ingresa la hora de check-in.",
+                },{
+                  whitespace:true,
+                  message:"No puede dejar en blanco este campo"
+                }
+              ]}
+              hasFeedback
               className="check-in-item" // Agrega una clase aquí
             >
               <Input.TextArea
-                className="inputsize"
+                className="input-check"
                 name="checkInResid"
                 placeholder="Ingresa la hora de check-in"
                 showCount
-                maxLength={1000}
+                maxLength={800}
                 autoSize={{ minRows: 5, maxRows: 20 }}
                 onChange={handleChange}
               />
             </Form.Item>
 
           </div>
-          <div className="amenities-row">
+          <div className="columna-check-input">
             <Form.Item
+              name="checkOutResid"
               label="Check Out"
-              rules={[{ required: true, message: 'Por favor, ingresa la hora de check-out.' }]
-              }
+              rules={[
+                {
+                  required: true,
+                  message: "Por favor, ingresa la hora de check-out.",
+                },{
+                  whitespace: true,
+                  message:"No puede dejar en blanco este campo"
+                }
+              ]}
+              hasFeedback
             >
               <Input.TextArea
-                className="inputsize"
+                className="input-check"
                 name="checkOutResid"
                 placeholder="Ingresa la hora de check-out"
                 showCount
-                maxLength={1000}
+                maxLength={800}
                 autoSize={{ minRows: 5, maxRows: 20 }}
                 onChange={handleChange}
               />
             </Form.Item>
-
-            <Form.Item>
+            </div>
+        </div>
+        
+        <div className="imgs-edit-form-flex-container">
+            <Form.Item
+            name="imagen"
+            rules={[
+              { required: !isImageUploaded },
+              {
+                validator: (_, value) => {
+                  if (isImageUploaded) {
+                    return Promise.resolve();
+                  } else {
+                    return Promise.reject("Por favor, suba una imagen");
+                  }
+                }
+              }
+            ]}
+            >
               <UploadComponent
                 urls={urls}
                 setUrls={setUrls}
@@ -491,20 +794,21 @@ function RentalForm() {
                 setImageUploaded={setImageUploaded}
               />
             </Form.Item>
-
           </div>
-        </div>
+          <Divider dashed />
 
-        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+        <Form.Item >
+        <div className="button-container">
           <Button type="primary" htmlType="submit">
             Completar
           </Button>
           <Button htmlType="button" onClick={deleteFiels}>
             Cancelar
           </Button>
+          </div>
         </Form.Item>
-
-      </Form>
+        <Divider dashed />
+        </Form>
     </div>
   );
 
