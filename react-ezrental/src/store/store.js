@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
-import editRentalFormSlice from './slices/editRentalFormSlice';
+import successfulPaymentSlice from './slices/successfulPaymentSlice';
 
 export default configureStore({
-    reducer: {
-        editRentalForm: editRentalFormSlice,
-    }
+  reducer: {
+    successfulPayment: successfulPaymentSlice,
+  }
 });

@@ -10,21 +10,25 @@ import './layoutEzRentalStyles.css';
 
 function LayoutEzRental() {
   const { Header, Content, Sider, Footer } = Layout;
-
   const [sideMenuCollapsed, setSideMenuCollapsed] = useState(true);
+  const [switchMode, setIsSwitchMode] = useState(false);
 
   const displaySideMenu = () => {
     setSideMenuCollapsed(!sideMenuCollapsed);
   };
 
+  const setSwitchMode = () => {
+    setIsSwitchMode(!switchMode);
+  }
+
   return (
     <Layout className="app-layout-container">
-      <Sider className={`app-sider-container ${sideMenuCollapsed ? "app-sider-container--collapsed" : ""}`} collapsed={sideMenuCollapsed} width={'18%'} collapsedWidth={'70'}  >
-        <SideMenu sideMenuCollapsed={sideMenuCollapsed} displaySideMenu={displaySideMenu} />
+      <Sider className={`app-sider-container ${sideMenuCollapsed ? "app-sider-container--collapsed" : ""}`} collapsed={sideMenuCollapsed} width={'15%'} collapsedWidth={'70'}  >
+        <SideMenu sideMenuCollapsed={sideMenuCollapsed} displaySideMenu={displaySideMenu} switchMode={switchMode} setSwitchMode={setSwitchMode}/>
       </Sider>
       <Layout /* onClick={!sideMenuCollapsed ? displaySideMenu: null} */>
         <Header className="app-header-container">
-          <HeaderContent sideMenuCollapsed={sideMenuCollapsed} displaySideMenu={displaySideMenu} />
+          <HeaderContent sideMenuCollapsed={sideMenuCollapsed} displaySideMenu={displaySideMenu} switchMode={switchMode} setSwitchMode={setSwitchMode}/>
         </Header>
         <Content className="app-content-container" >
           <PagesContainer>

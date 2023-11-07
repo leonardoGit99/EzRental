@@ -1,10 +1,20 @@
 import React from 'react';
-import { Button } from 'antd';
+import { Button, Switch } from 'antd';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 import './headerContentStyles.css';
+import { useNavigate } from 'react-router-dom';
 
-function HeaderContent({ sideMenuCollapsed, displaySideMenu }) {
-
+function HeaderContent({ sideMenuCollapsed, displaySideMenu, switchMode, setSwitchMode }) {
+  const navigate = useNavigate();
+  const onChange = (checked) =>{
+    if(checked){
+      setSwitchMode();
+      navigate('mis-anuncios');
+    }else{
+      setSwitchMode();
+      navigate('/');
+    }
+  }
   return (
     <div className="header-container">
       <div>
@@ -17,6 +27,13 @@ function HeaderContent({ sideMenuCollapsed, displaySideMenu }) {
       </div>
       <div className="title-web-site-container">
         <h1>Sistema de Alquileres</h1>
+      </div>
+      <div className="switch-mode-container">
+        <Switch
+          onChange={onChange}
+          checkedChildren="Anfitrión"
+          unCheckedChildren="Huésped"
+        />
       </div>
     </div>
   );

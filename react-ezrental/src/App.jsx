@@ -8,7 +8,7 @@ import MoreInfoMyAds from './pages/MoreInfoMyAds';
 import MoreInfoAds from './pages/MoreInfoAds';
 import EditMyAds from './pages/EditMyAds';
 import LayoutBasic from './layouts/LayoutBasic/LayoutBasic';
-import SuccessfullPaymentModal from './components/SuccessfullPaymentModal/SuccessfullPaymentModal';
+import PaymentSimulation from './pages/PaymentSimulation';
 import './App.css';
 
 
@@ -61,7 +61,7 @@ function App() {
           </Route>
         </Route>
         <Route path='/ez-rental' element={<LayoutBasic />}>
-          <Route path='pago-residencia' element={<SuccessfullPaymentModal />} />
+          <Route path='pago-residencia' element={<PaymentSimulation />} />
         </Route>
       </Routes>
     </>

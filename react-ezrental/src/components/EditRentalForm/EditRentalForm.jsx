@@ -16,7 +16,7 @@ function EditRentalForm() {
   const [dataAd, setDataAd] = useState([]);
   const [imgsResidence, setImgsResidence] = useState([]);
   const [form] = Form.useForm();
-  const [isAtLeastOneChecked, setIsAtLeastOneChecked] = useState(false);
+  const [isAtLeastFiveChecked, setIsAtLeastFiveChecked] = useState(false);
   const [rangeDatesBody, setRangeDatesBody] = useState([null, null]);
   const [isImageUploaded, setIsImageUploaded] = useState(false);
   const setImageUploaded = (status) => {
@@ -93,8 +93,8 @@ function EditRentalForm() {
         [name]: prevEditBody[name] === "true" ? "false" : "true",
       };
       console.log(updatedEditBody);
-      const atLeastOneChecked = Object.values(updatedEditBody).some((value) => value === "true");
-      setIsAtLeastOneChecked(atLeastOneChecked);
+      const atLeastFiveChecked = Object.values(updatedEditBody).filter(((value) => value === "true")).length >=5; //Object.values(updatedEditBody).some((value) => value === "true");
+      setIsAtLeastFiveChecked(atLeastFiveChecked);
       return updatedEditBody;
     });
   };
@@ -181,7 +181,7 @@ function EditRentalForm() {
       imagen: urls, 
       rangeDates: [dayjs(dataAd.fecha_inicio_estado), dayjs(dataAd.fecha_fin_estado)],
     })
-    setIsAtLeastOneChecked(true);
+    setIsAtLeastFiveChecked(true);
   }, [dataAd, urls]);
 
   useEffect(() => {
@@ -256,6 +256,8 @@ function EditRentalForm() {
                   name="tituloResid"
                   className='input'
                   placeholder="Introduce el título de la residencia"
+                  showCount
+                  maxLength={50}
                   onChange={handleChange}
                 />
               </Form.Item>
@@ -272,7 +274,7 @@ function EditRentalForm() {
                   className='textArea'
                   placeholder="Ingresa una descripción del espacio"
                   showCount
-                  maxLength={350}
+                  maxLength={200}
                   autoSize={{ minRows: 5, maxRows: 5 }}
                   onChange={handleChange}
                 />
@@ -517,10 +519,10 @@ function EditRentalForm() {
                 name="servicios"
                 label="Comodidades"
                 rules={[
-                  { required: ((editBody.estado === "Publicado") || (editBody.estado === "En Construcción") || (editBody.estado === "Previsualización") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")) && !isAtLeastOneChecked },
+                  { required: ((editBody.estado === "Publicado") || (editBody.estado === "En Construcción") || (editBody.estado === "Previsualización") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")) && !isAtLeastFiveChecked },
                   {
                     validator: (_, values) => {
-                      if (isAtLeastOneChecked) {
+                      if (isAtLeastFiveChecked) {
                         return Promise.resolve();
                       } else {
                         return Promise.reject();
@@ -579,10 +581,10 @@ function EditRentalForm() {
                 name="servicios"
                 label="Caracteristicas"
                 rules={[
-                  { required: ((editBody.estado === "Publicado") || (editBody.estado === "En Construcción") || (editBody.estado === "Previsualización") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")) && !isAtLeastOneChecked },
+                  { required: ((editBody.estado === "Publicado") || (editBody.estado === "En Construcción") || (editBody.estado === "Previsualización") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")) && !isAtLeastFiveChecked },
                   {
                     validator: (_, values) => {
-                      if (isAtLeastOneChecked) {
+                      if (isAtLeastFiveChecked) {
                         return Promise.resolve();
                       } else {
                         return Promise.reject();
@@ -642,10 +644,10 @@ function EditRentalForm() {
                 name="servicios"
                 label="Seguridad"
                 rules={[
-                  { required: ((editBody.estado === "Publicado") || (editBody.estado === "En Construcción") || (editBody.estado === "Previsualización") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")) && !isAtLeastOneChecked },
+                  { required: ((editBody.estado === "Publicado") || (editBody.estado === "En Construcción") || (editBody.estado === "Previsualización") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")) && !isAtLeastFiveChecked },
                   {
                     validator: (_, values) => {
-                      if (isAtLeastOneChecked) {
+                      if (isAtLeastFiveChecked) {
                         return Promise.resolve();
                       } else {
                         return Promise.reject("Por favor, seleccione al menos un servicio");

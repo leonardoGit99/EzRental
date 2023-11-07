@@ -9,29 +9,29 @@ function GuestCard({ idResidencia, imagen, titulo, ciudad, pais, fechaIni, fecha
   return (
     <>
       <Link to={`/${idResidencia}`}>
+        <Tooltip title={/* description */ `Clic para ver más detalles`} placement="right">
         <Card
           className="guest-card"
           hoverable
           cover={
-            <Tooltip title={/* description */ `Clic para ver más detalles`} placement="right">
               <img
                 className="img-guest-card-carousel"
                 src={/* imagen === "Sin imagen" ? defaultLogo : */imagen}
                 alt="Algo salió mal..."
               />
-              {/* <ImgCarouselCard imagen={imagen}/> */}
-            </Tooltip>
+              //  <ImgCarouselCard imagen={imagen}/> 
           }
         >
           <Meta
             title={`${ciudad}, ${pais}`}
             description={
               <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                {titulo} <br /> {fechaIni} / {fechaFin} <br /> Bs. {precio}
+                {titulo} <br /> {fechaIni} / {fechaFin} <br /> <span style={{fontWeight:'700'}}>Bs. {precio}</span>  noche
               </div>
             }
-          />
+            />
         </Card>
+            </Tooltip>
       </Link>
     </>
   );

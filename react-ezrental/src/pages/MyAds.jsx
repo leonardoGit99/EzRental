@@ -59,7 +59,7 @@ function MyAds() {
         pagination={{
           onChange: page => {
             console.log(page);
-          }, pageSize: 15,
+          }, pageSize: 10,
         }}
         locale={customEmptyMessage}
         dataSource={residences}
