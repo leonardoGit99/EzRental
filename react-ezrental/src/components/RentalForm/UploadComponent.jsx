@@ -3,6 +3,7 @@ import "./rentalFormStyles.css";
 import { Upload, Modal, message} from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import axios from "axios";
+import DescriptionModal from "./DescriptionModal";
 
 function UploadComponent({urls, setUrls, fileList, setFileList, setImageUploaded}) {
 
@@ -17,7 +18,15 @@ function UploadComponent({urls, setUrls, fileList, setFileList, setImageUploaded
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
-  // const [fileList, setFileList] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const openDescriptionModal = () => {
+    setModalVisible(true);
+  }
+
+  const closeDescriptionModal = () => {
+    setModalVisible(false);
+  }
 
   const handleCancel = () => setPreviewOpen(false);
 
@@ -72,9 +81,11 @@ function UploadComponent({urls, setUrls, fileList, setFileList, setImageUploaded
           onSuccess(file);
           //añadir url recibida del response al array urls
           // urls.push(`https://drive.google.com/uc?export=view&id=${res.data.fileId}`);
-          urls.push(res.data.imgUrl);
+          urls.push({link: res.data.imgUrl, descripcion: ""});
           
-          fileList.length > 9 ? message.info("Solo puede subir 10 fotos") : "";
+          openDescriptionModal();
+
+          // fileList.length > 9 ? message.info("Solo puede subir 10 fotos") : "";
         });
     } catch {
       (error) => {
@@ -111,7 +122,9 @@ function UploadComponent({urls, setUrls, fileList, setFileList, setImageUploaded
 
   return (
     <>
-      <h2 style={{textAlign:'center'}}>Agregue algunas fotos de su residencia</h2>
+      <h2 style={{ textAlign: "center" }}>
+        Agregue algunas fotos de su residencia
+      </h2>
 
       <Upload
         customRequest={uploadImage}
@@ -127,7 +140,7 @@ function UploadComponent({urls, setUrls, fileList, setFileList, setImageUploaded
       </Upload>
 
       {/* {fileList.length >= 1 && fileList.length < 5 ? <p>Debe subir al menos 5 fotos</p> : ""} */}
-      
+
       <Modal
         open={previewOpen}
         title={previewTitle}
@@ -141,9 +154,16 @@ function UploadComponent({urls, setUrls, fileList, setFileList, setImageUploaded
           }}
           src={previewImage}
         />
-
       </Modal>
 
+      {urls.length > 0 ? (
+        <DescriptionModal
+          visible={modalVisible}
+          urls={urls}
+          index={urls.length - 1}
+          onClose={closeDescriptionModal}
+        />
+      ) : null}
     </>
   );
 }
