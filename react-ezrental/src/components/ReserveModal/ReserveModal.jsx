@@ -7,14 +7,10 @@ import './reserveModalStyles.css';
 function ReserveModal({ reservationModal, closeReservationModal, numberMaxOfGuests, initialDate, finalDate, daysMin, daysMax, isRefresh, setRefresh, priceResidence }) {
   const { RangePicker } = DatePicker;
   const [isVisibleQRCode, setIsVisibleQRCode] = useState(false);
-  const [paymentConfirmed, setIsPaymentConfirmed] = useState(false);
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [selectedEndDate, setSelectedEndDate] = useState(null);
-  const setPaymentConfirmed = (status) => {
-    setIsPaymentConfirmed(status);
-  }
-  console.log(paymentConfirmed);
   const [bodyReserve, setBodyReserve] = useState({
+    precioResidencia: 0,
     huesMaxResid: 0,
     fechaIniEst: null,
     fechaFinEst: null
@@ -148,9 +144,8 @@ function ReserveModal({ reservationModal, closeReservationModal, numberMaxOfGues
         isVisibleQRCode={isVisibleQRCode}
         setIsVisibleQRCode={setIsVisibleQRCode}
         closeModalQR={closeModalQR}
-        paymentConfirmed={paymentConfirmed}
-        setPaymentConfirmed={setPaymentConfirmed}
         bodyReserve={bodyReserve}
+        setBodyReserve={setBodyReserve}
         closeReservationModal={closeReservationModal}
         priceResidence={priceResidence}
         selectedStartDate={dayjs(selectedStartDate).subtract(1, 'day')}//Quito un dia por que no toma el cuenta el dia inicio, toma el siguiente

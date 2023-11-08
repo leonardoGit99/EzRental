@@ -73,6 +73,8 @@ function MoreInfoMyAds() {
           numberOfRooms={detailAdd.habitacion_residencia}
           numberOfBeds={detailAdd.cama_residencia}
           numberOfBathrooms={detailAdd.banio_residencia}
+          residenceUbication={detailAdd.direccion_residencia}
+          daysMax={detailAdd.dias_max_residencia}
         />
 
         <DetailOffers

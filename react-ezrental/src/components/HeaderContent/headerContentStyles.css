@@ -25,6 +25,7 @@
 
 
 .switch-mode-container{
+    margin-right: 10px;
     flex: 0;
 }
 
@@ -37,7 +38,7 @@
 @media (280px <= width <=1024px) {
     .header__menu-btn--inactive {
         display: block;
-        margin: 0 10px!important;
+        margin: 0 10px !important;
         padding: 0 !important;
         height: 43px;
         width: 50px;

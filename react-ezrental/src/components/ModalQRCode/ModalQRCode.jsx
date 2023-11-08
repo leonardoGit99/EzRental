@@ -1,13 +1,13 @@
 import React from 'react';
 import { Button, Divider, Modal, QRCode, message } from 'antd';
 import { createResidence } from '../../services/residences';
-import dayjs from 'dayjs';
 import './modalQRCodeStyles.css';
 
-function ModalQRCode({ isVisibleQRCode, setIsVisibleQRCode, closeModalQR, paymentConfirmed, setPaymentConfirmed, bodyReserve, closeReservationModal, priceResidence, selectedStartDate, selectedEndDate }) {
-  const daysDiff = selectedEndDate.diff(selectedStartDate, 'day'); 
+function ModalQRCode({ isVisibleQRCode, setIsVisibleQRCode, closeModalQR, bodyReserve, setBodyReserve, closeReservationModal, priceResidence, selectedStartDate, selectedEndDate }) {
+  const daysDiff = selectedEndDate.diff(selectedStartDate, 'day');
   const totalPrice = priceResidence * daysDiff;
-
+  bodyReserve["precioResidencia"] = totalPrice;
+  
   const onFinish = async () => {
     try {
       console.log(bodyReserve);
@@ -47,8 +47,8 @@ function ModalQRCode({ isVisibleQRCode, setIsVisibleQRCode, closeModalQR, paymen
           />
       </div> */}
       <div className="payment-confirmation-content">
-        <p style={{fontWeight:'600'}}>Monto total </p>
-        <p>{priceResidence} Bs. x {daysDiff} Noche(s) = <span style={{fontWeight:'500'}}>{totalPrice} Bs.</span></p>
+        <p style={{ fontWeight: '600' }}>Monto total </p>
+        <p>{priceResidence} Bs. x {daysDiff} Noche(s) = <span style={{ fontWeight: '500' }}>{totalPrice} Bs.</span></p>
       </div>
 
       <div className="btns-payment-confirmation-modal">

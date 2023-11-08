@@ -13,7 +13,6 @@ function SideMenu({ sideMenuCollapsed, displaySideMenu, switchMode, setSwitchMod
   ];
 
   const itemsHost = [
-    { key: "/", label: (<Link to="/" onClick={!sideMenuCollapsed ? displaySideMenu: null}>Home</Link>), icon: <HomeOutlined /> },
     {
       key: 2, label: 'Modo Anfitrion', icon: <FormOutlined />, children: [
         { key: "aniadir-anuncio", label: (<Link to="aniadir-anuncio" onClick={!sideMenuCollapsed ? displaySideMenu: null}>Añadir Anuncio</Link>) },

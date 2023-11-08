@@ -23,7 +23,7 @@ function LayoutEzRental() {
 
   return (
     <Layout className="app-layout-container">
-      <Sider className={`app-sider-container ${sideMenuCollapsed ? "app-sider-container--collapsed" : ""}`} collapsed={sideMenuCollapsed} width={'15%'} collapsedWidth={'70'}  >
+      <Sider className={`app-sider-container ${sideMenuCollapsed ? "app-sider-container--collapsed" : ""}`} collapsed={sideMenuCollapsed} width={'17%'} collapsedWidth={'70'}  >
         <SideMenu sideMenuCollapsed={sideMenuCollapsed} displaySideMenu={displaySideMenu} switchMode={switchMode} setSwitchMode={setSwitchMode}/>
       </Sider>
       <Layout /* onClick={!sideMenuCollapsed ? displaySideMenu: null} */>

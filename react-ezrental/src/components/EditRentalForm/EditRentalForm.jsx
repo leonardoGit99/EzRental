@@ -652,7 +652,7 @@ function EditRentalForm() {
                       if (isAtLeastFiveChecked) {
                         return Promise.resolve();
                       } else {
-                        return Promise.reject("Por favor, seleccione al menos un servicio");
+                        return Promise.reject("Por favor, seleccione al menos cinco servicios");
                       }
                     }
                   }

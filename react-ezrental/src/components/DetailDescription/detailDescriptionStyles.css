@@ -1,73 +1,66 @@
+.detail-description-flex-container {
+  display: flex;
+}
+
+.description-sumary-complete {
+  width: 50%;
+}
+
 .detail-description-summary {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    /* background-color: aquamarine; */
-    width: 50%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* background-color: aquamarine; */
+  /* width: 50%; */
 }
 
 .detail-description {
-    display: flex;
-    flex-direction: column;
-    width: 50%;
-    /* background-color: aquamarine; */
+  display: flex;
+  flex-direction: column;
+  /* width: 50%; */
+  /* background-color: aquamarine; */
 }
 
-.detail-description-flex-container {
-    display: flex;
-}
 
 
 @media (280px <=width <=320px) {
-    .detail-description-summary {
-        width: 100%;
-    }
-    .detail-description {
-        width: 100%;
-    }
+  .detail-description-flex-container {
+    display: block;
+  }
+
+  .description-sumary-complete {
+    width: 100%;
+  }
 }
 
 @media (320px <=width <=480px) {
-    .detail-description-summary {
-        width: 100%;
-    }
-    .detail-description {
-        width: 100%;
-    }
+  .detail-description-flex-container {
+    display: block;
+  }
+
+  .description-sumary-complete {
+    width: 100%;
+  }
 }
 
 @media (480px <=width <=768px) {
-    .detail-description-summary {
-        width: 100%;
-    }
-    .detail-description {
-        width: 100%;
-    }
+  .detail-description-flex-container {
+    display: block;
+  }
+
+  .description-sumary-complete {
+    width: 100%;
+  }
 }
 
-@media (768px <=width <=1024px) {
-    .detail-description-summary {
-        width: 50%;
-    }
-    .detail-description {
-        width: 50%;
-    }
+/* @media (768px <=width <=1024px) {
+
 }
 
 @media (1024px <=width <=1200px) {
-    .detail-description-summary {
-        width: 50%;
-    }
-    .detail-description {
-        width: 50%;
-    }
+
 }
 
 @media (1200px <=width <=1440px) {
-    .detail-description-summary {
-        width: 50%;
-    }
-    .detail-description {
-        width: 50%;
-    }
-}
+
+} */
