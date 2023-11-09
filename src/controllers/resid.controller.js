@@ -34,6 +34,32 @@ const uploadImg = (req, res, next) => {
 
 const getAllResid = async (req, res) => {
   try {
+ /* // Lógica para mandar mensaje
+const estados = await pool.query("SELECT estado_residencia FROM estado WHERE fecha_fin_estado < CURRENT_DATE+1");
+const id_noti = await pool.query("SELECT id_residencia FROM estado WHERE fecha_fin_estado < CURRENT_DATE+1");
+console.log(id_noti)
+
+// Verifica si id_noti tiene resultados antes de usarlo
+if (id_noti.length > 0) {
+  const idResidencia = id_noti[0].id_residencia;
+  const titulo = await pool.query("SELECT titulo_residencia FROM residencia WHERE id_residencia = $1", [idResidencia]);
+  
+  if (titulo.length > 0) {
+    const mensajeFrontend = `La residencia con título '${titulo[0].titulo_residencia}' cambiará su estado a '${estados[0].estado_residencia}' mañana.`;
+    
+    // Enviar el mensaje al frontend como una respuesta JSON
+    console.log(mensajeFrontend);
+    res.json({ message: mensajeFrontend });
+  }
+}else{console.log("No hay nada en id_noti");}
+*/
+
+    // Lógica para actualizar el estado aquí
+    await pool.query("UPDATE estado SET estado_residencia = 'Inactivo', fecha_inicio_estado = null, fecha_fin_estado = null WHERE estado_residencia = 'Publicado' AND fecha_fin_estado < CURRENT_DATE"
+    );
+    await pool.query("UPDATE estado SET estado_residencia = 'Publicado', fecha_inicio_estado = CURRENT_DATE, fecha_fin_estado = CURRENT_DATE + INTERVAL '30 days' WHERE estado_residencia = 'Pausado' AND fecha_fin_estado < CURRENT_DATE"
+    );
+
     const result = await pool.query(`
     SELECT 
     r.id_residencia, r.titulo_residencia, r.tipo_residencia, r.pais_residencia, r.ciudad_residencia, r.direccion_residencia, r.cama_residencia, r.habitacion_residencia, r.banio_residencia, r.descripcion_residencia, r.huesped_max_residencia, r.dias_max_residencia, r.dias_min_residencia, r.precio_residencia, r.check_in_residencia, r.check_out_residencia, r.tipo_alojamiento,
@@ -178,7 +204,7 @@ const createResid = async (req, res) =>{
         [id_nuevoResid]);  //raro raro las comillas en activo...
     } else {
       const newEst2 = await pool.query(
-        "INSERT INTO estado (id_residencia, estado_residencia, fecha_inicio_estado, fecha_fin_estado) VALUES ($1,'Previsualización', null, null)",
+        "INSERT INTO estado (id_residencia, estado_residencia, fecha_inicio_estado, fecha_fin_estado) VALUES ($1,'Inactivo', null, null)",
         [id_nuevoResid]  //raro raro las comillas en activo...
       );
     }

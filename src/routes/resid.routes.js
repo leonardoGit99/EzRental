@@ -10,9 +10,14 @@ const {
     createResid,
     getServ,
     updateResid,
-    uploadImg,
-    
+    uploadImg, 
+     
 } = require("../controllers/resid.controller");
+const { 
+    getrent,
+    getevalu,
+    createRent
+} = require("../controllers/rent.controller");
 
 router.post('/api/upload', uploadImg);
 
@@ -24,5 +29,9 @@ router.put('/resid/:idResid', updateResid);
 
 router.get("/serv/:idResid", getServ);
 router.get("/image/:idResid", getImgResid);
+
+router.get("/rent/:idResid", getrent);
+router.post("/rent/:idResid", createRent);
+router.get("/evalu/:idResid", getevalu);
 
 module.exports = router;
