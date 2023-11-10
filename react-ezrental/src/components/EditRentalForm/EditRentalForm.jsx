@@ -467,7 +467,7 @@ function EditRentalForm() {
                   }, {
                     validator: (_, value) => {
                       const max = 10; // Establece el valor máximo permitido aquí
-                      if (value && value.match("^0*[1-9][0-9]*") && parseInt(value, 10) <= max) {
+                      if (value  && parseInt(value, 10) <= max) {
                         return Promise.resolve();
                       } else {
                         return Promise.reject(
@@ -500,7 +500,7 @@ function EditRentalForm() {
                     validator: (_, value) => {
                       const min = 1; // Valor mínimo permitido
                       const max = 10; // Valor máximo permitido
-                      if (value && value.match("^0*[1-9][0-9]*")) {
+                      if (value) {
                         const numericValue = parseInt(value, 10);
                         if (numericValue >= min && numericValue <= max) {
                           return Promise.resolve();
@@ -540,7 +540,7 @@ function EditRentalForm() {
                   }, {
                     validator: (_, value) => {
                       const max = 10; // Establece el valor máximo permitido aquí
-                      if (value && value.match("^0*[1-9][0-9]*") && parseInt(value, 10) <= max) {
+                      if (value  && parseInt(value, 10) <= max) {
                         return Promise.resolve();
                       } else {
                         return Promise.reject(
@@ -573,7 +573,7 @@ function EditRentalForm() {
                   }, {
                     validator: (_, value) => {
                       const max = 100; // Establece el valor máximo permitido aquí
-                      if (value && value.match("^0*[1-9][0-9]*") && parseInt(value, 10) <= max) {
+                      if (value && parseInt(value, 10) <= max) {
                         return Promise.resolve();
                       } else {
                         return Promise.reject(
@@ -605,7 +605,7 @@ function EditRentalForm() {
                   }, {
                     validator: (_, value) => {
                       const max = 100; // Establece el valor máximo permitido aquí
-                      if (value && value.match("^0*[1-9][0-9]*") && parseInt(value, 10) <= max) {
+                      if (value  && parseInt(value, 10) <= max) {
                         return Promise.resolve();
                       } else {
                         return Promise.reject(
@@ -637,7 +637,7 @@ function EditRentalForm() {
                   }, {
                     validator: (_, value) => {
                       const max = 10; // Establece el valor máximo permitido aquí
-                      if (value && value.match("^0*[1-9][0-9]*") && parseInt(value, 10) <= max) {
+                      if (value  && parseInt(value, 10) <= max) {
                         return Promise.resolve();
                       } else {
                         return Promise.reject(
