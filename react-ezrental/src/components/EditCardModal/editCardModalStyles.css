@@ -14,5 +14,5 @@
 
 .buttons-modal-edit-container {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
 }

@@ -11,10 +11,9 @@ function RentalForm() {
   const [urls, setUrls] = useState([]);
   const [fileList, setFileList] = useState([]);
   const [isImageUploaded, setIsImageUploaded] = useState(false);
-  const setImageUploaded=(status)=>{
+  const setImageUploaded = (status) => {
     setIsImageUploaded(status)
   }
-  const [dataAd, setDataAd] = useState([]);
   const [form] = Form.useForm();
   const [isAtLeastFiveChecked, setIsAtLeastFiveChecked] = useState(false);
   const [body, setBody] = useState({
@@ -58,23 +57,17 @@ function RentalForm() {
     // console.log(body);
   }
 
-const handleSelectChange = (value, name) => {
-  
-
-  if (name === "tipoAlojam") {
-    setBody({...body,[name]:value});
-  } else if (name === "tipoResid") {
-    setBody({...body,[name]:value});
-  } else if (name === "paisResid") {
-    setBody({...body,[name]:value,ciudadResid:null});
-  } else if (name === "ciudadResid") {
-    setBody({...body,[name]:value});
-  }
-
-  
-};
-  
-  
+  const handleSelectChange = (value, name) => {
+    if (name === "tipoAlojam") {
+      setBody({ ...body, [name]: value });
+    } else if (name === "tipoResid") {
+      setBody({ ...body, [name]: value });
+    } else if (name === "paisResid") {
+      setBody({ ...body, [name]: value, ciudadResid: null });
+    } else if (name === "ciudadResid") {
+      setBody({ ...body, [name]: value });
+    }
+  };
 
   const handleCheckedChange = (name) => {
     setBody((prevBody) => {
@@ -83,24 +76,11 @@ const handleSelectChange = (value, name) => {
         [name]: prevBody[name] === "true" ? "false" : "true",
       };
       console.log(updatedBody);
-      const atLeastFiveChecked = Object.values(updatedBody).filter(((value) => value === "true")).length >=5; //Object.values(updatedEditBody).some((value) => value === "true");
+      const atLeastFiveChecked = Object.values(updatedBody).filter(((value) => value === "true")).length >= 5; //Object.values(updatedEditBody).some((value) => value === "true");
       setIsAtLeastFiveChecked(atLeastFiveChecked);
       return updatedBody;
     });
   };
-
-  const handleDateChange = (dates) => {
-    const [initialDate, finalDate] = dates;
-    const initialDateFormat = dayjs(initialDate).format('YYYY-MM-DD');
-    const finalDateFormat = dayjs(finalDate).format('YYYY-MM-DD');
-    setBody({
-      ...body,
-      fechaIniEst: initialDateFormat,
-      fechaFinEst: finalDateFormat,
-    })
-  };
-
-  console.log(dataAd);
 
   const onFinish = async () => {
     // const formData = new FormData();
@@ -110,10 +90,11 @@ const handleSelectChange = (value, name) => {
     console.log(body);
     message.success("Anuncio creado exitosamente!");
   };
-  
+
   useEffect(() => {
     form.setFieldsValue(body);
   }, [body]);
+
   const deleteFiels = () => {
     setFileList([]);
     setUrls([]);
@@ -128,7 +109,7 @@ const handleSelectChange = (value, name) => {
   return (
     <div className="margen">
       <h1 className="form-title">Registro</h1>
-      <Divider dashed />
+      <Divider />
       <Form
         name="basic"
         labelCol={{ span: 8 }}
@@ -136,8 +117,9 @@ const handleSelectChange = (value, name) => {
         // initialValues={{ remember: true }}
         onFinish={onFinish}
         form={form}
+        autoComplete='off'
       >
-        <h3 class="subtitulos">Datos de la residencia</h3>
+        <h3 className="subtitulos">Datos de la residencia</h3>
         <Form.Item
           label="Título de la Residencia"
           name="tituloResid"
@@ -170,7 +152,7 @@ const handleSelectChange = (value, name) => {
               message: "Solo puede ingresar 50 caracteres",
             },
           ]}
-        hasFeedback    
+          hasFeedback
         >
           <Input
             className="inputsize"
@@ -194,14 +176,14 @@ const handleSelectChange = (value, name) => {
                 value && /^\d+$/.test(value) && parseInt(value, 10) <= 10000
                   ? Promise.resolve()
                   : Promise.reject(
-                      new Error(
-                        "Debe ingresar solo números y un valor igual o menor a 10,000"
-                      )
-                    ),
+                    new Error(
+                      "Debe ingresar solo números y un valor igual o menor a 10,000"
+                    )
+                  ),
             },
           ]}
-          hasFeedback        
-          >
+          hasFeedback
+        >
           <Input
             className="inputsize"
             name="precioResid"
@@ -221,7 +203,7 @@ const handleSelectChange = (value, name) => {
               message: "Por favor, selecciona el tipo de residencia.",
             },
           ]}
-        hasFeedback  
+          hasFeedback
         >
           <Select
             name="tipoResid"
@@ -239,7 +221,7 @@ const handleSelectChange = (value, name) => {
           name="tipoAlojam"
           label="Tipo de Alojamiento"
           rules={[{ required: true, message: 'Por favor, selecciona el tipo de alojamiento.' }]}
-          hasFeedback  
+          hasFeedback
         >
           <Select
             name="tipoAlojam"
@@ -274,7 +256,7 @@ const handleSelectChange = (value, name) => {
               },
             },
           ]}
-          hasFeedback 
+          hasFeedback
         >
           <Input
             className="inputsize"
@@ -308,7 +290,7 @@ const handleSelectChange = (value, name) => {
               },
             },
           ]}
-          hasFeedback 
+          hasFeedback
         >
           <Input
             className="inputsize"
@@ -367,39 +349,39 @@ const handleSelectChange = (value, name) => {
           name="paisResid"
           label="País"
           rules={[{ required: true, message: 'Por favor, selecciona el pais.' }]}
-          hasFeedback  
+          hasFeedback
         >
-        <Select
-        
-        placeholder="Selecciona tu país"
-        options={Object.keys(countryToCities).map((country) => {
-        return {
-         label: `${country}`,
-         value: `${country}`,
-        };
-        })}
-        onChange={(value) => handleSelectChange(value, "paisResid")}
-        >
-        </Select>
-       </Form.Item>
+          <Select
 
-        <Form.Item 
-        name="ciudadResid" 
-        label="Ciudad"
-        rules={[{ required: true, message: 'Por favor, selecciona el pais.' }]}
-        hasFeedback 
-        >
-        <Select
-        placeholder="Selecciona tu ciudad"
-        value={body.ciudadResid}
-        options={countryToCities[body.paisResid]?.map((city) => ({
-          label: city,
-          value: city,
-        }))}
-        onChange={(value) => handleSelectChange(value, "ciudadResid")}
-      >
+            placeholder="Selecciona tu país"
+            options={Object.keys(countryToCities).map((country) => {
+              return {
+                label: `${country}`,
+                value: `${country}`,
+              };
+            })}
+            onChange={(value) => handleSelectChange(value, "paisResid")}
+          >
           </Select>
-      </Form.Item>
+        </Form.Item>
+
+        <Form.Item
+          name="ciudadResid"
+          label="Ciudad"
+          rules={[{ required: true, message: 'Por favor, selecciona el pais.' }]}
+          hasFeedback
+        >
+          <Select
+            placeholder="Selecciona tu ciudad"
+            value={body.ciudadResid}
+            options={countryToCities[body.paisResid]?.map((city) => ({
+              label: city,
+              value: city,
+            }))}
+            onChange={(value) => handleSelectChange(value, "ciudadResid")}
+          >
+          </Select>
+        </Form.Item>
 
         <Form.Item
           name="direcResid"
@@ -444,7 +426,7 @@ const handleSelectChange = (value, name) => {
               },
             },
           ]}
-        hasFeedback 
+          hasFeedback
         >
           <Input
             className="inputsize"
@@ -530,8 +512,8 @@ const handleSelectChange = (value, name) => {
             {
               required: true,
               message: "Por favor, ingresa una descripción del espacio.",
-            },{
-              whitespace:true,
+            }, {
+              whitespace: true,
               message: "No puede dejar en blanco este campo"
             },
           ]}
@@ -553,7 +535,7 @@ const handleSelectChange = (value, name) => {
           label="Comodidades"
           name="servicios"
           rules={[
-            { required:  !isAtLeastFiveChecked ,message:""},
+            { required: !isAtLeastFiveChecked, message: "" },
             {
               validator: (_, values) => {
                 if (isAtLeastFiveChecked) {
@@ -615,7 +597,7 @@ const handleSelectChange = (value, name) => {
           label="Caracteristicas"
           name="servicios"
           rules={[
-            { required:  !isAtLeastFiveChecked ,message:""},
+            { required: !isAtLeastFiveChecked, message: "" },
             {
               validator: (_, values) => {
                 if (isAtLeastFiveChecked) {
@@ -678,7 +660,7 @@ const handleSelectChange = (value, name) => {
           label="Seguridad"
           name="servicios"
           rules={[
-            { required:  !isAtLeastFiveChecked ,message:""},
+            { required: !isAtLeastFiveChecked, message: "" },
             {
               validator: (_, values) => {
                 if (isAtLeastFiveChecked) {
@@ -712,7 +694,7 @@ const handleSelectChange = (value, name) => {
           </div>
 
         </Form.Item>
-        <h3 className="subtitulos">Instrucciones de Check In y Check Out</h3> 
+        <h3 className="subtitulos">Instrucciones de Check In y Check Out</h3>
         <div className="fila-check-input">
           <div className="columna-check-input">
             <Form.Item
@@ -721,10 +703,10 @@ const handleSelectChange = (value, name) => {
               rules={[
                 {
                   required: true,
-                  message: "Por favor, ingresa la hora de check-in.",
-                },{
-                  whitespace:true,
-                  message:"No puede dejar en blanco este campo"
+                  message: "Por favor, ingrese las instrucciones de check-in.",
+                }, {
+                  whitespace: true,
+                  message: "No puede dejar en blanco este campo"
                 }
               ]}
               hasFeedback
@@ -733,10 +715,10 @@ const handleSelectChange = (value, name) => {
               <Input.TextArea
                 className="input-check"
                 name="checkInResid"
-                placeholder="Ingresa la hora de check-in"
+                placeholder="Ingrese las instrucciones de check-in"
                 showCount
                 maxLength={800}
-                autoSize={{ minRows: 5, maxRows: 20 }}
+                autoSize={{ minRows: 5, maxRows: 5 }}
                 onChange={handleChange}
               />
             </Form.Item>
@@ -749,10 +731,10 @@ const handleSelectChange = (value, name) => {
               rules={[
                 {
                   required: true,
-                  message: "Por favor, ingresa la hora de check-out.",
-                },{
+                  message: "Por favor, ingrese las instrucciones de check-out.",
+                }, {
                   whitespace: true,
-                  message:"No puede dejar en blanco este campo"
+                  message: "No puede dejar en blanco este campo"
                 }
               ]}
               hasFeedback
@@ -760,18 +742,19 @@ const handleSelectChange = (value, name) => {
               <Input.TextArea
                 className="input-check"
                 name="checkOutResid"
-                placeholder="Ingresa la hora de check-out"
+                placeholder="Ingrese las instrucciones de check-out"
                 showCount
                 maxLength={800}
-                autoSize={{ minRows: 5, maxRows: 20 }}
+                autoSize={{ minRows: 5, maxRows: 5 }}
                 onChange={handleChange}
               />
             </Form.Item>
-            </div>
+          </div>
         </div>
-        
-        <div className="imgs-edit-form-flex-container">
-            <Form.Item
+
+        <div className="imgs-register-form-flex-container">
+          <Form.Item
+            wrapperCol={{}}
             name="imagen"
             rules={[
               { required: !isImageUploaded },
@@ -785,30 +768,32 @@ const handleSelectChange = (value, name) => {
                 }
               }
             ]}
-            >
-              <UploadComponent
-                urls={urls}
-                setUrls={setUrls}
-                fileList={fileList}
-                setFileList={setFileList}
-                setImageUploaded={setImageUploaded}
-              />
-            </Form.Item>
-          </div>
-          <Divider dashed />
+          >
+            <UploadComponent
+              urls={urls}
+              setUrls={setUrls}
+              fileList={fileList}
+              setFileList={setFileList}
+              setImageUploaded={setImageUploaded}
+            />
+          </Form.Item>
+        </div>
+        <Divider />
 
-        <Form.Item >
-        <div className="button-container">
-          <Button type="primary" htmlType="submit">
-            Completar
-          </Button>
-          <Button htmlType="button" onClick={deleteFiels}>
-            Cancelar
-          </Button>
+        <Form.Item
+          wrapperCol={{}}
+        >
+          <div className="button-container">
+            <Button type="primary" htmlType="submit" >
+              Completar
+            </Button>
+            <Button htmlType="button" onClick={deleteFiels}>
+              Cancelar
+            </Button>
           </div>
         </Form.Item>
         <Divider dashed />
-        </Form>
+      </Form>
     </div>
   );
 

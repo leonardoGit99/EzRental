@@ -3,7 +3,6 @@ import { Carousel, Image } from 'antd';
 import './detailImgsStyles.css';
 
 function DetailImgs({ images }) {
-  console.log(images);
   return (
     <div className="img-flex-container">
       <div className="img-container">
@@ -17,12 +16,12 @@ function DetailImgs({ images }) {
             autoplay
             effect="fade"
           >
-            {images && images.map((image) => (
-              <div>
+            {images && images.map((image, pos) => (
+              <div key={pos}>
                 <Image
                   className="carousel-detail__img"
                   src={image}
-                  alt="Algo salió mal..." 
+                  alt="Algo salió mal..."
                 />
               </div>
             ))}

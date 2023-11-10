@@ -1,0 +1,12 @@
+.review-form-container {
+  width: 50%;
+}
+
+.comment-btns-container {
+  width: 60%;
+}
+
+.btns-container {
+  display: flex;
+  justify-content: space-between;
+}
