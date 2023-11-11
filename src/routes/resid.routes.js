@@ -16,7 +16,8 @@ const {
 const { 
     getrent,
     getevalu,
-    createRent
+    createRent,
+    createEvalu
 } = require("../controllers/rent.controller");
 
 router.post('/api/upload', uploadImg);
@@ -33,5 +34,6 @@ router.get("/image/:idResid", getImgResid);
 router.get("/rent/:idResid", getrent);
 router.post("/rent/:idResid", createRent);
 router.get("/evalu/:idResid", getevalu);
+router.post("/evalu/:idResid", createEvalu);
 
 module.exports = router;
