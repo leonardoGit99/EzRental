@@ -88,7 +88,8 @@
   @media (max-width: 480px) {/* para dispositivos móviles */
  .button-container {
       flex-direction: column; /* Cambia a disposición de columna en dispositivos móviles */
-      align-items: center; /* Centra verticalmente el contenido en dispositivos móviles */
+      align-items: center; 
+     
     }
   
     .button-container button {

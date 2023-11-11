@@ -109,6 +109,19 @@ const handleSelectChange = (value, name) => {
     await createResidence(body);
     console.log(body);
     message.success("Anuncio creado exitosamente!");
+
+    form.resetFields();
+    setFileList([]); // Borra la lista de imágenes
+
+    setIsImageUploaded(false); // Restablece el estado de subida de imágenes
+  
+    // Limpia los valores de los checkboxes
+    for (const key in body) {
+      if (typeof body[key] === "string" && body[key] === "true") {
+        body[key] = "false";
+      }
+    }
+  
   };
   
   useEffect(() => {
@@ -132,10 +145,10 @@ const handleSelectChange = (value, name) => {
       <Form
         name="basic"
         labelCol={{ span: 8 }}
-        wrapperCol={{ span: 16 }}
-        // initialValues={{ remember: true }}
+        
         onFinish={onFinish}
         form={form}
+        autoComplete='off'
       >
         <h3 class="subtitulos">Datos de la residencia</h3>
         <Form.Item
