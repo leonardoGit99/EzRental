@@ -62,8 +62,9 @@ if (id_noti.length > 0) {
 
     const result = await pool.query(`
     SELECT 
-    r.id_residencia, r.titulo_residencia, r.tipo_residencia, r.pais_residencia, r.ciudad_residencia, r.direccion_residencia, r.cama_residencia, r.habitacion_residencia, r.banio_residencia, r.descripcion_residencia, r.huesped_max_residencia, r.dias_max_residencia, r.dias_min_residencia, r.precio_residencia, r.check_in_residencia, r.check_out_residencia, r.tipo_alojamiento,
+    r.id_residencia, r.titulo_residencia, r.tipo_residencia, r.pais_residencia, r.ciudad_residencia, r.direccion_residencia, r.cama_residencia, r.habitacion_residencia, r.banio_residencia, r.descripcion_residencia, r.huesped_max_residencia, r.dias_max_residencia, r.precio_residencia, r.check_in_residencia, r.check_out_residencia, r.tipo_alojamiento, r.telefono_usuario, r.ubicacion_residencia,
     array_agg(i.imagen_residencia) AS imagenes,
+    array_agg(i.descripcion_imagen) AS descripcion_imagen,
     array_agg(s.wifi_residencia) AS wifi_residencia,
     array_agg(s.cocina_residencia) AS cocina_residencia,
     array_agg(s.televisor_residencia) AS televisor_residencia,
@@ -150,7 +151,8 @@ const getResid = async (req, res) =>{
 const createResid = async (req, res) =>{
   const client = await pool.connect(); // Inicia una transacción
   try {
-    const { tituloResid, tipoResid, paisResid, ciudadResid, direcResid, camaResid, habitResid, banioResid, descripResid, huesMaxResid, diasMaxResid, diasMinResid, precioResid, checkInResid, checkOutResid, tipoAlojam,
+    const idUsuario = req.params.idUsuario;
+    const { tituloResid, tipoResid, paisResid, ciudadResid, direcResid, camaResid, habitResid, banioResid, descripResid, huesMaxResid, diasMaxResid, precioResid, checkInResid, checkOutResid, tipoAlojam, telefono, ubicacion,
      wifi, lavadora, cocina, televisor, aireAcond, psicina, jacuzzi, estacionamiento, gim, parrilla, camaras, detectorHumo,
     imagen
     } = req.body;
@@ -166,8 +168,8 @@ const createResid = async (req, res) =>{
     
     await client.query('BEGIN'); // Inicia la transacción
     const newResid = await pool.query(
-      "INSERT INTO residencia (titulo_residencia, tipo_residencia, pais_residencia, ciudad_residencia, direccion_residencia, cama_residencia, habitacion_residencia, banio_residencia, descripcion_residencia, huesped_max_residencia, dias_max_residencia, dias_min_residencia, precio_residencia, check_in_residencia, check_out_residencia, tipo_alojamiento ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)",
-      [tituloResid, tipoResid, paisResid, ciudadResid, direcResid, camaResid, habitResid, banioResid, descripResid, huesMaxResid, diasMaxResid, diasMinResid, precioResid, checkInResid, checkOutResid, tipoAlojam]
+      "INSERT INTO residencia (id_usuario, titulo_residencia, tipo_residencia, pais_residencia, ciudad_residencia, direccion_residencia, cama_residencia, habitacion_residencia, banio_residencia, descripcion_residencia, huesped_max_residencia, dias_max_residencia, precio_residencia, check_in_residencia, check_out_residencia, tipo_alojamiento, telefono_usuario, ubicacion_residencia ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)",
+      [idUsuario, tituloResid, tipoResid, paisResid, ciudadResid, direcResid, camaResid, habitResid, banioResid, descripResid, huesMaxResid, diasMaxResid, precioResid, checkInResid, checkOutResid, tipoAlojam, telefono, ubicacion]
     );
     
     const id_nuevo = await pool.query(
@@ -180,7 +182,7 @@ const createResid = async (req, res) =>{
     for (let i = 0; i < enlacesImagenes.length; i++) {
       const enlaceImagen = enlacesImagenes[i];
       const newImg = await pool.query(
-        "INSERT INTO imagen (id_residencia, imagen_residencia, tipo_imagen) VALUES ($1, $2, 'habitacion')",
+        "INSERT INTO imagen (id_residencia, imagen_residencia, descripcion_imagen) VALUES ($1, $2, 'habitacion')",
         [id_nuevoResid, enlaceImagen]  
       );
     }
@@ -224,7 +226,7 @@ const createResid = async (req, res) =>{
   const updateResid = async (req, res) => {
     try {
       const { idResid } = req.params;
-      const { tituloResid, tipoResid, paisResid, ciudadResid, direcResid, camaResid, habitResid, banioResid, descripResid, huesMaxResid, diasMaxResid, diasMinResid, precioResid, checkInResid, checkOutResid, tipoAlojam,
+      const { tituloResid, tipoResid, paisResid, ciudadResid, direcResid, camaResid, habitResid, banioResid, descripResid, huesMaxResid, diasMaxResid, precioResid, checkInResid, checkOutResid, tipoAlojam, telefono, ubicacion,
         wifi, lavadora, cocina, televisor, aireAcond, psicina, jacuzzi, estacionamiento, gim, parrilla, camaras, detectorHumo,
         estado, fechaIniEst, fechaFinEst,
         imagen
@@ -239,15 +241,15 @@ const createResid = async (req, res) =>{
       }
       
       const newResid = await pool.query(
-        "UPDATE residencia SET titulo_residencia = $1, tipo_residencia = $2, pais_residencia = $3, ciudad_residencia = $4, direccion_residencia= $5, cama_residencia = $6, habitacion_residencia = $7, banio_residencia = $8, descripcion_residencia = $9, huesped_max_residencia= $10, dias_max_residencia = $11, dias_min_residencia = $12, precio_residencia = $13, check_in_residencia= $14, check_out_residencia= $15, tipo_alojamiento= $16  WHERE id_residencia = $17 ",
-        [tituloResid, tipoResid, paisResid, ciudadResid, direcResid, camaResid, habitResid, banioResid, descripResid, huesMaxResid, diasMaxResid, diasMinResid, precioResid, checkInResid, checkOutResid, tipoAlojam, idResid]
+        "UPDATE residencia SET titulo_residencia = $1, tipo_residencia = $2, pais_residencia = $3, ciudad_residencia = $4, direccion_residencia= $5, cama_residencia = $6, habitacion_residencia = $7, banio_residencia = $8, descripcion_residencia = $9, huesped_max_residencia= $10, dias_max_residencia = $11, precio_residencia = $12, check_in_residencia= $13, check_out_residencia= $14, tipo_alojamiento= $15, telefono_usuario= $16, ubicacion_residencia= $17 WHERE id_residencia = $18 ",
+        [tituloResid, tipoResid, paisResid, ciudadResid, direcResid, camaResid, habitResid, banioResid, descripResid, huesMaxResid, diasMaxResid, precioResid, checkInResid, checkOutResid, tipoAlojam, telefono, ubicacion, idResid]
       );
       await pool.query('DELETE FROM IMAGEN WHERE id_residencia = $1', [idResid]);
       const enlacesImagenes = imagen;
       for (let i = 0; i < enlacesImagenes.length; i++) {
         const enlaceImagen = enlacesImagenes[i];
         const newImg = await pool.query(
-          "INSERT INTO imagen (id_residencia, imagen_residencia, tipo_imagen) VALUES ($1, $2, 'habitacion')",
+          "INSERT INTO imagen (id_residencia, imagen_residencia, descripcion_imagen) VALUES ($1, $2, 'habitacion')",
           [idResid, enlaceImagen]  
         );
       }

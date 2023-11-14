@@ -2,6 +2,7 @@ const pool = require('../db')
 
   const getrent = async (req, res) =>{
     const idResid = req.params.idResid;
+    //falta poner nombre de usuario
     try {
       const resultRent = await pool.query("SELECT * FROM reserva WHERE id_residencia = $1", [idResid]);
       res.json(resultRent.rows);
@@ -14,7 +15,10 @@ const pool = require('../db')
   const getevalu = async (req, res) =>{
       const idResid = req.params.idResid;
       try {
-        const resultEvalu = await pool.query("SELECT * FROM evaluacion WHERE id_residencia = $1", [idResid]);
+        const idUsuarioResult = await pool.query("SELECT id_usuario FROM residencia WHERE id_residencia = $1", [idResid]);
+        const idUsuario = idUsuarioResult.rows[0].id_usuario;
+        const resultEvalu = await pool.query("SELECT e.id_evaluacion, e.calificacion, e.comentario, u.nombre_usuario FROM evaluacion e, usuario u WHERE e.id_residencia = $1 and u.id_usuario = $2", 
+        [idResid, idUsuario]);
         res.json(resultEvalu.rows);
       } catch (err) {
         console.error(err);

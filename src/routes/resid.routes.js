@@ -25,7 +25,7 @@ router.post('/api/upload', uploadImg);
 router.get("/resid", getAllResid);
 router.get("/resid/:idResid", getResid);
 router.delete("/resid/:idResid", deleteResid);
-router.post('/resid', createResid);
+router.post('/resid/:idUsuario', createResid);
 router.put('/resid/:idResid', updateResid);
 
 router.get("/serv/:idResid", getServ);
