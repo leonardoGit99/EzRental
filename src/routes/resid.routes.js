@@ -32,8 +32,8 @@ router.get("/serv/:idResid", getServ);
 router.get("/image/:idResid", getImgResid);
 
 router.get("/rent/:idResid", getrent);
-router.post("/rent/:idResid", createRent);
+router.post("/rent/:idResid/:idUsuario", createRent);
 router.get("/evalu/:idResid", getevalu);
-router.post("/evalu/:idResid", createEvalu);
+router.post("/evalu/:idResid/:idUsuario", createEvalu);
 
 module.exports = router;
