@@ -4,7 +4,7 @@ import { Menu, Button } from 'antd';
 import { MenuUnfoldOutlined, MenuFoldOutlined, HomeOutlined, FormOutlined } from '@ant-design/icons';
 import './SideMenuStyles.css';
 import Logo from '../Logo/Logo';
-
+import { useAuth } from '../../contexts/authContext';
 
 function SideMenu({ sideMenuCollapsed, displaySideMenu, switchMode, setSwitchMode }) {
 
@@ -24,6 +24,7 @@ function SideMenu({ sideMenuCollapsed, displaySideMenu, switchMode, setSwitchMod
   const location = useLocation();
   const currentRoute = location.pathname;
 
+  const { logout, user } = useAuth();
   // Eliminar la key seleccionada del almacenamiento local del navegador cada vez que se inicia la pagina
   localStorage.removeItem("selectedTab");
 
@@ -55,6 +56,15 @@ function SideMenu({ sideMenuCollapsed, displaySideMenu, switchMode, setSwitchMod
         defaultSelectedKeys={[selectedTab]}
         mode="inline"
       />
+      <img alt='Sin foto' src={user.photoURL} width={50} height={50}/>
+      <p style={{color:'white'}}>{user.displayName}</p>
+      <p style={{color:'white'}}>{user.email}</p>
+      <Button onClick={() => {console.log(user);}}>
+        USER
+      </Button>
+      <Button onClick={() => {logout()}}>
+        LOGOUT
+      </Button>
     </div>
   );
 };
