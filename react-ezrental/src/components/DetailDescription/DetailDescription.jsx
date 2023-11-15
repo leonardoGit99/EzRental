@@ -5,7 +5,7 @@ import { WhatsAppOutlined } from '@ant-design/icons';
 import './detailDescriptionStyles.css';
 import DetailContactUbication from '../DetailContactUbication/DetailContactUbication';
 
-function DetailDescription({ residenceType, spaceType, description, numberOfGuests, numberOfRooms, numberOfBeds, numberOfBathrooms, residenceTitle, residenceUbication, daysMax }) {
+function DetailDescription({ residenceType, spaceType, description, numberOfGuests, numberOfRooms, numberOfBeds, numberOfBathrooms, residenceTitle, residenceAddress, residenceUbication, wppNumber, daysMax }) {
 
   return (
     <div>
@@ -28,7 +28,9 @@ function DetailDescription({ residenceType, spaceType, description, numberOfGues
           </div>
         </div>
         <DetailContactUbication
+          residenceAddress={residenceAddress}
           residenceUbication={residenceUbication}
+          wppNumber={wppNumber}
           residenceTitle={residenceTitle}
         />
       </div>

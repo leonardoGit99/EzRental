@@ -73,7 +73,9 @@ function MoreInfoMyAds() {
           numberOfRooms={detailAdd.habitacion_residencia}
           numberOfBeds={detailAdd.cama_residencia}
           numberOfBathrooms={detailAdd.banio_residencia}
-          residenceUbication={detailAdd.direccion_residencia}
+          residenceAddress={detailAdd.direccion_residencia}
+          residenceUbication={detailAdd.ubicacion_residencia}
+          wppNumber={detailAdd.telefono_usuario}
           daysMax={detailAdd.dias_max_residencia}
         />
 

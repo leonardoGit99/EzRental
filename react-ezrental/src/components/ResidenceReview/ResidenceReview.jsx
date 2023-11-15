@@ -1,10 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react';
 import './residenceReviewStyles.css';
-import { Card, Popover } from 'antd';
+import { Card, Popover, Rate } from 'antd';
 import Meta from 'antd/es/card/Meta';
 
 
-function ResidenceReview({ commentResidence, idReview }) {
+function ResidenceReview({ commentResidence, idReview, rate, reviewOwner }) {
   const cardRef = useRef(null);
   const [isOverflowed, setIsOverflowed] = useState(false);
 
@@ -26,8 +26,18 @@ function ResidenceReview({ commentResidence, idReview }) {
           ref={cardRef}
         >
           <Meta
-            title={`Comentario ${idReview}`}
-            description={`${commentResidence}`}
+            title={`Reseña de ${reviewOwner}`}
+            description=
+            {
+              <>
+                <Rate
+                  style={{}}
+                  disabled
+                  defaultValue={rate}
+                />
+                <p>{commentResidence}</p>
+              </>
+            }
           />
         </Card>
       </Popover>

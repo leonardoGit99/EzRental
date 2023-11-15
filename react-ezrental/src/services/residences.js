@@ -27,6 +27,11 @@ export const createResidence = async (body) => {
     return response;
 }
 
+export const createImgResidence = async (body, headers) => {
+    const response = await axios.post(`${api}/api/upload`, body, headers);
+    return response;
+}
+
 export const updateResidence = async (body, id) => {
     const response = await axios.put(`${api}/resid/${id}`, JSON.stringify(body), { headers });
     return response;

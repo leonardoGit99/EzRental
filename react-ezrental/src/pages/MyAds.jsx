@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { List } from 'antd';
+import { Empty, List } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import homePageEnDesarrollo from '../assets/homePageEnDesarrollo.jpg';
 import HostCard from '../components/HostCard/HostCard';
@@ -39,11 +39,21 @@ function MyAds() {
 
   const customEmptyMessage = {
     emptyText: (
-      <div>
-        <ExclamationCircleOutlined /><br />
-        No existen residencias registradas
-      </div>),
-  };
+      <>
+        <Empty
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          imageStyle={{
+            height: 60,
+          }}
+          description={
+            <span>
+              No existen Anuncios registrados
+            </span>
+          }
+        >
+        </Empty>
+      </>),
+  }
 
   return (
     <>

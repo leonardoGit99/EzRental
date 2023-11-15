@@ -1,34 +1,59 @@
 import React, { useEffect, useState } from 'react';
-import { List } from 'antd';
+import { Empty, List } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import GuestCard from '../components/GuestCard/GuestCard';
 import { getAllResidences } from '../services/residences';
+import AdsFilter from '../components/AdsFilter/AdsFilter';
 
 function Home() {
   const [residences, setResidences] = useState([]);
   const [isRefresh, setIsRefresh] = useState(true);
+  const [filteredResidences, setFilteredResidences] = useState([]);
+  const [countries, setCountries] = useState([]);
   const setRefresh = (status) => {
     setIsRefresh(status);
   }
 
   useEffect(() => {
     if (isRefresh) {
-      getAllResidences().then((data) => setResidences(data))
+      getAllResidences().then((data) => {
+        setResidences(data);
+        setFilteredResidences(data);
+        const uniqueCountries = [...new Set(data.map(residence => residence.pais_residencia))];
+        setCountries(uniqueCountries);
+      })
       setRefresh(false);
     }
   }, [setRefresh, isRefresh]);
 
-
   const customEmptyMessage = {
     emptyText: (
-      <div>
-        <ExclamationCircleOutlined /><br />
-        No existen residencias
-      </div>),
+      <>
+        <Empty
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          imageStyle={{
+            height: 60,
+          }}
+          description={
+            <span>
+              No existen Lugares
+            </span>
+          }
+        >
+        </Empty>
+      </>),
   };
 
   return (
     <>
+      <AdsFilter
+        residences={residences}
+        filteredResidences={filteredResidences}
+        setFilteredResidences={setFilteredResidences}
+        countries={countries}
+        setCountries={setCountries}
+      />
+
       <List
         grid={{
           xs: 1,
@@ -44,7 +69,7 @@ function Home() {
           }, pageSize: 15,
         }}
         locale={customEmptyMessage}
-        dataSource={residences.filter(residence => residence.estado_residencia[0] === "Publicado")}
+        dataSource={filteredResidences.filter(residence => residence.estado_residencia[0] === "Publicado")}
         renderItem={(residence) => (
           <List.Item
             style={

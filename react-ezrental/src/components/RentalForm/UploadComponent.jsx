@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import "./rentalFormStyles.css";
-import { Upload, Modal, message} from "antd";
+import { Upload, Modal, message } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import axios from "axios";
 import DescriptionModal from "./DescriptionModal";
+import { createImgResidence } from "../../services/residences";
 
-function UploadComponent({urls, setUrls, fileList, setFileList, setImageUploaded}) {
+function UploadComponent({ urls, setUrls, fileList, setFileList, setImageUploaded }) {
 
   const getBase64 = (file) =>
     new Promise((resolve, reject) => {
@@ -74,15 +75,14 @@ function UploadComponent({urls, setUrls, fileList, setFileList, setImageUploaded
 
     try {
       //llamar a peticion para subir archivo a drive y recibir url(ahora mismo con peticion de prueba)
-      axios
-        .post("http://localhost:4000/api/upload", fmData, config)
-        .then((res) => {
+      createImgResidence(fmData, config)
+        .then((response) => {
           setImageUploaded(true);
           onSuccess(file);
           //añadir url recibida del response al array urls
           // urls.push(`https://drive.google.com/uc?export=view&id=${res.data.fileId}`);
-          urls.push({link: res.data.imgUrl, descripcion: ""});
-          
+          urls.push({ link: response.data.imgUrl, descripcion: "" });
+
           openDescriptionModal();
 
           // fileList.length > 9 ? message.info("Solo puede subir 10 fotos") : "";
@@ -95,11 +95,11 @@ function UploadComponent({urls, setUrls, fileList, setFileList, setImageUploaded
       };
     }
   };
-  
+
   const handleRemove = (file, index) => {
 
     //hacer peticion para eliminar de drive y eliminar de array de urls
-    console.log("Indice del elemento borrado:  "+index+" - URL del elemento borrado: "+urls[index]);
+    console.log("Indice del elemento borrado:  " + index + " - URL del elemento borrado: " + urls[index]);
     urls.splice(index, 1);
     setImageUploaded(urls.length > 0);
   }
@@ -111,14 +111,14 @@ function UploadComponent({urls, setUrls, fileList, setFileList, setImageUploaded
       message.error('Solo se admiten imágenes JPG o PNG');
       return Upload.LIST_IGNORE;
     }
-    
+
     const validSize = file.size / 1024 / 1024 < 10;
     if (!validSize) {
       message.error('El peso máximo de la imagen no debe pasar 10MB');
       return Upload.LIST_IGNORE;
     }
 
-  } 
+  }
 
   return (
     <>

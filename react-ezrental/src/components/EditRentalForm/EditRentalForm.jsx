@@ -146,11 +146,12 @@ function EditRentalForm() {
       descripResid: dataAd.descripcion_residencia,
       huesMaxResid: dataAd.huesped_max_residencia,
       diasMaxResid: dataAd.dias_max_residencia,
-      diasMinResid: dataAd.dias_min_residencia,
       precioResid: dataAd.precio_residencia,
       checkInResid: dataAd.check_in_residencia,
       checkOutResid: dataAd.check_out_residencia,
       tipoAlojam: dataAd.tipo_alojamiento,
+      telefono: dataAd.telefono_usuario,
+      ubicacion: dataAd.ubicacion_residencia,
       wifi: dataAd.wifi_residencia,
       lavadora: dataAd.lavadora_residencia,
       cocina: dataAd.cocina_residencia,
@@ -277,6 +278,40 @@ function EditRentalForm() {
               </Form.Item>
 
               <Form.Item
+                name="telefono"
+                label="Número de Whatsapp"
+                rules={[
+                  {
+                    required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, ingrese su número de Whatsapp.'
+                  }, {
+                    validator: (_, value) => {
+                      if (!value) {
+                        return Promise.resolve();
+                      }
+                      const regularPhrase = /^\+?\d+$/;
+                      const validLength = value.length >= 8 && value.length <= 15;
+                      const validExtensions = ["+591", "+51", "+56"];
+                      if (regularPhrase.test(value) && validLength) {
+                        const isStartsWithValidExtension = validExtensions.some((extension) => value.startsWith(extension));
+                        return isStartsWithValidExtension
+                          ? Promise.resolve()
+                          : Promise.reject("Por favor, ingrese la extensión de su país. Ej. +591...")
+                      } else {
+                        return Promise.reject("Por favor, ingrese un número de Whatsapp válido");
+                      }
+                    }
+                  },
+                ]}
+                hasFeedback
+              >
+                <Input
+                  name="telefono"
+                  className="input"
+                  placeholder="Ingrese su número de Whatsapp (+591...)"
+                  onChange={handleChange}
+                />
+              </Form.Item>
+              <Form.Item
                 label="Descripción del Espacio"
                 name="descripResid"
                 rules={[
@@ -322,6 +357,36 @@ function EditRentalForm() {
               </Form.Item>
 
               <Form.Item
+                name="ubicacion"
+                label="Ubicación"
+                rules={[
+                  {
+                    required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, ingrese un enlace de google maps.'
+                  }, {
+                    validator: (_, value) => {
+                      if (!value) {
+                        return Promise.resolve();
+                      }
+                      const regularPhrase = /^https:\/\/maps\.app\.goo\.gl\/.*$/;
+                      if (regularPhrase.test(value)) {
+                        return Promise.resolve();
+                      } else {
+                        return Promise.reject("Por favor, ingrese un enlace válido");
+                      }
+                    }
+                  },
+                ]}
+                hasFeedback
+              >
+                <Input
+                  name="ubicacion"
+                  className="input"
+                  placeholder="https://www.google.com/maps/..."
+                  onChange={handleChange}
+                />
+              </Form.Item>
+
+              <Form.Item
                 name="paisResid"
                 label="País"
                 rules={[{ required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, seleccione su país.' }]
@@ -362,36 +427,6 @@ function EditRentalForm() {
                 >
                 </Select>
               </Form.Item>
-
-              {/* <Form.Item
-                name="paisResid"
-                label="País"
-                rules={[{ required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, ingresa el país.' }]
-                }
-                hasFeedback
-              >
-                <Input
-                  name="paisResid"
-                  className='input'
-                  placeholder="Ingresa el país"
-                  onChange={handleChange}
-                />
-              </Form.Item>
-
-              <Form.Item
-                name="ciudadResid"
-                label="Ciudad"
-                rules={[{ required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, ingresa la ciudad.' }]
-                }
-                hasFeedback
-              >
-                <Input
-                  name="ciudadResid"
-                  className='input'
-                  placeholder="Ingresa la ciudad"
-                  onChange={handleChange}
-                />
-              </Form.Item> */}
 
               <Form.Item
                 name="precioResid"
@@ -467,7 +502,7 @@ function EditRentalForm() {
                   }, {
                     validator: (_, value) => {
                       const max = 10; // Establece el valor máximo permitido aquí
-                      if (value  && parseInt(value, 10) <= max) {
+                      if (value && parseInt(value, 10) <= max) {
                         return Promise.resolve();
                       } else {
                         return Promise.reject(
@@ -491,47 +526,6 @@ function EditRentalForm() {
               </Form.Item>
 
               <Form.Item
-                name="diasMinResid"
-                label="Número Mínimo de dias"
-                rules={[
-                  {
-                    required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, ingresa el numero minimo de dias.'
-                  }, {
-                    validator: (_, value) => {
-                      const min = 1; // Valor mínimo permitido
-                      const max = 10; // Valor máximo permitido
-                      if (value) {
-                        const numericValue = parseInt(value, 10);
-                        if (numericValue >= min && numericValue <= max) {
-                          return Promise.resolve();
-                        } else {
-                          return Promise.reject(
-                            new Error(
-                              `Debe ingresar solo números y un valor entre ${min} y ${max} días.`
-                            )
-                          );
-                        }
-                      } else {
-                        return Promise.reject(
-                          new Error(
-                            "Debe ingresar solo números y un valor mayor a cero."
-                          )
-                        );
-                      }
-                    },
-                  },
-                ]}
-                hasFeedback
-              >
-                <Input
-                  name="diasMinResid"
-                  className='input'
-                  placeholder="Ingresa el número mínimo de dias"
-                  type="number"
-                  onChange={handleChange}
-                />
-              </Form.Item>
-              <Form.Item
                 name="huesMaxResid"
                 label="Número Máximo de Huéspedes"
                 rules={[
@@ -540,7 +534,7 @@ function EditRentalForm() {
                   }, {
                     validator: (_, value) => {
                       const max = 10; // Establece el valor máximo permitido aquí
-                      if (value  && parseInt(value, 10) <= max) {
+                      if (value && parseInt(value, 10) <= max) {
                         return Promise.resolve();
                       } else {
                         return Promise.reject(
@@ -605,7 +599,7 @@ function EditRentalForm() {
                   }, {
                     validator: (_, value) => {
                       const max = 100; // Establece el valor máximo permitido aquí
-                      if (value  && parseInt(value, 10) <= max) {
+                      if (value && parseInt(value, 10) <= max) {
                         return Promise.resolve();
                       } else {
                         return Promise.reject(
@@ -637,7 +631,7 @@ function EditRentalForm() {
                   }, {
                     validator: (_, value) => {
                       const max = 10; // Establece el valor máximo permitido aquí
-                      if (value  && parseInt(value, 10) <= max) {
+                      if (value && parseInt(value, 10) <= max) {
                         return Promise.resolve();
                       } else {
                         return Promise.reject(
@@ -893,7 +887,7 @@ function EditRentalForm() {
                     placeholder="Ingresa las instrucciones de check-in"
                     showCount
                     maxLength={800}
-                    autoSize={{ minRows: 8, maxRows: 8 }}
+                    autoSize={{ minRows: 9, maxRows: 9 }}
                     onChange={handleChange}
 
                   />
@@ -917,7 +911,7 @@ function EditRentalForm() {
                     placeholder="Ingrese las instrucciones de check-out"
                     showCount
                     maxLength={800}
-                    autoSize={{ minRows: 8, maxRows: 8 }}
+                    autoSize={{ minRows: 9, maxRows: 9 }}
                     onChange={handleChange}
                   />
                 </Form.Item>

@@ -4,16 +4,16 @@ import dayjs from 'dayjs';
 import ModalQRCode from '../ModalQRCode/ModalQRCode';
 import './reserveModalStyles.css';
 
-function ReserveModal({ reservationModal, closeReservationModal, numberMaxOfGuests, initialDate, finalDate, daysMin, daysMax, isRefresh, setRefresh, priceResidence }) {
+function ReserveModal({ reservationModal, closeReservationModal, numberMaxOfGuests, initialDate, finalDate, daysMin, daysMax, isRefresh, setRefresh, priceResidence, idAd }) {
   const { RangePicker } = DatePicker;
   const [isVisibleQRCode, setIsVisibleQRCode] = useState(false);
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [selectedEndDate, setSelectedEndDate] = useState(null);
   const [bodyReserve, setBodyReserve] = useState({
-    precioResidencia: 0,
-    huesMaxResid: 0,
-    fechaIniEst: null,
-    fechaFinEst: null
+    precio: 0,
+    fechaIni: null,
+    fechaFin: null,
+    huespedes: 0
   });
 
   const openModalQR = () => {
@@ -28,8 +28,8 @@ function ReserveModal({ reservationModal, closeReservationModal, numberMaxOfGues
     setBodyReserve((prevBodyReserve) => {
       const updatedBodyReserve = {
         ...prevBodyReserve,
-        fechaIniEst: dayjs(dates[0], 'YYYY-MM-DD'),
-        fechaFinEst: dayjs(dates[1], 'YYYY-MM-DD')
+        fechaIni: dayjs(dates[0], 'YYYY-MM-DD'),
+        fechaFin: dayjs(dates[1], 'YYYY-MM-DD')
       }
       return updatedBodyReserve;
     })
@@ -63,8 +63,8 @@ function ReserveModal({ reservationModal, closeReservationModal, numberMaxOfGues
   }
 
   const handleSelectChange = (value, name) => {
-    if (name === "huesMaxResid") {
-      bodyReserve["huesMaxResid"] = value
+    if (name === "huespedes") {
+      bodyReserve["huespedes"] = value
     }
     console.log(bodyReserve);
   }
@@ -109,7 +109,7 @@ function ReserveModal({ reservationModal, closeReservationModal, numberMaxOfGues
 
         <h4>Huéspedes</h4>
         <Form.Item
-          name="huesMaxResid"
+          name="huespedes"
           rules={[{ required: true, message: 'Por favor, seleccione la cantidad de huéspedes' }]}
         >
           <Select
@@ -120,7 +120,7 @@ function ReserveModal({ reservationModal, closeReservationModal, numberMaxOfGues
               value: i + 1
             }))
             }
-            onChange={(value) => handleSelectChange(value, "huesMaxResid")}
+            onChange={(value) => handleSelectChange(value, "huespedes")}
           />
         </Form.Item>
 
@@ -150,6 +150,7 @@ function ReserveModal({ reservationModal, closeReservationModal, numberMaxOfGues
         priceResidence={priceResidence}
         selectedStartDate={dayjs(selectedStartDate).subtract(1, 'day')}//Quito un dia por que no toma el cuenta el dia inicio, toma el siguiente
         selectedEndDate={dayjs(selectedEndDate)}
+        idAd={idAd}
       />
     </Modal>
   )
