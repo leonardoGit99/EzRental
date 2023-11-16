@@ -1,25 +1,23 @@
-.background {
+.form-register-container{
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
   width: 100vw;
-  background: url('./../../assets/homePageEnDesarrollo.jpg');
+  background: url('./../../assets/fondo_8.png');
+  background-position: center center;
   background-size: cover;
+  background-repeat: no-repeat;
 }
 
-.login-form {
-  background-color: rgba(255,255,255,0.50);
-  box-shadow: 0px 8px 32px 0 rgba(0, 0, 255, 0.40);
-  backdrop-filter: blur(10px);
-  padding: 0px 16px 16px 16px;
-  border-radius: 16px;
-  text-align: center;
+.logo-ez-rental-register-container{
+  display: flex;
+  justify-content: center;
 }
 
-.login-button {
-  font-size: medium;
-  height: auto;
+.logo-ez-rental-register-container img{
+  display: block;
+  width: 150px;
 }
 
 .ant-form-item-label {
@@ -38,32 +36,15 @@
   margin-left: 0 !important; /* Elimina cualquier margen izquierdo */
 }
 
-.login-input {
-  width: 100%;
-  margin-bottom: 16px;
-}
-
-.social-login {
-  display: flex;
-  justify-content: center;
-  gap: 24px;
-  color: white;
-  font-size: 40px;
-  margin-bottom: 16px;
-}
-
-.social-icon {
-  cursor: pointer;
-}
-
 .register-form {
+  padding: 0px 16px 16px 16px;
   background-color: rgba(255,255,255,0.50);
   box-shadow: 0px 8px 32px 0 rgba(0, 0, 255, 0.40);
   backdrop-filter: blur(10px);
-  padding: 0px 16px 16px 16px;
   border-radius: 16px;
   text-align: center;
   width: 40vw;
+  margin: 50px 0;
 }
 
 .register-button {
@@ -80,3 +61,39 @@
   background-color: white;
   border-radius: 8px;
 }
+
+@media (320px <=width <=480px) {
+  .register-form {
+    width: 95vw;
+  }
+}
+
+@media (480px <=width <=576px) {
+  .register-form {
+    width: 95vw;
+  }
+}
+
+@media (576px <=width <=768px) {
+  .register-form {
+    width: 80vw;
+  }
+}
+
+@media (768px <=width <=1024px) {
+  .register-form {
+    width: 60vw;
+  }
+}
+
+@media (1024px <=width <=1200px) {
+  .register-form {
+    width: 50vw;
+  }
+}
+
+/* @media (1200px <=width <=1440px) {
+  
+} */
+
+

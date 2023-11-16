@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Divider, Form, Input, Typography, message } from "antd";
+import { GoogleOutlined, FacebookFilled, LoginOutlined, UserAddOutlined } from "@ant-design/icons";
 import { useAuth } from "../../contexts/authContext";
-import { GoogleOutlined, FacebookFilled } from "@ant-design/icons";
+import ezRental from '../../assets/EzRental Transparente v2.png';
 import "./LoginForm.css";
 
 function LoginForm({ formFlag, switchForm }) {
@@ -37,7 +38,7 @@ function LoginForm({ formFlag, switchForm }) {
     }
   };
 
-  const handleGoogleLogin = async() => {
+  const handleGoogleLogin = async () => {
     try {
       await googleLogin();
       navigate("/");
@@ -47,19 +48,22 @@ function LoginForm({ formFlag, switchForm }) {
   }
 
   return (
-    <>
+    <div className="login-form-container">
       <Form
         onFinish={handleFinish}
-        labelCol={{ span: 9 }}
+        labelCol={{ xs: 10, sm: 9, md: 8, lg: 7, xl: 7, xxl: 6 }}
         // wrapperCol={{ span: 16 }}
         className="login-form"
         initialValues={{ remember: true }}
         autoComplete="off"
       >
-        <Typography.Title level={1} style={{fontSize:'40px'}}>¡Bienvenido!</Typography.Title>
-        <Typography.Text type="secondary" style={{fontSize:'20px'}}>Ingrese sus datos de acceso <br /><br /> </Typography.Text>   
+        <Typography.Title level={1} style={{ fontSize: '40px' }}>¡Bienvenido!</Typography.Title>
+        <div className="logo-ez-rental-login-container">
+          <img src={ezRental} ></img>
+        </div>
+        <Typography.Text type="secondary" style={{ fontSize: '20px' }}>Ingrese sus datos de acceso <br /><br /> </Typography.Text>
 
-        <Form.Item label="Email" name="email" hasFeedback rules={[{required:true, message:"Ingrese un correo electrónico"}]}>
+        <Form.Item label="Email" name="email" hasFeedback rules={[{ required: true, message: "Ingrese un correo electrónico" }]}>
           <Input
             name="email"
             placeholder="Ingrese su correo electrónico"
@@ -68,7 +72,7 @@ function LoginForm({ formFlag, switchForm }) {
           ></Input>
         </Form.Item>
 
-        <Form.Item name="password" label="Contraseña" hasFeedback rules={[{required:true,message:"Debe ingresar una contraseña"}]}>
+        <Form.Item name="password" label="Contraseña" hasFeedback rules={[{ required: true, message: "Debe ingresar una contraseña" }]}>
           <Input.Password
             name="password"
             placeholder="Ingrese su contraseña"
@@ -79,21 +83,21 @@ function LoginForm({ formFlag, switchForm }) {
 
         <Form.Item>
           <Button type="primary" htmlType="submit" block className="login-button">
-            Iniciar sesión
+            <LoginOutlined /> Iniciar sesión
           </Button>
-        <Divider style={{borderColor: 'black', fontSize: '18px'}}><Button onClick={console.log("hola")} type='link' className="login-button">¿Olvidaste tu contraseña?</Button></Divider>
+          <Divider style={{ borderColor: 'black', fontSize: '18px' }}><Button onClick={console.log("hola")} type='link' className="login-button">¿Olvidaste tu contraseña?</Button></Divider>
         </Form.Item>
-        <Divider style={{borderColor: 'black', fontSize: '18px'}}>O ingrese con</Divider>
+        <Divider style={{ borderColor: 'black', fontSize: '18px' }}>O ingrese con</Divider>
         <div className="social-login">
-          <GoogleOutlined className="social-icon" style={{color: 'red'}} onClick={handleGoogleLogin}></GoogleOutlined>
-          <FacebookFilled className="social-icon" style={{color: 'blue'}}></FacebookFilled>
+          <GoogleOutlined className="social-icon" style={{ color: 'red' }} onClick={handleGoogleLogin}></GoogleOutlined>
+          <FacebookFilled className="social-icon" style={{ color: 'blue' }}></FacebookFilled>
         </div>
-        <Divider style={{borderColor: 'black', fontSize: '18px'}}>¿Aún no tiene una cuenta?</Divider>
+        <Divider style={{ borderColor: 'black', fontSize: '18px' }}>¿Aún no tiene una cuenta?</Divider>
         <div>
-          <Button onClick={switchForm} className="login-button">Registrarse</Button>
+          <Button onClick={switchForm} className="login-button"> <UserAddOutlined /> Registrarse</Button>
         </div>
       </Form>
-    </>
+    </div>
   );
 }
 
