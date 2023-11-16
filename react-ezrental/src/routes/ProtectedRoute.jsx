@@ -9,7 +9,7 @@ function ProtectedRoute({children}) {
 
     if(loading) return <LoadingPage />
 
-    if(!user) return <Navigate to={'/login'} />
+    if(!user) return <Navigate to={'/iniciar-sesion'} />
 
     return <>{children}</>
 }

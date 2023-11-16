@@ -8,12 +8,12 @@ import {
   Upload,
   message,
 } from "antd";
-import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PlusOutlined } from "@ant-design/icons";
 import { useAuth } from "../../contexts/authContext";
 import "./RegisterForm.css";
+import { createImgResidence } from "../../services/residences";
 
 function RegisterForm({ formFlag, switchForm }) {
   const [userData, setUserData] = useState({
@@ -21,7 +21,6 @@ function RegisterForm({ formFlag, switchForm }) {
     email: "",
     password: "",
     phoneNumber: "",
-    photoURL: "",
   });
 
   const navigate = useNavigate();
@@ -38,36 +37,30 @@ function RegisterForm({ formFlag, switchForm }) {
   const handleChangeUpload = ({ fileList: newFileList }) =>
     setFileList(newFileList);
 
-  // const handleSelectChange = (value) => {
-  //   setSelectedCountry(value);
-  // };
-
-  // const { Option } = Select;
-
-  // const selectCountry = (
-  //   <Select style={{ width: 90 }} onChange={handleSelectChange}>
-  //     <Option value="591">+591</Option>
-  //     <Option value="51">+51</Option>
-  //     <Option value="56">+56</Option>
-  //   </Select>
-  // );
-
   const handleFinish = async () => {
-    // userData.phoneNumber = selectedCountry + userData.phoneNumber;
 
     try {
       await register(
         userData.email,
         userData.password,
         userData.fullname,
-        userData.phoneNumber,
         userData.photoURL
       );
       navigate("/");
     } catch (error) {
       console.log(error.code);
+      switch (error.code) {
+        case "auth/invalid-email":
+          message.error("El correo ingresado es inválido")
+          break;
+        case "auth/email-already-in-use":
+          message.error("El correo ingresado ya fue registrado")
+          break;
+
+        default:
+          break;
+      }
     }
-    //Hacer el registro
   };
 
   const uploadImage = async (options) => {
@@ -87,8 +80,7 @@ function RegisterForm({ formFlag, switchForm }) {
 
     try {
       //llamar a peticion para subir archivo a drive y recibir url(ahora mismo con peticion de prueba)
-      axios
-        .post("http://localhost:4000/api/upload", fmData, config)
+      createImgResidence(fmData, config)
         .then((res) => {
           onSuccess(file);
 
@@ -231,20 +223,6 @@ function RegisterForm({ formFlag, switchForm }) {
             className="register-input"
           ></Input.Password>
         </Form.Item>
-
-        {/* <Form.Item
-                  name="phoneNumber"
-                  label="Número de teléfono"
-                  hasFeedback
-                >
-                  <Input
-                    addonBefore={selectCountry}
-                    type="number"
-                    name="phoneNumber"
-                    placeholder="Ingrese su número de teléfono"
-                    onChange={handleChange}
-                    ></Input>
-                  </Form.Item> */}
 
         <Form.Item
           name="photo"

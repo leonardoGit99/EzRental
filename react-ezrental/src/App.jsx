@@ -13,6 +13,7 @@ import './App.css';
 import LoginPage from './pages/LoginPage';
 import { AuthProvider } from './contexts/authContext';
 import ProtectedRoute from './routes/ProtectedRoute';
+import PasswordRecovery from './pages/PasswordRecovery';
 
 function App() {
   return (
@@ -66,7 +67,8 @@ function App() {
           <Route path='/ez-rental' element={<LayoutBasic />}>
             <Route path='pago-residencia' element={<PaymentSimulation />} />
           </Route>
-          <Route path='/login' element={<LoginPage />} />
+          <Route path='/iniciar-sesion' element={<LoginPage />} />
+          <Route path='/cambiar-contrasenia' element={<PasswordRecovery />} />
         </Routes>
       </AuthProvider>
     </>

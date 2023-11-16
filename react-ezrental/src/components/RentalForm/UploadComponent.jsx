@@ -19,6 +19,7 @@ function UploadComponent({ urls, setUrls, fileList, setFileList, setImageUploade
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
+  const [previewDescription, setPreviewDescription] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
 
   const openDescriptionModal = () => {
@@ -32,6 +33,9 @@ function UploadComponent({ urls, setUrls, fileList, setFileList, setImageUploade
   const handleCancel = () => setPreviewOpen(false);
 
   const handlePreview = async (file) => {
+
+    const index = fileList.findIndex((item) => item.uid === file.uid);
+
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
     }
@@ -40,6 +44,7 @@ function UploadComponent({ urls, setUrls, fileList, setFileList, setImageUploade
     setPreviewTitle(
       file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
     );
+    setPreviewDescription(urls[index].descripcion);
   };
 
   const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
@@ -81,8 +86,11 @@ function UploadComponent({ urls, setUrls, fileList, setFileList, setImageUploade
           onSuccess(file);
           //añadir url recibida del response al array urls
           // urls.push(`https://drive.google.com/uc?export=view&id=${res.data.fileId}`);
-          urls.push({ link: response.data.imgUrl, descripcion: "" });
-
+          
+          // urls.push({link: res.data.imgUrl, descripcion: ""});
+          urls.push(response.data.imgUrl);
+          
+          setImageUploaded(urls.length > 4);
           openDescriptionModal();
 
           // fileList.length > 9 ? message.info("Solo puede subir 10 fotos") : "";
@@ -95,13 +103,13 @@ function UploadComponent({ urls, setUrls, fileList, setFileList, setImageUploade
       };
     }
   };
-
-  const handleRemove = (file, index) => {
+  
+  const handleRemove = async (file, index) => {
 
     //hacer peticion para eliminar de drive y eliminar de array de urls
-    console.log("Indice del elemento borrado:  " + index + " - URL del elemento borrado: " + urls[index]);
-    urls.splice(index, 1);
-    setImageUploaded(urls.length > 0);
+    console.log("Indice del elemento borrado:  "+index+" - URL del elemento borrado: "+urls[index]);
+    await urls.splice(index, 1);
+    setImageUploaded(urls.length > 4);
   }
 
   const handleValidation = (file) => {
@@ -154,16 +162,17 @@ function UploadComponent({ urls, setUrls, fileList, setFileList, setImageUploade
           }}
           src={previewImage}
         />
+        {/* <b>{previewDescription}</b> */}
       </Modal>
 
-      {urls.length > 0 ? (
+      {/* {urls.length > 0 ? (
         <DescriptionModal
           visible={modalVisible}
           urls={urls}
           index={urls.length - 1}
           onClose={closeDescriptionModal}
         />
-      ) : null}
+      ) : null} */}
     </>
   );
 }

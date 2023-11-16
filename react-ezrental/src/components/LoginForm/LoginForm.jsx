@@ -81,12 +81,14 @@ function LoginForm({ formFlag, switchForm }) {
           <Button type="primary" htmlType="submit" block className="login-button">
             Iniciar sesión
           </Button>
-        <Divider style={{borderColor: 'black', fontSize: '18px'}}><Button onClick={console.log("hola")} type='link' className="login-button">¿Olvidaste tu contraseña?</Button></Divider>
         </Form.Item>
+        <Divider style={{borderColor: 'black', fontSize: '18px'}}>
+          <Button onClick={()=>{navigate('/cambiar-contrasenia')}} type='link' className="forgot-password-button">¿Olvidaste tu contraseña?</Button>
+        </Divider>
         <Divider style={{borderColor: 'black', fontSize: '18px'}}>O ingrese con</Divider>
         <div className="social-login">
           <GoogleOutlined className="social-icon" style={{color: 'red'}} onClick={handleGoogleLogin}></GoogleOutlined>
-          <FacebookFilled className="social-icon" style={{color: 'blue'}}></FacebookFilled>
+          <FacebookFilled className="social-icon" style={{color: 'blue'}} onClick={()=>{message.info("Aún en desarrollo ( ͡° ͜ʖ ͡°)")}}></FacebookFilled>
         </div>
         <Divider style={{borderColor: 'black', fontSize: '18px'}}>¿Aún no tiene una cuenta?</Divider>
         <div>
