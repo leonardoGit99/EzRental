@@ -1,17 +1,10 @@
-import {
-  Button,
-  Divider,
-  Form,
-  Input,
-  Select,
-  Typography,
-  Upload,
-  message,
-} from "antd";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { PlusOutlined } from "@ant-design/icons";
+import { Button, Divider, Form, Input, Select, Typography, Upload, message } from "antd";
+import { PlusOutlined, LoginOutlined, UserAddOutlined } from "@ant-design/icons";
 import { useAuth } from "../../contexts/authContext";
+import ezRental from '../../assets/EzRental Transparente v2.png';
+import axios from "axios";
 import "./RegisterForm.css";
 import { createImgResidence } from "../../services/residences";
 
@@ -128,21 +121,24 @@ function RegisterForm({ formFlag, switchForm }) {
   };
 
   return (
-    <>
+    <div className="form-register-container">
       <Form
         onFinish={handleFinish}
-        labelCol={{ span: 9 }}
+        labelCol={{ xs: 10, sm: 8, md: 9, lg: 8, xl: 8, xxl: 6 }}
         // wrapperCol={{ span: 16 }}
         initialValues={{ remember: true }}
         className="register-form"
         autoComplete="off"
       >
-        <Typography.Title level={1} style={{ fontSize: "40px" }}>
-          ¡Bienvenido!
+        <Typography.Title level={1} style={{ fontSize: "40px", margin: '10px 0 0 0' }}>
+          ¡Registrate!
         </Typography.Title>
-        <Typography.Text type="secondary" style={{ fontSize: "20px" }}>
+        <div className="logo-ez-rental-register-container">
+          <img src={ezRental} ></img>
+        </div>
+        <Typography.Text type="secondary" style={{ fontSize: "20px", margin: '' }}>
           Registre sus datos de acceso <br />
-          <br />{" "}
+          <br />
         </Typography.Text>
 
         <Form.Item
@@ -213,7 +209,7 @@ function RegisterForm({ formFlag, switchForm }) {
           hasFeedback
           rules={[
             { required: true, message: "Debe ingresar una contraseña" },
-            { min:6, message:"Su contraseña debe tener al menos 6 caracteres" },
+            { min: 6, message: "Su contraseña debe tener al menos 6 caracteres" },
           ]}
         >
           <Input.Password
@@ -226,7 +222,7 @@ function RegisterForm({ formFlag, switchForm }) {
 
         <Form.Item
           name="photo"
-          label="Suba una foto de usuario"
+          label="Foto de usuario"
           hasFeedback
           rules={[{ required: true, message: "Debe subir su foto" }]}
         >
@@ -253,7 +249,7 @@ function RegisterForm({ formFlag, switchForm }) {
             block
             className="register-button"
           >
-            Registrarse
+            <UserAddOutlined /> Registrarse
           </Button>
         </Form.Item>
         <Divider style={{ borderColor: "black", fontSize: "18px" }}>
@@ -261,11 +257,11 @@ function RegisterForm({ formFlag, switchForm }) {
         </Divider>
         <div>
           <Button onClick={switchForm} className="register-button">
-            Iniciar Sesión
+          <LoginOutlined />  Iniciar Sesión
           </Button>
         </div>
       </Form>
-    </>
+    </div>
   );
 }
 

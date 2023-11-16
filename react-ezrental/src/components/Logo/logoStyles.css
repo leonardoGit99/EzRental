@@ -3,6 +3,7 @@
     justify-content: right;
     align-items: center;
     /* margin: 0 5px; */
+    width: 150px;
     height: 43px;
     flex: 1 1;
     /* background-color: blanchedalmond; */
@@ -16,8 +17,7 @@
 
 .logo__img {
     display: block;
-    margin: 0 4px;
-    height: 9vh;
+    width: 100%;
     /* background-color: aqua; */
     cursor: pointer;
 }
