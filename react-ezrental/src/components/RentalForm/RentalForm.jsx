@@ -3,6 +3,7 @@ import { Form, Input, Button, Select, Checkbox, message, Divider } from 'antd';
 import UploadComponent from './UploadComponent';
 import { useNavigate } from 'react-router-dom';
 import { createResidence } from '../../services/residences';
+import { useAuth } from '../../contexts/authContext';
 import './rentalFormStyles.css';
 
 function RentalForm() {
@@ -13,6 +14,9 @@ function RentalForm() {
   const setImageUploaded = (status) => {
     setIsImageUploaded(status)
   }
+
+  const { user } = useAuth();
+
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const [isAtLeastFiveChecked, setIsAtLeastFiveChecked] = useState(false);
@@ -88,7 +92,8 @@ function RentalForm() {
     // formData.append(body);
     console.log(body);
     try {
-      await createResidence(body);
+      // await createResidence(body, user.uid);
+      await createResidence(body, 1);
       navigate('/mis-anuncios');
       message.success("Anuncio creado exitosamente!");
     } catch (error) {
