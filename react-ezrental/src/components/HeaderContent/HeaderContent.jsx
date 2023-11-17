@@ -30,6 +30,7 @@ function HeaderContent({ sideMenuCollapsed, displaySideMenu, switchMode, setSwit
       </div>
       <div className="switch-mode-container">
         <Switch
+          className="switch-mode"
           onChange={onChange}
           checkedChildren="Anfitrión"
           unCheckedChildren="Huésped"

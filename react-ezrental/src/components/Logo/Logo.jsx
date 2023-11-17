@@ -1,5 +1,5 @@
 import React from 'react';
-import EzRentalLogo from '../../assets/EzRental Transparente v2.png';
+import EzRentalLogo from '../../assets/EzRental Transparente v2.webp';
 import { Link } from 'react-router-dom';
 import './logoStyles.css';
 

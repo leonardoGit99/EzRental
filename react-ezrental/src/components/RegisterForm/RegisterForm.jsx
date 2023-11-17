@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button, Divider, Form, Input, Select, Typography, Upload, message } from "antd";
 import { PlusOutlined, LoginOutlined, UserAddOutlined } from "@ant-design/icons";
 import { useAuth } from "../../contexts/authContext";
-import ezRental from '../../assets/EzRental Transparente v2.png';
+import ezRental from '../../assets/EzRental Transparente v2.webp';
 import axios from "axios";
 import "./RegisterForm.css";
 import { createImgResidence } from "../../services/residences";
@@ -131,7 +131,7 @@ function RegisterForm({ formFlag, switchForm }) {
         autoComplete="off"
       >
         <Typography.Title level={1} style={{ fontSize: "40px", margin: '10px 0 0 0' }}>
-          ¡Registrate!
+          ¡Regístrate!
         </Typography.Title>
         <div className="logo-ez-rental-register-container">
           <img src={ezRental} ></img>

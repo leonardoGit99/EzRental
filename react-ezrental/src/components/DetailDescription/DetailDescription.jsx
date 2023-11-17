@@ -14,12 +14,14 @@ function DetailDescription({ residenceType, spaceType, description, numberOfGues
         <div className="description-sumary-complete">
           <div className="detail-description-summary">
             <div>
-              <p>Lugar para quedarse en {residenceType} · {spaceType}  - Anfitrión: ... </p>
+              <p>Lugar para quedarse en {residenceType} · {spaceType}  	&mdash; Anfitrión: ... </p>
               <p>
                 Máx. {numberOfGuests > 1 ? `${numberOfGuests} Huéspedes` : `${numberOfGuests} Huésped`} · {daysMax > 1 ? `${daysMax} Noches` : `${daysMax} Noche`} · {numberOfRooms > 1 ? `${numberOfRooms} Habitaciones` : `${numberOfRooms} Habitación`} · {numberOfBeds > 1 ? `${numberOfBeds} Camas` : `${numberOfBeds} Cama`} · {numberOfBathrooms > 1 ? `${numberOfBathrooms} Baños` : `${numberOfBathrooms} Baño`}
               </p>
             </div>
-            <Avatar src={homePageEnDesarrollo} size={80} />
+            <div>
+              <Avatar src={homePageEnDesarrollo}  size={{ xs:60, sm:71, md:74, lg:79, xl:80, xxl:85}} />
+            </div>
           </div>
 
           <div className="detail-description">

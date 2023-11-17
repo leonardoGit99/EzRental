@@ -82,7 +82,7 @@ function ReserveModal({ reservationModal, closeReservationModal, numberMaxOfGues
       destroyOnClose="true"
       title={
         <>
-          <h3>Realize su reserva del lugar</h3><Divider />
+          <h3>Realice su reserva del lugar</h3><Divider />
         </>
       }
       footer={null}
@@ -127,12 +127,12 @@ function ReserveModal({ reservationModal, closeReservationModal, numberMaxOfGues
         <Form.Item>
           <div className="btns-reserve-form-flex-container">
             <div>
-              <Button type="primary" htmlType="submit" style={{ margin: '0' }}>
+              <Button className="btn-pay" type="primary" htmlType="submit" >
                 Pagar
               </Button>
             </div>
             <div>
-              <Button style={{ margin: '0' }} htmlType="button" onClick={closeReservationModal}>
+              <Button  className="btn-cancel-pay" htmlType="button" onClick={closeReservationModal}>
                 Cancelar
               </Button>
             </div>
