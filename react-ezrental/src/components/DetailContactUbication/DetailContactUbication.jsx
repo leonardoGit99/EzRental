@@ -1,9 +1,7 @@
 import React from 'react'
 import { Tooltip, Image } from 'antd';
 import { WhatsAppOutlined } from '@ant-design/icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMapLocationDot } from '@fortawesome/free-solid-svg-icons';
-import gMapsIcon from '../../assets/gMapsIcon.png';
+import gMapsIcon from '../../assets/gMapsIcon.webp';
 import './detailContactUbicationStyles.css';
 
 function DetailContactUbication({ residenceAddress, residenceTitle, residenceUbication, wppNumber }) {

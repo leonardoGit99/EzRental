@@ -1,6 +1,9 @@
 .img-flex-container{
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
+    
 }
 .img-container{
     width: 40vw;
@@ -37,6 +40,7 @@
 @media (320px <= width <=480px) {
     .img-container{
         width: 90vw;
+        height: 30vh;
     }
     .carousel-detail__img{
         width: 90vw !important;
@@ -46,21 +50,21 @@
 
 @media (480px <= width <=768px) {
     .img-container{
-        width: 90vw;
+        width: 70vw;
+        height: 35vh;
     }
     .carousel-detail__img{
-        width: 90vw !important;
+        width: 70vw !important;
         height: 35vh !important;
     }
 }
 
 @media (768px <= width <=1024px) {
     .img-container{
-        width: 90vw;
+        width: 60vw;
     }
     .carousel-detail__img{
-        width: 90vw !important;
-        height: 40vh !important;
+        width: 60vw !important;
     }
 }
 
@@ -70,7 +74,6 @@
     }
     .carousel-detail__img{
         width: 50vw !important;
-        height: 50vh !important;
     }
 }
 

@@ -109,6 +109,10 @@
 */
 
 @media (320px <=width <=480px) {
+  .edit-form-container {
+    padding: 0 5px;
+  }
+
   .check-in-out-container {
     display: block;
   }
@@ -129,8 +133,26 @@
     width: 92vw !important;
   }
 
+  .amenities-group {
+    justify-content: center;
+  }
+
   .range-picker-edit-form {
     width: 92vw !important;
+  }
+
+  .btns-edit-form-flex-container {
+    flex-direction: column;
+    padding: 0 10px;
+    gap: 10px;
+  }
+
+  .btn-save-changes {
+    width: 100% !important;
+  }
+
+  .btn-cancel-changes {
+    width: 100% !important;
   }
 }
 
@@ -155,6 +177,10 @@
     width: 93vw !important;
   }
 
+  .amenities-group {
+    justify-content: center;
+  }
+  
   .range-picker-edit-form {
     width: 93vw !important;
   }

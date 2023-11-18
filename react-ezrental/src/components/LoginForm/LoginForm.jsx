@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button, Divider, Form, Input, Typography, message } from "antd";
 import { GoogleOutlined, FacebookFilled, LoginOutlined, UserAddOutlined } from "@ant-design/icons";
 import { useAuth } from "../../contexts/authContext";
-import ezRental from '../../assets/EzRental Transparente v2.png';
+import ezRental from '../../assets/EzRental Transparente v2.webp';
 import "./LoginForm.css";
 
 function LoginForm({ formFlag, switchForm }) {

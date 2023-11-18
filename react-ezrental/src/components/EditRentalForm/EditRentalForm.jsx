@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, Select, Checkbox, DatePicker, message, Divider } from 'antd';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faScrewdriverWrench } from '@fortawesome/free-solid-svg-icons';
 import { getImagesByResidence, getOneResidence, updateResidence } from '../../services/residences';
 import UploadComponent from '../RentalForm/UploadComponent';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -204,11 +206,11 @@ function EditRentalForm() {
   return (
     <>
       <div className="edit-form-container">
-        <h2>Formulario de Edición</h2>
+        <h2><FontAwesomeIcon icon={faScrewdriverWrench} /> Edite su anuncio</h2>
         <Divider />
         <Form
           name="formularioEdicion"
-          labelCol={{ xs: 14, sm: 8, md: 14, lg: 11, xl: 10, xxl: 11 }}
+          labelCol={{ xs: 14, sm: 8, md: 11, lg: 11, xl: 10, xxl: 11 }}
           // wrapperCol={{ span: 16 }}
           initialValues={{ remember: true }}
           autoComplete="off"
@@ -948,12 +950,12 @@ function EditRentalForm() {
           <Form.Item>
             <div className="btns-edit-form-flex-container">
               <div>
-                <Button type="primary" htmlType="submit">
+                <Button type="primary" htmlType="submit" className="btn-save-changes">
                   Guardar Cambios
                 </Button>
               </div>
               <div>
-                <Button htmlType="button" onClick={onCancel}>
+                <Button htmlType="button" onClick={onCancel} className="btn-cancel-changes">
                   Cancelar
                 </Button>
               </div>

@@ -4,7 +4,7 @@
   align-items: center;
   height: 100vh;
   width: 100vw;
-  background: url('./../../assets/fondoLogin_1.png');
+  background: url('./../../assets/fondo_1.webp');
   background-position: center center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -47,7 +47,7 @@
 
 .login-form .ant-form-item-control-input {
   width: 100%;
-  margin-left: 0 !important; /* Elimina cualquier margen izquierdo */
+  margin-left: 0 !important; 
 }
 
 .login-input {

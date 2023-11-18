@@ -188,6 +188,40 @@ function RentalForm() {
         </Form.Item>
 
         <Form.Item
+                name="telefono"
+                label="Número de Whatsapp"
+                rules={[
+                    {
+                    required: true,
+                    validator: (_, value) => {
+                      if (!value) {
+                        return Promise.resolve();
+                      }
+                      const regularPhrase = /^\+?\d+$/;
+                      const validLength = value.length >= 8 && value.length <= 15;
+                      const validExtensions = ["+591", "+51", "+56"];
+                      if (regularPhrase.test(value) && validLength) {
+                        const isStartsWithValidExtension = validExtensions.some((extension) => value.startsWith(extension));
+                        return isStartsWithValidExtension
+                          ? Promise.resolve()
+                          : Promise.reject("Por favor, ingrese la extensión de su país. Ej. +591...")
+                      } else {
+                        return Promise.reject("Por favor, ingrese un número de Whatsapp válido");
+                      }
+                    }
+                  },
+                ]}
+                hasFeedback
+              >
+                <Input
+                  name="telefono"
+                  className="inputsize"
+                  placeholder="Ingrese su número de Whatsapp (+591...)"
+                  onChange={handleChange}
+                />
+              </Form.Item>
+
+        <Form.Item
           label="Precio"
           name="precioResid"
           rules={[
@@ -326,50 +360,6 @@ function RentalForm() {
         </Form.Item>
 
         <Form.Item
-          name="diasMinResid"
-          label="Número Mínimo de dias"
-          rules={[
-            {
-              required: true,
-              message: "Por favor, ingresa el número de días.",
-            },
-            {
-              validator: (_, value) => {
-                const min = 1; // Valor mínimo permitido
-                const max = 10; // Valor máximo permitido
-                if (value && value.match("^0*[1-9][0-9]*")) {
-                  const numericValue = parseInt(value, 10);
-                  if (numericValue >= min && numericValue <= max) {
-                    return Promise.resolve();
-                  } else {
-                    return Promise.reject(
-                      new Error(
-                        `Debe ingresar solo números y un valor entre ${min} y ${max} días.`
-                      )
-                    );
-                  }
-                } else {
-                  return Promise.reject(
-                    new Error(
-                      "Debe ingresar solo números y un valor mayor a cero."
-                    )
-                  );
-                }
-              },
-            },
-          ]}
-          hasFeedback
-        >
-          <Input
-            className="inputsize"
-            name="diasMinResid"
-            placeholder="Ingresa el número mínimo de dias"
-            type="number"
-            onChange={handleChange}
-          />
-        </Form.Item>
-
-        <Form.Item
           name="paisResid"
           label="País"
           rules={[{ required: true, message: 'Por favor, selecciona el pais.' }]}
@@ -426,6 +416,35 @@ function RentalForm() {
             onChange={handleChange}
           />
         </Form.Item>
+
+        <Form.Item
+                name="ubicacion"
+                label="Ubicación"
+                rules={[
+                  {
+                    required: true,
+                    validator: (_, value) => {
+                      if (!value) {
+                        return Promise.resolve();
+                      }
+                      const regularPhrase = /^https:\/\/maps\.app\.goo\.gl\/.*$/;
+                      if (regularPhrase.test(value)) {
+                        return Promise.resolve();
+                      } else {
+                        return Promise.reject("Por favor, ingrese un enlace válido");
+                      }
+                    }
+                  },
+                ]}
+                hasFeedback
+              >
+                <Input
+                  name="ubicacion"
+                  className="inputsize"
+                  placeholder="https://www.google.com/maps/..."
+                  onChange={handleChange}
+                />
+              </Form.Item>
 
         <Form.Item
           name="camaResid"

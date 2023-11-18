@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Spin, Typography } from "antd";
 import "./LoadingPage.css";
 import { LoadingOutlined } from "@ant-design/icons";
-import EzRentalLogo from "../../assets/EzRental.png";
+import EzRentalLogo from "../../assets/EzRental Transparente v2 _Loading.webp";
 
 function LoadingPage() {
   const [phrases, setPhrases] = useState([

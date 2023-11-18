@@ -46,32 +46,66 @@
   border-radius: 14px;
 }
 
-@media (280px <=width <=320px) {
-  .detail-contact-ubication {
-    width: 100%;
-  }
-}
 
 @media (320px <=width <=480px) {
-  .detail-contact-ubication {
+  .detail-contact-ubication-flex-container {
     width: 100%;
+  }
+
+  .detail-contact-ubication-container {
+    margin-left: 0;
+    width: 60%;
+  }
+
+  .detail-address-ubication-container img{
+    width: 7vw;
   }
 }
 
-@media (480px <=width <=768px) {
-  .detail-contact-ubication {
+@media (480px <=width <=576px) {
+  .detail-contact-ubication-flex-container {
     width: 100%;
+  }
+
+  .detail-contact-ubication-container {
+    margin-left: 0;
+    width: 60%;
+  }
+
+  .detail-address-ubication-container img{
+    width: 6vw;
   }
 }
 
-/* @media (768px <=width <=1024px) {
-  
+@media (576px <=width <=768px) {
+  .detail-contact-ubication-flex-container {
+    width: 100%;
   }
-  
-  @media (1024px <=width <=1200px) {
-  
+
+  .detail-contact-ubication-container {
+    margin-left: 0;
+    width: 50%;
   }
-  
-  @media (1200px <=width <=1440px) {
-  
-  } */
+
+  .detail-address-ubication-container img{
+    width: 6vw;
+  }
+}
+
+@media (768px <=width <=1024px) {
+  .detail-address-ubication-container img{
+    width: 3vw;
+  }
+}
+
+@media (1024px <=width <=1200px) {
+  .detail-address-ubication-container img{
+    width: 3vw;
+  }
+}
+
+@media (1200px <=width <=1440px) {
+  .detail-address-ubication-container img{
+    width: 2vw;
+  }
+}

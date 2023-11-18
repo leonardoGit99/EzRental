@@ -1,17 +1,16 @@
  .side-menu-container {
    height: 100%;
    width: 17%;
-   background-color: #001529;
+   background: linear-gradient(to top,#001529 ,#000c17 , #001c32);
    padding: 10px;
    /* overflow: auto; */
-   transition: width 0.2s;
    position: fixed;
-
+   transition: width 0.2s;
  }
 
  .side-menu-container--collapsed {
    width: 70px;
-   transition: width 0.2s;
+   transition: width 0.2s; /* Estilo para header fijo */
  }
 
  .button-logo-container {
@@ -40,19 +39,19 @@
  .avatar-username-container {
    display: flex;
    align-items: center;
-   transition: width 0.9s !important;
    gap: 17px;
  }
 
  .avatar-container {
    width: 100% !important;
-   transition: width 0.9s !important;
+   transition: width 0.2s; /* Estilo para header fijo */
  }
 
  .username-container {
    color: #fff;
    width: 100%;
-   transition: width 0.9s;
+   transition: width 0.2s; /* Estilo para header fijo */
+   
  }
 
  .email-container {
@@ -60,7 +59,7 @@
    justify-content: center;
    color: #f5f5f5b1;
    width: 100%;
-   transition: width 0.9s;
+   transition: width 0.2s; /* Estilo para header fijo */
  }
 
  .email-container>h4 {
@@ -71,7 +70,6 @@
 
  .btn-logout {
    width: 100%;
-   transition: width 0.9s;
  }
 
  .side-menu__menu-btn--active {

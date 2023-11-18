@@ -83,23 +83,17 @@ function SideMenu({ sideMenuCollapsed, displaySideMenu, switchMode, setSwitchMod
           </>
         }
         <Tooltip title="Cerrar Sesión" arrow={false} placement="right">
-        <Button type="primary" onClick={() => { logout() }}>
-          {sideMenuCollapsed
-            ? <LogoutOutlined />
-            :
-            <div className="btn-logout">
-              <LogoutOutlined /> Cerrar Sesión
-            </div>
-          }
-        </Button>
+          <Button type="primary" onClick={() => { logout() }}>
+            {sideMenuCollapsed
+              ? <LogoutOutlined />
+              :
+              <div className="btn-logout">
+                <LogoutOutlined /> Cerrar Sesión
+              </div>
+            }
+          </Button>
         </Tooltip>
       </div>
-      {/*  <img alt='Sin foto' src={user.photoURL} width={50} height={50} />
-      <p style={{ color: 'white' }}>{user.displayName}</p>
-      <p style={{ color: 'white' }}>{user.email}</p>
-      <Button onClick={() => { console.log(user); }}>
-        USER
-      </Button> */}
     </div>
   );
 };
