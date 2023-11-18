@@ -61,15 +61,15 @@ function MyAds() {
         grid={{
           xs: 1,
           sm: 2,
-          md: 3,
-          lg: 4,
-          xl: 5,
-          xxl: 6
+          md: 2,
+          lg: 3,
+          xl: 4,
+          xxl: 4
         }}
         pagination={{
           onChange: page => {
             console.log(page);
-          }, pageSize: 10,
+          }, pageSize: 8,
         }}
         locale={customEmptyMessage}
         dataSource={residences}

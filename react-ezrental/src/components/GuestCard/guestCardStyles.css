@@ -1,12 +1,24 @@
-.guest-card{
-    width: 210px;
-    /* text-align: center;  */
-} 
+.guest-card {
+  width: 265px;
+  /* text-align: center;  */
+}
 
-.img-guest-card-carousel{
-    width: 110px;
-    height: 210px;
-    object-fit: cover;
-    margin: auto;
-    /* margin-top: 20px; */
+
+.img-guest-card-carousel {
+  width: 265px;
+  height: 230px;
+  object-fit: cover;
+  margin: auto;
+  /* margin-top: 20px; */
+}
+
+.meta-guest-card-title-container{
+  display: flex !important;
+  justify-content: space-between !important; 
+}
+
+.meta-guest-card-description-container{
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
 }

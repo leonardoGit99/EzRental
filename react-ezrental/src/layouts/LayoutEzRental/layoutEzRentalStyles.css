@@ -14,10 +14,10 @@
   } */
 
 /* Estilo para header fijo */
-.app-sider-container {
+/* .app-sider-container {
   left: 0 !important;
   transition: left 0.2s !important;
-}
+} */
 
 .app-sider-container--collapsed {
   display: block !important;
@@ -44,7 +44,7 @@
   position: fixed !important; /* Estilo para header fijo */
   z-index: 100 !important; /* Estilo para header fijo */
   width: calc(100% - 17%) !important; /* Estilo para header fijo */
-  transition: width 0.2, left 0.2s !important; /* Estilo para header fijo */
+  transition: width 0.2s, right 0.2s !important; /* Estilo para header fijo */
   right: 0 !important; /* Estilo para header fijo */
   /* background-color: rgb(163, 249, 77); */
 }

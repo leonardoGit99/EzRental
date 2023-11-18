@@ -58,15 +58,15 @@ function Home() {
         grid={{
           xs: 1,
           sm: 2,
-          md: 3,
-          lg: 4,
-          xl: 5,
-          xxl: 6
+          md: 2,
+          lg: 3,
+          xl: 4,
+          xxl: 4
         }}
         pagination={{
           onChange: page => {
             console.log(page);
-          }, pageSize: 15,
+          }, pageSize: 12,
         }}
         locale={customEmptyMessage}
         dataSource={filteredResidences.filter(residence => residence.estado_residencia[0] === "Publicado" || residence.estado_residencia[0] === "Alquilado")}
@@ -90,6 +90,7 @@ function Home() {
               fechaIni={residence.fecha_inicio_estado[0] ? residence.fecha_inicio_estado[0].split('T')[0].toString() : 'Sin fecha'}
               fechaFin={residence.fecha_fin_estado[0] ? residence.fecha_fin_estado[0].split('T')[0].toString() : 'Sin fecha'}
               precio={residence.precio_residencia}
+              promedio={Number(residence.promedio).toFixed(1)}
               setRefresh={setRefresh}
             />
           </List.Item>

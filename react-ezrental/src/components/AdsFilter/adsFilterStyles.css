@@ -1,4 +1,4 @@
-.filter-ads-container{
+.filter-ads-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -15,23 +15,23 @@
   margin-bottom: 17px;
 }
 
-.filter-country{
+.filter-country {
   width: 100px !important;
 }
 
-.filter-city{
+.filter-city {
   width: 110px !important;
 }
 
-.filter-range-dates{
+.filter-range-dates {
   width: 180px !important;
 }
 
-.filter-count-guest{
+.filter-count-guest {
   width: 110px !important;
 }
 
-.filter-range-price-container{
+.filter-range-price-container {
   width: 250px;
 }
 
@@ -40,18 +40,17 @@
 } */
 
 
-.range-price-selected{
+.range-price-selected {
   text-align: center;
   color: gray;
 }
 
-.btn-reset-filters{
+.btn-reset-filters {
   padding: 0 5px !important;
 }
 
-.places-count{
+.places-count {
   display: flex;
   justify-content: space-between;
   margin-left: 35px;
 }
-
