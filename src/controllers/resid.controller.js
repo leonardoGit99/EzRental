@@ -134,9 +134,12 @@ const getResid = async (req, res) =>{
     try {
       // Inicia la transacción
       await pool.query('BEGIN');
+
       await pool.query('DELETE FROM SERVICIO WHERE id_residencia = $1', [id]);
       await pool.query('DELETE FROM IMAGEN WHERE id_residencia = $1', [id]);
       await pool.query('DELETE FROM ESTADO WHERE id_residencia = $1', [id]);
+      await pool.query('DELETE FROM RESERVA WHERE id_residencia = $1', [id]);
+      await pool.query('DELETE FROM EVALUACION WHERE id_residencia = $1', [id]);
       await pool.query('DELETE FROM RESIDENCIA WHERE id_residencia = $1', [id]);
       // Finaliza la transacción
       await pool.query('COMMIT');
