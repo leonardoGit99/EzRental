@@ -20,18 +20,18 @@
   width: 150px;
 }
 
-.ant-form-item-label {
+.register-form .ant-form-item-label {
   width: 15vw !important; 
   text-align: left !important;
   left: 1vw; 
   font-weight: 500;
 }
 
-.ant-col-9.ant-form-item-label {
+.register-form .ant-col-9.ant-form-item-label {
   margin-right: -45px !important;
 }
 
-.ant-form-item-control-input {
+.register-form .ant-form-item-control-input {
   width: 100%;
   margin-left: 0 !important; /* Elimina cualquier margen izquierdo */
 }
@@ -57,7 +57,7 @@
   margin-bottom: 16px;
 }
 
-.ant-upload{
+.register-form .ant-upload{
   background-color: white;
   border-radius: 8px;
 }

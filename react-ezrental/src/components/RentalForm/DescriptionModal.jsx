@@ -3,7 +3,7 @@ import { Modal, Button, Input, Select, message } from "antd";
 import { ExclamationCircleTwoTone } from '@ant-design/icons';
 import "./DescriptionModalStyles.css"
 
-function DescriptionModal({ visible, urls, index, onClose }) {
+function DescriptionModal({ visible, urls, index, onClose, setUploading }) {
 
   const {Option} = Select;
   const [selected, setSelected] = useState(null);
@@ -25,6 +25,7 @@ function DescriptionModal({ visible, urls, index, onClose }) {
         message.error("Seleccione una descripción");
       }
     }
+    setUploading(false);
     urls.length > 9 ? message.info("Solo puede subir 10 fotos") : "";
     setDescription(null);
     setSelected(null);
