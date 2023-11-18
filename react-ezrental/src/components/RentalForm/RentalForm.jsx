@@ -137,7 +137,8 @@ function RentalForm() {
       <Form
         name="basic"
         labelCol={{ span: 8 }}
-        
+        wrapperCol={{ span: 16 }}
+        // initialValues={{ remember: true }}
         onFinish={onFinish}
         form={form}
         autoComplete='off'
@@ -186,38 +187,6 @@ function RentalForm() {
           />
         </Form.Item>
 
-        <Form.Item
-                name="telefono"
-                label="Número de Whatsapp"
-                rules={[
-                    { required: true,
-                      validator: (_, value) => {
-                      if (!value) {
-                        return Promise.resolve();
-                      }
-                      const regularPhrase = /^\+?\d+$/;
-                      const validLength = value.length >= 8 && value.length <= 15;
-                      const validExtensions = ["+591", "+51", "+56"];
-                      if (regularPhrase.test(value) && validLength) {
-                        const isStartsWithValidExtension = validExtensions.some((extension) => value.startsWith(extension));
-                        return isStartsWithValidExtension
-                          ? Promise.resolve()
-                          : Promise.reject("Por favor, ingrese la extensión de su país. Ej. +591...")
-                      } else {
-                        return Promise.reject("Por favor, ingrese un número de Whatsapp válido");
-                      }
-                    }
-                  },
-                ]}
-                hasFeedback
-              >
-                <Input
-                  name="telefono"
-                  className="inputsize"
-                  placeholder="Ingrese su número de Whatsapp (+591...)"
-                  onChange={handleChange}
-                />
-              </Form.Item>
         <Form.Item
           label="Precio"
           name="precioResid"
@@ -407,6 +376,7 @@ function RentalForm() {
           hasFeedback
         >
           <Select
+
             placeholder="Selecciona tu país"
             options={Object.keys(countryToCities).map((country) => {
               return {
@@ -422,7 +392,7 @@ function RentalForm() {
         <Form.Item
           name="ciudadResid"
           label="Ciudad"
-          rules={[{ required: true, message: 'Por favor, selecciona la ciudad.' }]}
+          rules={[{ required: true, message: 'Por favor, selecciona el pais.' }]}
           hasFeedback
         >
           <Select
@@ -456,34 +426,7 @@ function RentalForm() {
             onChange={handleChange}
           />
         </Form.Item>
-        <Form.Item
-                name="ubicacion"
-                label="Ubicación"
-                rules={[
-                   {
-                    required: true,
-                    validator: (_, value) => {
-                      if (!value) {
-                        return Promise.resolve();
-                      }
-                      const regularPhrase = /^https:\/\/maps\.app\.goo\.gl\/.*$/;
-                      if (regularPhrase.test(value)) {
-                        return Promise.resolve();
-                      } else {
-                        return Promise.reject("Por favor, ingrese un enlace válido");
-                      }
-                    }
-                  },
-                ]}
-                hasFeedback
-              >
-                <Input
-                  name="ubicacion"
-                  className="inputsize"
-                  placeholder="https://www.google.com/maps/..."
-                  onChange={handleChange}
-                />
-              </Form.Item>
+
         <Form.Item
           name="camaResid"
           label="Número de Camas"

@@ -5,10 +5,7 @@ import GuestCard from '../components/GuestCard/GuestCard';
 import { getAllResidences } from '../services/residences';
 import AdsFilter from '../components/AdsFilter/AdsFilter';
 
-import FilterContent from '../components/FilterContent/FilterContent'
-
 function Home() {
-  const [ filtros, setFiltros ] = useState({})
   const [residences, setResidences] = useState([]);
   const [isRefresh, setIsRefresh] = useState(true);
   const [filteredResidences, setFilteredResidences] = useState([]);
@@ -100,6 +97,6 @@ function Home() {
       />
     </>
   );
-}
+};
 
 export default Home;
