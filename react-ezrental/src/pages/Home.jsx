@@ -21,7 +21,7 @@ function Home() {
     }
   }, [setRefresh, isRefresh]);
 
-console.log(residences)
+
   function aplicarFiltros(residencias, filtro) {
     return residencias.filter(residencia => {
       if (filtro?.lugar) {
@@ -43,14 +43,27 @@ console.log(residences)
         }
       }
 
-      if(filtro.ragoData) {
-        const fechaInicio = new Date(residencia.fecha_inicio_estado[0]);
-        const fechaFin = new Date(residencia.fecha_fin_estado[0]);
-  
+      // Filtrar por rango de fechas
+      if (filtro.rangoData) {
+        const fechaInicioCliente = parseISO(filtro.rangoData?.inicio);
+        const fechaFinCliente = parseISO(filtro.rangoData?.final);
+        const fechaInicioServidor = parseISO(residencia.fecha_inicio_estado[0]);
+        const fechaFinServidor = parseISO(residencia.fecha_fin_estado[0]);
+
         if (
-          (filtro.ragoData?.inicio && fechaInicio < new Date(filtro.ragoData?.inicio)) ||
-          (filtro.ragoData?.fin && fechaFin > new Date(filtro.ragoData?.fin))
+          !isWithinInterval(fechaInicioServidor, { start: fechaInicioCliente, end: fechaFinCliente }) ||
+          !isWithinInterval(fechaFinServidor, { start: fechaInicioCliente, end: fechaFinCliente })
         ) {
+          return false;
+        }
+      }
+
+      // Filtrar por cantidad de habitaciones
+      if (filtro.personas) {
+        const totalHabitaciones = residencia.habitacion_residencia || 0;
+        const totalPersonas = filtro.personas.reduce((total, persona) => total + persona.count, 0) || 0;
+
+        if (totalHabitaciones < totalPersonas) {
           return false;
         }
       }

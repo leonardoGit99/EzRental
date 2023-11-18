@@ -129,9 +129,7 @@
 
   
 
-  .ant-btn-primary {
-    margin-right: 300px; /* Ajusta el valor según lo necesites para el espacio entre los botones */
-  } 
+
 
   @media (max-width: 480px) {/* para dispositivos móviles */
  .button-container {
