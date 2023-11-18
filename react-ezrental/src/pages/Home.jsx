@@ -69,7 +69,7 @@ function Home() {
           }, pageSize: 15,
         }}
         locale={customEmptyMessage}
-        dataSource={filteredResidences.filter(residence => residence.estado_residencia[0] === "Publicado")}
+        dataSource={filteredResidences.filter(residence => residence.estado_residencia[0] === "Publicado" || residence.estado_residencia[0] === "Alquilado")}
         renderItem={(residence) => (
           <List.Item
             style={

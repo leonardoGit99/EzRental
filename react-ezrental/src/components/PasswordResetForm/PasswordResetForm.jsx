@@ -41,10 +41,10 @@ function PasswordResetForm() {
   };
 
   return (
-    <>
+    <div className="reset-pass-container">
       <Form
         onFinish={handleFinish}
-        labelCol={{ span: 9 }}
+        labelCol={{ xs: 5, sm: 5, md: 8, lg: 7, xl: 6, xxl: 5 }}
         initialValues={{ remember: true }}
         className="password-recovery-form"
         autoComplete="off"
@@ -123,7 +123,7 @@ function PasswordResetForm() {
         </Modal>
         
       ) : null }
-    </>
+    </div>
   );
 }
 
