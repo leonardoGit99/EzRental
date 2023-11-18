@@ -61,30 +61,39 @@ if (id_noti.length > 0) {
     );
 
     const result = await pool.query(`
+    WITH PromedioEvaluacion AS (
+      SELECT
+          id_residencia,
+          AVG(calificacion) AS promedio
+      FROM evaluacion
+      GROUP BY id_residencia
+    )
     SELECT 
     r.id_residencia, r.titulo_residencia, r.tipo_residencia, r.pais_residencia, r.ciudad_residencia, r.direccion_residencia, r.cama_residencia, r.habitacion_residencia, r.banio_residencia, r.descripcion_residencia, r.huesped_max_residencia, r.dias_max_residencia, r.precio_residencia, r.check_in_residencia, r.check_out_residencia, r.tipo_alojamiento, r.telefono_usuario, r.ubicacion_residencia,
-    array_agg(i.imagen_residencia) AS imagenes,
+    array_agg(DISTINCT i.imagen_residencia) AS imagenes,
     array_agg(i.descripcion_imagen) AS descripcion_imagen,
-    array_agg(s.wifi_residencia) AS wifi_residencia,
-    array_agg(s.cocina_residencia) AS cocina_residencia,
-    array_agg(s.televisor_residencia) AS televisor_residencia,
-    array_agg(s.lavadora_residencia) AS lavadora_residencia,
-    array_agg(s.aire_acond_residencia) AS aire_acond_residencia,
-    array_agg(s.psicina_residencia) AS psicina_residencia,
-    array_agg(s.jacuzzi_residencia) AS jacuzzi_residencia,
-    array_agg(s.estacionamiento_residencia) AS estacionamiento_residencia,
-    array_agg(s.gimnasio_residencia) AS gimnasio_residencia,
-    array_agg(s.parrilla_residencia) AS parrilla_residencia,
-    array_agg(s.camaras_segurid_residencia) AS camaras_segurid_residencia,
-    array_agg(s.humo_segurid_residencia) AS humo_segurid_residencia,
-    array_agg(e.estado_residencia) AS estado_residencia,
-    array_agg(e.fecha_inicio_estado) AS fecha_inicio_estado,
-    array_agg(e.fecha_fin_estado) AS fecha_fin_estado
+    array_agg(DISTINCT s.wifi_residencia) AS wifi_residencia,
+    array_agg(DISTINCT s.cocina_residencia) AS cocina_residencia,
+    array_agg(DISTINCT s.televisor_residencia) AS televisor_residencia,
+    array_agg(DISTINCT s.lavadora_residencia) AS lavadora_residencia,
+    array_agg(DISTINCT s.aire_acond_residencia) AS aire_acond_residencia,
+    array_agg(DISTINCT s.psicina_residencia) AS psicina_residencia,
+    array_agg(DISTINCT s.jacuzzi_residencia) AS jacuzzi_residencia,
+    array_agg(DISTINCT s.estacionamiento_residencia) AS estacionamiento_residencia,
+    array_agg(DISTINCT s.gimnasio_residencia) AS gimnasio_residencia,
+    array_agg(DISTINCT s.parrilla_residencia) AS parrilla_residencia,
+    array_agg(DISTINCT s.camaras_segurid_residencia) AS camaras_segurid_residencia,
+    array_agg(DISTINCT s.humo_segurid_residencia) AS humo_segurid_residencia,
+    array_agg(DISTINCT e.estado_residencia) AS estado_residencia,
+    array_agg(DISTINCT e.fecha_inicio_estado) AS fecha_inicio_estado,
+    array_agg(DISTINCT e.fecha_fin_estado) AS fecha_fin_estado,
+    pe.promedio
 FROM residencia r
 LEFT JOIN imagen i ON r.id_residencia = i.id_residencia
 LEFT JOIN servicio s ON r.id_residencia = s.id_residencia
 LEFT JOIN estado e ON r.id_residencia = e.id_residencia
-GROUP BY r.id_residencia;
+LEFT JOIN PromedioEvaluacion pe ON r.id_residencia = pe.id_residencia
+GROUP BY r.id_residencia, pe.promedio;
       `);
     
     res.json(result.rows);
