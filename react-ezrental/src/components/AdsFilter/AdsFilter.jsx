@@ -204,7 +204,7 @@ function AdsFilter({ residences, filteredResidences, setFilteredResidences, coun
         </Button>
       </div>
       <div className="places-count">
-        <h3>Lugares ( {filteredResidences.filter(residence => residence.estado_residencia[0] === "Publicado").length} )</h3>
+        <h3>Lugares ( {filteredResidences.filter(residence => residence.estado_residencia[0] === "Publicado" || residence.estado_residencia[0] === "Alquilado").length} )</h3>
       </div>
     </>
   )
