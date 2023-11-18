@@ -9,6 +9,7 @@ import { getImagesByResidence, getOneResidence, getServicesByResidence } from '.
 import DetailsForGuestOnly from '../components/DetailsForGuestOnly/DetailsForGuestOnly';
 import AddReview from '../components/AddReview/AddReview';
 import ReviewsList from '../components/ReviewsList/ReviewsList';
+import { getAllReviewsByResidence } from '../services/reviews';
 
 
 function MoreInfoAds() {
@@ -17,7 +18,7 @@ function MoreInfoAds() {
   const [detailServices, setDetailServices] = useState({});
   const [imgsResidence, setImgsResidence] = useState([]);
   const [isRefresh, setIsRefresh] = useState(true);
-  const [detailReviews, setDetailReviews] = useState([]);
+  const [reviewsResidence, setReviewsResidence] = useState([]);
   const setRefresh = (status) => {
     setIsRefresh(status);
   }
@@ -43,61 +44,12 @@ function MoreInfoAds() {
     }
   }, [setRefresh, isRefresh]);
 
-
-  const allReviews =
-    [
-      {
-        idResidence: 1,
-        review: [
-          {
-            idReview: 1,
-            rate: 4,
-            comment: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos quam officia alias! Tempore libero officia maxime, nam veritatis, nesciunt error sequi enim commodi repellat explicabo, eius beatae vero. Quis, eos.Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos quam officia alias! Tempore libero officia maxime, nam veritatis, nesciunt error sequi enim commodi repellat explicabo, eius beatae vero. Quis, eos.Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos quam officia alias! Tempore libero officia maxime, nam veritatis, nesciunt error sequi enim commodi repellat explicabo, eius beatae vero. Quis, eos.Lorem ipsum dolor si ${idAd}`
-          }, {
-            idReview: 2,
-            rate: 5,
-            comment: `Comentario 2 de residencia ${idAd}`
-          },{
-            idReview: 3,
-            rate: 5,
-            comment: `Comentario 3 de residencia ${idAd}`
-          },{
-            idReview: 4,
-            rate: 5,
-            comment: `Comentario 4 de residencia ${idAd}`
-          },{
-            idReview: 5,
-            rate: 5,
-            comment: `Comentario 5 de residencia ${idAd}`
-          },{
-            idReview: 6,
-            rate: 5,
-            comment: `Comentario 6 de residencia ${idAd}`
-          },{
-            idReview: 7,
-            rate: 5,
-            comment: `Comentario 7 de residencia ${idAd}`
-          },{
-            idReview: 8,
-            rate: 5,
-            comment: `Comentario 8 de residencia ${idAd}`
-          },{
-            idReview: 9,
-            rate: 5,
-            comment: `Comentario 9 de residencia ${idAd}`
-          }
-        ]
-      }
-    ];
-
   useEffect(() => {
     if (isRefresh) {
-    //simulandoPeticionGet Para todos los comentarios
-    setDetailReviews(allReviews);
-    setRefresh(false);
+      getAllReviewsByResidence(idAd).then((data) => setReviewsResidence(data));
+      setRefresh(false);
     }
-  }, [setRefresh, isRefresh]);
-
+  }, [isRefresh])
 
   return (
     <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
@@ -116,6 +68,7 @@ function MoreInfoAds() {
             isRefresh={isRefresh}
             setRefresh={setRefresh}
             priceResidence={detailAdd.precio_residencia}
+            idAd={idAd}
           />
 
         </DetailTitle>
@@ -134,7 +87,9 @@ function MoreInfoAds() {
           numberOfBeds={detailAdd.cama_residencia}
           numberOfBathrooms={detailAdd.banio_residencia}
           residenceTitle={detailAdd.titulo_residencia}
-          residenceUbication={detailAdd.direccion_residencia}
+          residenceAddress={detailAdd.direccion_residencia}
+          residenceUbication={detailAdd.ubicacion_residencia}
+          wppNumber={detailAdd.telefono_usuario}
           daysMax={detailAdd.dias_max_residencia}
         />
 
@@ -148,13 +103,13 @@ function MoreInfoAds() {
         />
 
         <AddReview
-          idAd={idAd} 
+          idAd={idAd}
           isRefresh={isRefresh}
           setRefresh={setRefresh}
         />
 
         <ReviewsList
-          detailReviews={detailReviews[0]}
+          detailReviews={reviewsResidence}
         />
       </div>
     </div>

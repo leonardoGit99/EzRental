@@ -10,7 +10,10 @@ import EditMyAds from './pages/EditMyAds';
 import LayoutBasic from './layouts/LayoutBasic/LayoutBasic';
 import PaymentSimulation from './pages/PaymentSimulation';
 import './App.css';
-
+import LoginPage from './pages/LoginPage';
+import { AuthProvider } from './contexts/authContext';
+import ProtectedRoute from './routes/ProtectedRoute';
+import PasswordRecovery from './pages/PasswordRecovery';
 
 function App() {
   return (
@@ -47,23 +50,27 @@ function App() {
         declarara lo siguiente: ruta-padre/*. Esto me habilita a las anidaciones solo cuando las rutas se encuentran
         en otro componente. Esto solo es cuando las rutas hijo se encuentran en otro componente/
       */}
-      <Routes>
-        <Route path='/' element={<LayoutEzRental />}>
-          <Route index element={<Home />} />
-          <Route path=":idAd" element={<MoreInfoAds />} />
-          <Route path="aniadir-anuncio" element={<Addad />} />
-          <Route path="mis-anuncios">
-            <Route index element={<MyAds />} />
-            <Route path=":idMyAd" element={<MoreInfoMyAds />} />
-            <Route path="editar-anuncio">
-              <Route path=":idMyAd" element={<EditMyAds />} />
+      <AuthProvider>
+        <Routes>
+          <Route path='/' element={<ProtectedRoute>   <LayoutEzRental />   </ProtectedRoute>}>
+            <Route index element={<Home />} />
+            <Route path=":idAd" element={<MoreInfoAds />} />
+            <Route path="aniadir-anuncio" element={<Addad />} />
+            <Route path="mis-anuncios">
+              <Route index element={<MyAds />} />
+              <Route path=":idMyAd" element={<MoreInfoMyAds />} />
+              <Route path="editar-anuncio">
+                <Route path=":idMyAd" element={<EditMyAds />} />
+              </Route>
             </Route>
           </Route>
-        </Route>
-        <Route path='/ez-rental' element={<LayoutBasic />}>
-          <Route path='pago-residencia' element={<PaymentSimulation />} />
-        </Route>
-      </Routes>
+          <Route path='/ez-rental' element={<LayoutBasic />}>
+            <Route path='pago-residencia' element={<PaymentSimulation />} />
+          </Route>
+          <Route path='/iniciar-sesion' element={<LoginPage />} />
+          <Route path='/cambiar-contrasenia' element={<PasswordRecovery />} />
+        </Routes>
+      </AuthProvider>
     </>
   );
 };

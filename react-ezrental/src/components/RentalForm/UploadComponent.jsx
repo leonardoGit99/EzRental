@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import "./rentalFormStyles.css";
-import { Upload, Modal, message} from "antd";
+import { Upload, Modal, message } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import axios from "axios";
 import DescriptionModal from "./DescriptionModal";
+import { createImgResidence } from "../../services/residences";
 
-function UploadComponent({urls, setUrls, fileList, setFileList, setImageUploaded}) {
+function UploadComponent({ urls, setUrls, fileList, setFileList, setImageUploaded }) {
 
   const getBase64 = (file) =>
     new Promise((resolve, reject) => {
@@ -18,6 +19,7 @@ function UploadComponent({urls, setUrls, fileList, setFileList, setImageUploaded
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
+  const [previewDescription, setPreviewDescription] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
 
   const openDescriptionModal = () => {
@@ -31,6 +33,9 @@ function UploadComponent({urls, setUrls, fileList, setFileList, setImageUploaded
   const handleCancel = () => setPreviewOpen(false);
 
   const handlePreview = async (file) => {
+
+    const index = fileList.findIndex((item) => item.uid === file.uid);
+
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
     }
@@ -39,6 +44,7 @@ function UploadComponent({urls, setUrls, fileList, setFileList, setImageUploaded
     setPreviewTitle(
       file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
     );
+    setPreviewDescription(urls[index].descripcion);
   };
 
   const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
@@ -74,15 +80,17 @@ function UploadComponent({urls, setUrls, fileList, setFileList, setImageUploaded
 
     try {
       //llamar a peticion para subir archivo a drive y recibir url(ahora mismo con peticion de prueba)
-      axios
-        .post("http://localhost:4000/api/upload", fmData, config)
-        .then((res) => {
+      createImgResidence(fmData, config)
+        .then((response) => {
           setImageUploaded(true);
           onSuccess(file);
           //añadir url recibida del response al array urls
           // urls.push(`https://drive.google.com/uc?export=view&id=${res.data.fileId}`);
-          urls.push({link: res.data.imgUrl, descripcion: ""});
           
+          // urls.push({link: res.data.imgUrl, descripcion: ""});
+          urls.push(response.data.imgUrl);
+          
+          setImageUploaded(urls.length > 4);
           openDescriptionModal();
 
           // fileList.length > 9 ? message.info("Solo puede subir 10 fotos") : "";
@@ -96,12 +104,12 @@ function UploadComponent({urls, setUrls, fileList, setFileList, setImageUploaded
     }
   };
   
-  const handleRemove = (file, index) => {
+  const handleRemove = async (file, index) => {
 
     //hacer peticion para eliminar de drive y eliminar de array de urls
     console.log("Indice del elemento borrado:  "+index+" - URL del elemento borrado: "+urls[index]);
-    urls.splice(index, 1);
-    setImageUploaded(urls.length > 0);
+    await urls.splice(index, 1);
+    setImageUploaded(urls.length > 4);
   }
 
   const handleValidation = (file) => {
@@ -111,14 +119,14 @@ function UploadComponent({urls, setUrls, fileList, setFileList, setImageUploaded
       message.error('Solo se admiten imágenes JPG o PNG');
       return Upload.LIST_IGNORE;
     }
-    
+
     const validSize = file.size / 1024 / 1024 < 10;
     if (!validSize) {
       message.error('El peso máximo de la imagen no debe pasar 10MB');
       return Upload.LIST_IGNORE;
     }
 
-  } 
+  }
 
   return (
     <>
@@ -154,16 +162,17 @@ function UploadComponent({urls, setUrls, fileList, setFileList, setImageUploaded
           }}
           src={previewImage}
         />
+        {/* <b>{previewDescription}</b> */}
       </Modal>
 
-      {urls.length > 0 ? (
+      {/* {urls.length > 0 ? (
         <DescriptionModal
           visible={modalVisible}
           urls={urls}
           index={urls.length - 1}
           onClose={closeDescriptionModal}
         />
-      ) : null}
+      ) : null} */}
     </>
   );
 }

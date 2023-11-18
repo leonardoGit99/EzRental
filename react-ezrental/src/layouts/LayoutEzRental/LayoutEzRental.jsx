@@ -27,7 +27,7 @@ function LayoutEzRental() {
         <SideMenu sideMenuCollapsed={sideMenuCollapsed} displaySideMenu={displaySideMenu} switchMode={switchMode} setSwitchMode={setSwitchMode}/>
       </Sider>
       <Layout /* onClick={!sideMenuCollapsed ? displaySideMenu: null} */>
-        <Header className="app-header-container">
+        <Header className={sideMenuCollapsed?"app-header-container--collapsed": "app-header-container"}>
           <HeaderContent sideMenuCollapsed={sideMenuCollapsed} displaySideMenu={displaySideMenu} switchMode={switchMode} setSwitchMode={setSwitchMode}/>
         </Header>
         <Content className="app-content-container" >

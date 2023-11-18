@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Button, Select, Checkbox, DatePicker, message, Divider } from 'antd';
+import { Form, Input, Button, Select, Checkbox, message, Divider } from 'antd';
 import UploadComponent from './UploadComponent';
-import dayjs from "dayjs";
+import { useNavigate } from 'react-router-dom';
 import { createResidence } from '../../services/residences';
+import { useAuth } from '../../contexts/authContext';
 import './rentalFormStyles.css';
 
 function RentalForm() {
   const { Option } = Select;
-  const { RangePicker } = DatePicker;
   const [urls, setUrls] = useState([]);
   const [fileList, setFileList] = useState([]);
   const [isImageUploaded, setIsImageUploaded] = useState(false);
   const setImageUploaded = (status) => {
     setIsImageUploaded(status)
   }
+
+  const { user } = useAuth();
+
+  const navigate = useNavigate();
   const [form] = Form.useForm();
   const [isAtLeastFiveChecked, setIsAtLeastFiveChecked] = useState(false);
   const [body, setBody] = useState({
@@ -28,11 +32,12 @@ function RentalForm() {
     descripResid: '',
     huesMaxResid: '',
     diasMaxResid: '',
-    diasMinResid: '',
     precioResid: '',
     checkInResid: '',
     checkOutResid: '',
     tipoAlojam: '',
+    telefono:'',
+    ubicacion:'',
     wifi: 'false',
     lavadora: 'false',
     cocina: 'false',
@@ -86,29 +91,35 @@ function RentalForm() {
     // const formData = new FormData();
     // formData.append(body);
     console.log(body);
-    await createResidence(body);
-    console.log(body);
-    message.success("Anuncio creado exitosamente!");
-
-    form.resetFields();
-    setFileList([]); // Borra la lista de imágenes
-
-    setIsImageUploaded(false); // Restablece el estado de subida de imágenes
-  
-    // Limpia los valores de los checkboxes
-    for (const key in body) {
-      if (typeof body[key] === "string" && body[key] === "true") {
-        body[key] = "false";
-      }
+    try {
+      // await createResidence(body, user.uid);
+      await createResidence(body, 1);
+      navigate('/mis-anuncios');
+      message.success("Anuncio creado exitosamente!");
+    } catch (error) {
+      message.error(error);
     }
-  
   };
 
   useEffect(() => {
     form.setFieldsValue(body);
   }, [body]);
-
-  const deleteFiels = () => {
+  
+  const deleteFields = () => {
+    form.resetFields();
+    setBody({
+      wifi: 'false',
+      lavadora: 'false',
+      cocina: 'false',
+      televisor: 'false',
+      aireAcond: 'false',
+      psicina: 'false',
+      jacuzzi: 'false',
+      estacionamiento: 'false',
+      gim: 'false',
+      parrilla: 'false',
+      camaras: 'false',
+      detectorHumo: 'false'})
     setFileList([]);
     setUrls([]);
   }
@@ -827,13 +838,13 @@ function RentalForm() {
             wrapperCol={{}}
             name="imagen"
             rules={[
-              { required: !isImageUploaded },
+              { required: !isImageUploaded, message:'' },
               {
                 validator: (_, value) => {
                   if (isImageUploaded) {
                     return Promise.resolve();
                   } else {
-                    return Promise.reject("Por favor, suba una imagen");
+                    return Promise.reject("Por favor, suba al menos 5 imagenes");
                   }
                 }
               }
@@ -857,7 +868,7 @@ function RentalForm() {
             <Button type="primary" htmlType="submit" >
               Completar
             </Button>
-            <Button htmlType="button" onClick={deleteFiels}>
+            <Button htmlType="button" onClick={deleteFields}>
               Cancelar
             </Button>
           </div>

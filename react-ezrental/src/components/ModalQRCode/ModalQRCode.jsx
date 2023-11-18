@@ -1,17 +1,17 @@
 import React from 'react';
 import { Button, Divider, Modal, QRCode, message } from 'antd';
 import { createResidence } from '../../services/residences';
+import { createRental } from '../../services/rentals';
 import './modalQRCodeStyles.css';
 
-function ModalQRCode({ isVisibleQRCode, setIsVisibleQRCode, closeModalQR, bodyReserve, setBodyReserve, closeReservationModal, priceResidence, selectedStartDate, selectedEndDate }) {
+function ModalQRCode({ isVisibleQRCode, setIsVisibleQRCode, closeModalQR, bodyReserve, setBodyReserve, closeReservationModal, priceResidence, selectedStartDate, selectedEndDate, idAd }) {
   const daysDiff = selectedEndDate.diff(selectedStartDate, 'day');
   const totalPrice = priceResidence * daysDiff;
-  bodyReserve["precioResidencia"] = totalPrice;
+  bodyReserve["precio"] = totalPrice;
   
   const onFinish = async () => {
     try {
-      console.log(bodyReserve);
-      await createResidence(bodyReserve);
+      await createRental(bodyReserve, idAd, 1);
       closeReservationModal();
       closeModalQR();
       message.success("Reservación exitosa!. Disfrute de su estadia");

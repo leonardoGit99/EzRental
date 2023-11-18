@@ -1,17 +1,16 @@
 import React from 'react';
-import EzRentalLogo from '../../assets/EzRental Transparente v2.png';
+import EzRentalLogo from '../../assets/EzRental Transparente v2.webp';
 import { Link } from 'react-router-dom';
 import './logoStyles.css';
 
 function Logo() {
   return (
-    <div className='logo-container'>
-      <Link to={'/'}>
+    <Link to={'/'}>
+      <div className='logo-container'>
         <img src={EzRentalLogo} alt="logo lizardtech S.R.L" className='logo__img' />
-      </Link>
-
-      {/* <p className='title-logo'>EZ RENTAL</p> */}
-    </div>
+        {/* <p className='title-logo'>EZ RENTAL</p> */}
+      </div>
+    </Link>
   );
 };
 

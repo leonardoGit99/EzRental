@@ -22,17 +22,6 @@
 }
 
 
-
-@media (280px <=width <=320px) {
-  .detail-description-flex-container {
-    display: block;
-  }
-
-  .description-sumary-complete {
-    width: 100%;
-  }
-}
-
 @media (320px <=width <=480px) {
   .detail-description-flex-container {
     display: block;

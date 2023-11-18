@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
-import { List } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Empty, List } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import GuestCard from '../components/GuestCard/GuestCard';
 import { getAllResidences } from '../services/residences';
+import AdsFilter from '../components/AdsFilter/AdsFilter';
 
 import FilterContent from '../components/FilterContent/FilterContent'
 
@@ -10,79 +11,52 @@ function Home() {
   const [ filtros, setFiltros ] = useState({})
   const [residences, setResidences] = useState([]);
   const [isRefresh, setIsRefresh] = useState(true);
+  const [filteredResidences, setFilteredResidences] = useState([]);
+  const [countries, setCountries] = useState([]);
   const setRefresh = (status) => {
     setIsRefresh(status);
   }
 
   useEffect(() => {
     if (isRefresh) {
-      getAllResidences().then((data) => setResidences(data))
+      getAllResidences().then((data) => {
+        setResidences(data);
+        setFilteredResidences(data);
+        const uniqueCountries = [...new Set(data.map(residence => residence.pais_residencia))];
+        setCountries(uniqueCountries);
+      })
       setRefresh(false);
     }
   }, [setRefresh, isRefresh]);
 
-
-  function aplicarFiltros(residencias, filtro) {
-    return residencias.filter(residencia => {
-      if (filtro?.lugar) {
-        if (filtro?.lugar?.pais && residencia?.pais_residencia !== filtro?.lugar?.pais) {
-          return false;
-        }
-        if (filtro?.lugar?.ciudad && residencia?.ciudad_residencia !== filtro?.lugar?.ciudad) {
-          return false;
-        }
-      }
-
-      if (filtro.ragoPrecio) {
-        const precio = residencia.precio_residencia || 0;
-        if (
-          (filtro.ragoPrecio?.min && precio < filtro.ragoPrecio?.min) ||
-          (filtro.ragoPrecio?.max && precio > filtro.ragoPrecio?.max)
-        ) {
-          return false;
-        }
-      }
-
-      // Filtrar por rango de fechas
-      if (filtro.rangoData) {
-        const fechaInicioCliente = parseISO(filtro.rangoData?.inicio);
-        const fechaFinCliente = parseISO(filtro.rangoData?.final);
-        const fechaInicioServidor = parseISO(residencia.fecha_inicio_estado[0]);
-        const fechaFinServidor = parseISO(residencia.fecha_fin_estado[0]);
-
-        if (
-          !isWithinInterval(fechaInicioServidor, { start: fechaInicioCliente, end: fechaFinCliente }) ||
-          !isWithinInterval(fechaFinServidor, { start: fechaInicioCliente, end: fechaFinCliente })
-        ) {
-          return false;
-        }
-      }
-
-      // Filtrar por cantidad de habitaciones
-      if (filtro.personas) {
-        const totalHabitaciones = residencia.habitacion_residencia || 0;
-        const totalPersonas = filtro.personas.reduce((total, persona) => total + persona.count, 0) || 0;
-
-        if (totalHabitaciones < totalPersonas) {
-          return false;
-        }
-      }
-
-      return true;
-    });
-  }
-
   const customEmptyMessage = {
     emptyText: (
-      <div>
-        <ExclamationCircleOutlined /><br />
-        No existen residencias
-      </div>),
+      <>
+        <Empty
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          imageStyle={{
+            height: 60,
+          }}
+          description={
+            <span>
+              No existen Lugares
+            </span>
+          }
+        >
+        </Empty>
+      </>),
   };
 
   return (
     <>
-      <FilterContent setFiltros={setFiltros} />
+      <AdsFilter
+        residences={residences}
+        filteredResidences={filteredResidences}
+        setFilteredResidences={setFilteredResidences}
+        countries={countries}
+        setCountries={setCountries}
+      />
+
       <List
         grid={{
           xs: 1,
@@ -98,7 +72,7 @@ function Home() {
           }, pageSize: 15,
         }}
         locale={customEmptyMessage}
-        dataSource={aplicarFiltros(residences.filter(residence => residence.estado_residencia[0] === "Publicado"), filtros)}
+        dataSource={filteredResidences.filter(residence => residence.estado_residencia[0] === "Publicado")}
         renderItem={(residence) => (
           <List.Item
             style={

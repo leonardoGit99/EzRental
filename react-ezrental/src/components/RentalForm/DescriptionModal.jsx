@@ -72,6 +72,7 @@ function DescriptionModal({ visible, urls, index, onClose }) {
           <Select
             className="description-select"
             placeholder="Seleccione una opción"
+            value={selected}
             onChange={(value) => handleSelectChange(value)}
             listHeight={230}
           >

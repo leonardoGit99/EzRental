@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Rate, Form, Input, Button, message, Divider } from 'antd';
 import { useForm } from 'antd/es/form/Form';
+import { createReviewResidence } from '../../services/reviews';
 import './addReviewStyles.css';
 
 function AddReview({ isRefresh, setRefresh, idAd }) {
-  ;
   const [form] = useForm();
   const [rating, setRating] = useState(null);
   const [bodyReview, setBodyReview] = useState({
-    rate: null,
-    comment: "",
+    calificacion: null,
+    comentario: ""
   });
 
   const handleInputChange = (e) => {
@@ -27,16 +27,16 @@ function AddReview({ isRefresh, setRefresh, idAd }) {
   }
   const onFinish = async () => {
     console.log(bodyReview, idAd);
-    await createCommentResidence(bodyReview, idAd);
+    await createReviewResidence(bodyReview, idAd, 1);
     setRating();
-    setBodyReview({ rate: null, comment: "", });
+    setBodyReview({ calificacion: null, comentario: "", });
     message.success('Reseña enviada exitosamente!');
     setRefresh(true);
   }
 
   const onCancel = () => {
     setRating();
-    setBodyReview({ rate: null, comment: "", });
+    setBodyReview({ calificacion: null, comentario: "", });
   }
 
   useEffect(() => {
@@ -54,27 +54,27 @@ function AddReview({ isRefresh, setRefresh, idAd }) {
         >
           <h2>Cuéntanos sobre tu experiencia!</h2>
           <Form.Item
-            name="rate"
+            name="calificacion"
             rules={[{ required: true, message: 'No olvide calificar su experiencia' }]}
           >
             <h3>Calificar</h3>
             <Rate
-              name="rate"
+              name="calificacion"
               value={rating}
-              onChange={(value) => handleRatingChange(value, "rate")}
+              onChange={(value) => handleRatingChange(value, "calificacion")}
             />
           </Form.Item>
 
           <div className="comment-btns-container" >
             <Form.Item
-              name="comment"
+              name="comentario"
               rules={[{ required: true, message: "No olvide dejar su comentario" }]}
             >
               <h3>Agregar Comentario: </h3>
               <Input.TextArea
-                name="comment"
+                name="comentario"
                 placeholder="Ingrese un comentario acerca de su experiencia..."
-                value={bodyReview.comment}
+                value={bodyReview.comentario}
                 autoSize={{ minRows: 5, maxRows: 5 }}
                 maxLength={650}
                 showCount
@@ -82,7 +82,7 @@ function AddReview({ isRefresh, setRefresh, idAd }) {
               />
             </Form.Item>
             {
-              (bodyReview.rate && bodyReview.comment) && (
+              (bodyReview.calificacion && bodyReview.comentario) && (
                 <Form.Item>
                   <div className="btns-container">
                     <div>
