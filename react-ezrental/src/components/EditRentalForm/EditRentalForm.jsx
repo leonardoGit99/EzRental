@@ -127,7 +127,7 @@ function EditRentalForm() {
         uid: `-1-${index}`,
         name: `File ${index}`,
         status: 'done',
-        url: imagen.imagen_resdencia,
+        url: imagen.imagen_residencia,
       }))
       )
     }
