@@ -123,11 +123,11 @@ function EditRentalForm() {
     const fetchImgs = async () => {
       const data = await getImagesByResidence(idMyAd);
       setUrls(data);
-      setFileList(data.map((link, index) => ({
+      setFileList(data.map((imagen, index) => ({
         uid: `-1-${index}`,
         name: `File ${index}`,
         status: 'done',
-        url: link,
+        url: imagen.imagen_resdencia,
       }))
       )
     }
