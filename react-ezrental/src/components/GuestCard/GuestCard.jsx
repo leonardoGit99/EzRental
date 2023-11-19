@@ -30,7 +30,7 @@ function GuestCard({ idResidencia, imagen, titulo, ciudad, pais, fechaIni, fecha
                     {ciudad}, {pais}
                   </div>
                   <div>
-                    <StarFilled style={{ fontSize: "13px" }} /> <span style={{ fontWeight: "400" }}>{promedio}</span>
+                    <StarFilled style={{ fontSize: "13px", color:'#ECAB0F'}} /> <span style={{ fontWeight: "400" }}>{promedio}</span>
                   </div>
                 </div>
               }

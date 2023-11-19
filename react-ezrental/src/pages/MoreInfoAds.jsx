@@ -50,7 +50,6 @@ function MoreInfoAds() {
       setRefresh(false);
     }
   }, [isRefresh])
-
   return (
     <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
       <div style={{ display: 'flex', flexDirection: 'column', width: '1200px', maxWidth: '1200px' }}>
@@ -110,6 +109,7 @@ function MoreInfoAds() {
 
         <ReviewsList
           detailReviews={reviewsResidence}
+          averageRates={detailAdd.promedio}
         />
       </div>
     </div>
