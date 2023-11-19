@@ -147,16 +147,22 @@ const getResid = async (req, res) =>{
   }
   };
  
-  const getImgResid = async (req, res) => {
-    const idResid = req.params.idResid;
-    try {
-        const resultImgResid = await pool.query("SELECT imagen_residencia FROM residencia r, imagen i WHERE r.id_residencia = i.id_residencia AND r.id_residencia = $1", [idResid]);
-        const images = resultImgResid.rows.map((row) => row.imagen_residencia); // Extrae las URLs de las imágenes en un nuevo arreglo
-        res.json({ imagen_residencia: images }); // Envía un objeto con el arreglo de imágenes
-    } catch (err) {
-        res.status(500).send("Error obteniendo las imagenes de la residencia");
-    }
-};
+    const getImgResid = async (req, res) => {
+      const idResid = req.params.idResid;
+      try {
+          const resultImgResid = await pool.query("SELECT i.imagen_residencia, i.descripcion_imagen FROM residencia r, imagen i WHERE r.id_residencia = i.id_residencia AND r.id_residencia = $1", [idResid]);
+          
+          const images = resultImgResid.rows.map((row) => ({
+              imagen_residencia: row.imagen_residencia,
+              descripcion_imagen: row.descripcion_imagen
+          }));
+
+          res.json({ imagenes_residencia: images }); // Envía un objeto con el arreglo de imágenes y descripciones
+      } catch (err) {
+          res.status(500).send("Error obteniendo las imágenes de la residencia");
+      }
+  };
+
 
 
   const getServ = async (req, res) =>{
@@ -292,6 +298,7 @@ const createResid = async (req, res) =>{
         [tituloResid, tipoResid, paisResid, ciudadResid, direcResid, camaResid, habitResid, banioResid, descripResid, huesMaxResid, diasMaxResid, precioResid, checkInResid, checkOutResid, tipoAlojam, telefono, ubicacion, idResid]
       );
       await pool.query('DELETE FROM IMAGEN WHERE id_residencia = $1', [idResid]);
+
       const enlacesImagenes = imagen;
       console.log(enlacesImagenes);
       for (let i = 0; i < enlacesImagenes.length; i++) {
