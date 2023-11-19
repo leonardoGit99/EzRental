@@ -71,7 +71,7 @@ if (id_noti.length > 0) {
     SELECT 
     r.id_residencia, r.titulo_residencia, r.tipo_residencia, r.pais_residencia, r.ciudad_residencia, r.direccion_residencia, r.cama_residencia, r.habitacion_residencia, r.banio_residencia, r.descripcion_residencia, r.huesped_max_residencia, r.dias_max_residencia, r.precio_residencia, r.check_in_residencia, r.check_out_residencia, r.tipo_alojamiento, r.telefono_usuario, r.ubicacion_residencia,
     array_agg(DISTINCT i.imagen_residencia) AS imagenes,
-    array_agg(DISTINCT i.descripcion_imagen) AS descripcion_imagen,
+    array_agg( i.descripcion_imagen) AS descripcion_imagen,
     array_agg(DISTINCT s.wifi_residencia) AS wifi_residencia,
     array_agg(DISTINCT s.cocina_residencia) AS cocina_residencia,
     array_agg(DISTINCT s.televisor_residencia) AS televisor_residencia,
@@ -293,11 +293,13 @@ const createResid = async (req, res) =>{
       );
       await pool.query('DELETE FROM IMAGEN WHERE id_residencia = $1', [idResid]);
       const enlacesImagenes = imagen;
+      console.log(enlacesImagenes);
       for (let i = 0; i < enlacesImagenes.length; i++) {
-        const enlaceImagen = enlacesImagenes[i];
+        const {link, descripcion } = enlacesImagenes[i];
+        
         const newImg = await pool.query(
-          "INSERT INTO imagen (id_residencia, imagen_residencia, descripcion_imagen) VALUES ($1, $2, 'habitacion')",
-          [idResid, enlaceImagen]  
+          "INSERT INTO imagen (id_residencia, imagen_residencia, descripcion_imagen) VALUES ($1, $2, $3)",
+          [id_nuevoResid, link, descripcion]
         );
       }
 
