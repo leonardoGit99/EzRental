@@ -71,7 +71,7 @@ if (id_noti.length > 0) {
     SELECT 
     r.id_residencia, r.titulo_residencia, r.tipo_residencia, r.pais_residencia, r.ciudad_residencia, r.direccion_residencia, r.cama_residencia, r.habitacion_residencia, r.banio_residencia, r.descripcion_residencia, r.huesped_max_residencia, r.dias_max_residencia, r.precio_residencia, r.check_in_residencia, r.check_out_residencia, r.tipo_alojamiento, r.telefono_usuario, r.ubicacion_residencia,
     array_agg(DISTINCT i.imagen_residencia) AS imagenes,
-    array_agg(i.descripcion_imagen) AS descripcion_imagen,
+    array_agg(DISTINCT i.descripcion_imagen) AS descripcion_imagen,
     array_agg(DISTINCT s.wifi_residencia) AS wifi_residencia,
     array_agg(DISTINCT s.cocina_residencia) AS cocina_residencia,
     array_agg(DISTINCT s.televisor_residencia) AS televisor_residencia,
@@ -107,7 +107,40 @@ GROUP BY r.id_residencia, pe.promedio;
 const getResid = async (req, res) =>{
   const idResid = req.params.idResid;
   try {
-    const resultResid = await pool.query("SELECT * FROM residencia r, servicio s, estado e WHERE r.id_residencia = s.id_residencia AND r.id_residencia = e.id_residencia AND r.id_residencia = $1", [idResid]);
+    const resultResid = await pool.query(`
+      WITH PromedioEvaluacion AS (
+        SELECT
+          id_residencia,
+          AVG(calificacion) AS promedio
+        FROM evaluacion
+        GROUP BY id_residencia
+      )
+      SELECT 
+      r.id_residencia, r.titulo_residencia, r.tipo_residencia, r.pais_residencia, r.ciudad_residencia, r.direccion_residencia, r.cama_residencia, r.habitacion_residencia, r.banio_residencia, r.descripcion_residencia, r.huesped_max_residencia, r.dias_max_residencia, r.precio_residencia, r.check_in_residencia, r.check_out_residencia, r.tipo_alojamiento, r.telefono_usuario, r.ubicacion_residencia,
+      MAX(DISTINCT s.wifi_residencia) AS wifi_residencia,
+      MAX(DISTINCT s.cocina_residencia) AS cocina_residencia,
+      MAX(DISTINCT s.televisor_residencia) AS televisor_residencia,
+      MAX(DISTINCT s.lavadora_residencia) AS lavadora_residencia,
+      MAX(DISTINCT s.aire_acond_residencia) AS aire_acond_residencia,
+      MAX(DISTINCT s.psicina_residencia) AS psicina_residencia,
+      MAX(DISTINCT s.jacuzzi_residencia) AS jacuzzi_residencia,
+      MAX(DISTINCT s.estacionamiento_residencia) AS estacionamiento_residencia,
+      MAX(DISTINCT s.gimnasio_residencia) AS gimnasio_residencia,
+      MAX(DISTINCT s.parrilla_residencia) AS parrilla_residencia,
+      MAX(DISTINCT s.camaras_segurid_residencia) AS camaras_segurid_residencia,
+      MAX(DISTINCT s.humo_segurid_residencia) AS humo_segurid_residencia,
+      MAX(DISTINCT e.estado_residencia) AS estado_residencia,
+      MAX(DISTINCT e.fecha_inicio_estado) AS fecha_inicio_estado,
+      MAX(DISTINCT e.fecha_fin_estado) AS fecha_fin_estado,
+      pe.promedio
+      FROM residencia r
+      LEFT JOIN servicio s ON r.id_residencia = s.id_residencia
+      LEFT JOIN estado e ON r.id_residencia = e.id_residencia
+      LEFT JOIN PromedioEvaluacion pe ON r.id_residencia = pe.id_residencia
+      WHERE r.id_residencia = $1
+      GROUP BY r.id_residencia, pe.promedio;
+
+    `, [idResid]);
     res.json(resultResid.rows[0]);
   } catch (err) {
     res.status(500).send("Error obteniendo la residencia");
@@ -191,11 +224,13 @@ const createResid = async (req, res) =>{
     const id_nuevoResid = parseInt(id_nuevo.rows[0].id_residencia); 
      
     const enlacesImagenes = imagen;
+      console.log(enlacesImagenes);
     for (let i = 0; i < enlacesImagenes.length; i++) {
-      const enlaceImagen = enlacesImagenes[i];
+      const {link, descripcion } = enlacesImagenes[i];
+      
       const newImg = await pool.query(
-        "INSERT INTO imagen (id_residencia, imagen_residencia, descripcion_imagen) VALUES ($1, $2, 'habitacion')",
-        [id_nuevoResid, enlaceImagen]  
+        "INSERT INTO imagen (id_residencia, imagen_residencia, descripcion_imagen) VALUES ($1, $2, $3)",
+        [id_nuevoResid, link, descripcion]
       );
     }
     const newServ = await pool.query(
