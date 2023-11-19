@@ -25,8 +25,8 @@ function AdsFilter({ residences, filteredResidences, setFilteredResidences, coun
       (!value || residence.pais_residencia === value) && // Si value es falsy (null, undefined, etc.) entonces toda la expresion en true, sino se evalua la segunda expresion residence.pais_residencia === value
       (!selectedCity || residence.ciudad_residencia === selectedCity) &&// Si value es falsy (null, undefined, etc.) entonces toda la expresion en true, sino se evalua la segunda expresion residence.ciudad_residencia === selectedCity
       (!dateRange || (
-        new Date(residence.fecha_inicio_estado[0]) >= dayjs(dateRange[0]).subtract(1, 'day') &&
-        new Date(residence.fecha_fin_estado[0]) <= dateRange[1]
+        dateRange[0] >= dayjs(residence.fecha_inicio_estado[0]) &&
+        dateRange[1] <= dayjs(residence.fecha_fin_estado[0]).add(1, 'day')
       )) &&
       (!guestsCount || residence.huesped_max_residencia >= guestsCount) &&
       (!priceRange || ((priceRange[0] <= residence.precio_residencia) && (residence.precio_residencia <= priceRange[1])))
@@ -39,8 +39,8 @@ function AdsFilter({ residences, filteredResidences, setFilteredResidences, coun
       (!selectedCountry || residence.pais_residencia === selectedCountry) &&
       (!value || residence.ciudad_residencia === value) &&
       (!dateRange || (
-        new Date(residence.fecha_inicio_estado[0]) >= dayjs(dateRange[0]).subtract(1, 'day') &&
-        new Date(residence.fecha_fin_estado[0]) <= dateRange[1]
+        dateRange[0] >= dayjs(residence.fecha_inicio_estado[0]) &&
+        dateRange[1] <= dayjs(residence.fecha_fin_estado[0]).add(1, 'day')
       )) &&
       (!guestsCount || residence.huesped_max_residencia >= guestsCount) &&
       (!priceRange || ((priceRange[0] <= residence.precio_residencia) && (residence.precio_residencia <= priceRange[1])))
@@ -54,8 +54,8 @@ function AdsFilter({ residences, filteredResidences, setFilteredResidences, coun
       (!selectedCountry || residence.pais_residencia === selectedCountry) &&
       (!selectedCity || residence.ciudad_residencia === selectedCity) &&
       (!dates || (
-        new Date(residence.fecha_inicio_estado[0]) >= dayjs(dates[0]).subtract(1, 'day') &&
-        new Date(residence.fecha_fin_estado[0]) <= dates[1]
+        dates[0] >= dayjs(residence.fecha_inicio_estado[0]) &&
+        dates[1] <= dayjs(residence.fecha_fin_estado[0]).add(1, 'day')
       )) &&
       (!guestsCount || residence.huesped_max_residencia >= guestsCount) &&
       (!priceRange || ((priceRange[0] <= residence.precio_residencia) && (residence.precio_residencia <= priceRange[1])))
@@ -68,8 +68,8 @@ function AdsFilter({ residences, filteredResidences, setFilteredResidences, coun
       (!selectedCountry || residence.pais_residencia === selectedCountry) &&
       (!selectedCity || residence.ciudad_residencia === selectedCity) &&
       (!dateRange || (
-        new Date(residence.fecha_inicio_estado[0]) >= dayjs(dateRange[0]).subtract(1, 'day') &&
-        new Date(residence.fecha_fin_estado[0]) <= dateRange[1]
+        dateRange[0] >= dayjs(residence.fecha_inicio_estado[0]) &&
+        dateRange[1] <= dayjs(residence.fecha_fin_estado[0]).add(1, 'day')
       )) &&
       (!value || residence.huesped_max_residencia >= value) &&
       (!priceRange || priceRange[0] <= residence.precio_residencia && residence.precio_residencia <= priceRange[1])
@@ -82,8 +82,8 @@ function AdsFilter({ residences, filteredResidences, setFilteredResidences, coun
       (!selectedCountry || residence.pais_residencia === selectedCountry) &&
       (!selectedCity || residence.ciudad_residencia === selectedCity) &&
       (!dateRange || (
-        new Date(residence.fecha_inicio_estado[0]) >= dayjs(dateRange[0]).subtract(1, 'day') &&
-        new Date(residence.fecha_fin_estado[0]) <= dateRange[1]
+        dateRange[0] >= dayjs(residence.fecha_inicio_estado[0]) &&
+        dateRange[1] <= dayjs(residence.fecha_fin_estado[0]).add(1, 'day')
       )) &&
       (!guestsCount || residence.huesped_max_residencia >= guestsCount) &&
       (value[0] <= residence.precio_residencia && residence.precio_residencia <= value[1])
