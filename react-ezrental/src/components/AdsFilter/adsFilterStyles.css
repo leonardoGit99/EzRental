@@ -1,3 +1,7 @@
+.display-filter-ads {
+  display: block;
+}
+
 .filter-ads-container {
   display: flex;
   justify-content: space-between;
@@ -54,3 +58,55 @@
   justify-content: space-between;
   margin-left: 35px;
 }
+
+
+@media (320px <=width <=480px) {
+  .display-filter-ads {
+    display: none;
+  }
+}
+
+@media (480px <=width <=576px) {
+  .display-filter-ads {
+    display: none;
+  }
+}
+
+@media (576px <=width <=768px) {
+  .display-filter-ads {
+    display: none;
+  }
+}
+
+@media (768px <=width <=1024px) {
+  .display-filter-ads {
+    display: none;
+  }
+}
+
+@media (1024px <=width <=1200px) {
+  .filter-ads-container {
+    border-radius: 20px;
+    gap: 0px;
+    padding: 0 10px;
+    margin: 0 0;
+    margin-bottom: 17px;
+  }
+
+  .places-count {
+    display: flex;
+    margin-left: 10px;
+  }
+
+  .btn-reset-filters {
+    display: block;
+  }
+
+  .btn-reset-filters-text {
+    display: none !important;
+  }
+}
+
+/* @media (1200px <=width <=1440px) {
+  
+} */

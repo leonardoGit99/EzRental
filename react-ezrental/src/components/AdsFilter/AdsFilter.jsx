@@ -4,6 +4,7 @@ import { FilterOutlined } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGlobe, faEarthAmericas, faBuildingUser, faPersonWalkingLuggage } from '@fortawesome/free-solid-svg-icons';
 import dayjs from 'dayjs';
+import AdsFilterModal from './AdsFilterModal';
 import './adsFilterStyles.css';
 
 function AdsFilter({ residences, filteredResidences, setFilteredResidences, countries, setCountries }) {
@@ -113,98 +114,119 @@ function AdsFilter({ residences, filteredResidences, setFilteredResidences, coun
 
   return (
     <>
-      <div className="filter-ads-container">
-        <Select
-          className="filter-country"
-          placeholder={
-            <>
-              <FontAwesomeIcon icon={faGlobe} /> <span>País</span>
-            </>
-          }
-          value={selectedCountry}
-          onChange={handleCountryChange}
-        >
-          {countries.map(country => (
-            <Option key={country}>{country}</Option>
-          ))}
-        </Select>
-        <Divider type='vertical' />
-        <Select
-          className="filter-city"
-          placeholder={
-            <>
-              <FontAwesomeIcon icon={faEarthAmericas} /> <span>Ciudad</span>
-            </>
-          }
-          value={selectedCity}
-          onChange={handleCityChange}
-        >
-          {cities.map(city => (
-            <Option key={city} value={city}>{city}</Option>
-          ))}
-        </Select>
+      <AdsFilterModal
+        selectedCountry={selectedCountry}
+        handleCountryChange={handleCountryChange}
+        countries={countries}
+        selectedCity={selectedCity}
+        cities={cities}
+        handleCityChange={handleCityChange}
+        dateRange={dateRange}
+        handleDateRangeChange={handleDateRangeChange}
+        guestsCount={guestsCount}
+        handleGuestsCountChange={handleGuestsCountChange}
+        priceRange={priceRange}
+        marks={marks}
+        handlePriceRangeChange={handlePriceRangeChange}
+        handleResetFilters={handleResetFilters}
+        residences={residences}
+        filteredResidences={filteredResidences}
+        setFilteredResidences={setFilteredResidences}
+      />
+      <div className="display-filter-ads">
+        <div className="filter-ads-container">
+          <Select
+            className="filter-country"
+            placeholder={
+              <>
+                <FontAwesomeIcon icon={faGlobe} /> <span>País</span>
+              </>
+            }
+            value={selectedCountry}
+            onChange={handleCountryChange}
+          >
+            {countries.map(country => (
+              <Option key={country}>{country}</Option>
+            ))}
+          </Select>
+          <Divider type='vertical' />
+          <Select
+            className="filter-city"
+            placeholder={
+              <>
+                <FontAwesomeIcon icon={faEarthAmericas} /> <span>Ciudad</span>
+              </>
+            }
+            value={selectedCity}
+            onChange={handleCityChange}
+          >
+            {cities.map(city => (
+              <Option key={city} value={city}>{city}</Option>
+            ))}
+          </Select>
 
-        <Divider type='vertical' />
+          <Divider type='vertical' />
 
-        <RangePicker
-          className="filter-range-dates"
-          placeholder={["Llegada", "Salida"]}
-          superNextIcon={<FontAwesomeIcon icon={faPersonWalkingLuggage} />}
-          superPrevIcon={<FontAwesomeIcon icon={faPersonWalkingLuggage} />}
-          value={dateRange}
-          onChange={handleDateRangeChange}
-          disabledDate={(current) => {
-            return dayjs().add(-1, 'days') >= current;
-          }}
-        />
-        <Divider type='vertical' />
-        <InputNumber
-          className="filter-count-guest"
-          placeholder="Huéspedes"
-          prefix={<FontAwesomeIcon icon={faBuildingUser} style={{ color: '#BFBFBF' }} />}
-          value={guestsCount}
-          type='number'
-          min={1}
-          max={10}
-          onChange={handleGuestsCountChange}
-        />
-        <Divider type='vertical' />
-        <Popover
-          content={
-            <div style={{ textAlign: 'center' }}>
-              Rango de Precios: <span style={{ fontWeight: '600' }}>{priceRange[0]} (Bs.)  ⇀ {priceRange[1]} (Bs.) </span>
+          <RangePicker
+            className="filter-range-dates"
+            placeholder={["Llegada", "Salida"]}
+            superNextIcon={<FontAwesomeIcon icon={faPersonWalkingLuggage} />}
+            superPrevIcon={<FontAwesomeIcon icon={faPersonWalkingLuggage} />}
+            value={dateRange}
+            onChange={handleDateRangeChange}
+            disabledDate={(current) => {
+              return dayjs().add(-1, 'days') >= current;
+            }}
+          />
+          <Divider type='vertical' />
+          <InputNumber
+            className="filter-count-guest"
+            placeholder="Huéspedes"
+            prefix={<FontAwesomeIcon icon={faBuildingUser} style={{ color: '#BFBFBF' }} />}
+            value={guestsCount}
+            type='number'
+            min={1}
+            max={10}
+            onChange={handleGuestsCountChange}
+          />
+          <Divider type='vertical' />
+          <Popover
+            content={
+              <div style={{ textAlign: 'center' }}>
+                Rango de Precios: <span style={{ fontWeight: '600' }}>{priceRange[0]} (Bs.)  ⇀ {priceRange[1]} (Bs.) </span>
+              </div>
+            }
+            trigger="hover"
+            placement="bottom"
+          >
+            <div className="filter-range-price-container">
+              {/*  <div className="range-price-selected">Precio (Bs): {priceRange[0]} &mdash; {priceRange[1]}</div> */}
+              <Slider
+                className="filter-range-price"
+                value={priceRange}
+                range
+                marks={marks}
+                min={0}
+                max={5000}
+                step={100}
+                defaultValue={priceRange}
+                onChange={handlePriceRangeChange}
+                tooltip={{ open: false }}
+              />
             </div>
-          }
-          trigger="hover"
-          placement="bottom"
-        >
-          <div className="filter-range-price-container">
-            {/*  <div className="range-price-selected">Precio (Bs): {priceRange[0]} &mdash; {priceRange[1]}</div> */}
-            <Slider
-              className="filter-range-price"
-              value={priceRange}
-              range
-              marks={marks}
-              min={0}
-              max={5000}
-              step={100}
-              defaultValue={priceRange}
-              onChange={handlePriceRangeChange}
-              tooltip={{ open: false }}
-            />
-          </div>
-        </Popover>
-        <Divider type='vertical' />
-        <Button
-          className="btn-reset-filters"
-          type="primary"
-          onClick={handleResetFilters}
-        >
-          <FilterOutlined /> Restablecer
-        </Button>
-      </div>
-      <div className="places-count">
-        <h3>Lugares ( {filteredResidences.filter(residence => residence.estado_residencia[0] === "Publicado" || residence.estado_residencia[0] === "Alquilado").length} )</h3>
+          </Popover>
+          <Divider type='vertical' />
+          <Button
+            className="btn-reset-filters"
+            type="primary"
+            onClick={handleResetFilters}
+          >
+            <FilterOutlined /><span className="btn-reset-filters-text">Restablecer</span>
+          </Button>
+        </div>
+        <div className="places-count">
+          <h3>Lugares ( {filteredResidences.filter(residence => residence.estado_residencia[0] === "Publicado" || residence.estado_residencia[0] === "Alquilado").length} )</h3>
+        </div>
       </div>
     </>
   )
