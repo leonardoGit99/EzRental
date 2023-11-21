@@ -132,10 +132,13 @@ const getResid = async (req, res) =>{
       MAX(DISTINCT e.estado_residencia) AS estado_residencia,
       MAX(DISTINCT e.fecha_inicio_estado) AS fecha_inicio_estado,
       MAX(DISTINCT e.fecha_fin_estado) AS fecha_fin_estado,
+      MAX(DISTINCT u.nombre_usuario) AS nombre_usuario,
+      MAX(DISTINCT u.foto_usuario) AS foto_usuario,
       pe.promedio
       FROM residencia r
       LEFT JOIN servicio s ON r.id_residencia = s.id_residencia
       LEFT JOIN estado e ON r.id_residencia = e.id_residencia
+      LEFT JOIN usuario u ON r.id_usuario = u.id_usuario
       LEFT JOIN PromedioEvaluacion pe ON r.id_residencia = pe.id_residencia
       WHERE r.id_residencia = $1
       GROUP BY r.id_residencia, pe.promedio;
@@ -202,11 +205,13 @@ const getResid = async (req, res) =>{
 const createResid = async (req, res) =>{
   const client = await pool.connect(); // Inicia una transacción
   try {
-    const idUsuario = req.params.idUsuario;
+    const codUsuario = req.params.codUsuario;
     const { tituloResid, tipoResid, paisResid, ciudadResid, direcResid, camaResid, habitResid, banioResid, descripResid, huesMaxResid, diasMaxResid, precioResid, checkInResid, checkOutResid, tipoAlojam, telefono, ubicacion,
      wifi, lavadora, cocina, televisor, aireAcond, psicina, jacuzzi, estacionamiento, gim, parrilla, camaras, detectorHumo,
     imagen
     } = req.body;
+    const idUsuarioResult = await pool.query("SELECT id_usuario FROM usuario WHERE codigo_usuario = $1", [codUsuario]);
+    const idUsuario = idUsuarioResult.rows[0].id_usuario;
     
     const nameResid = await pool.query(
       "SELECT * FROM residencia WHERE LOWER(titulo_residencia) = LOWER($1);",
@@ -306,7 +311,7 @@ const createResid = async (req, res) =>{
         
         const newImg = await pool.query(
           "INSERT INTO imagen (id_residencia, imagen_residencia, descripcion_imagen) VALUES ($1, $2, $3)",
-          [id_nuevoResid, link, descripcion]
+          [idResid, link, descripcion]
         );
       }
 
