@@ -43,7 +43,7 @@ function MoreInfoMyAds() {
     console.log(imgsResidence);
   return (
     <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
-      <div style={{ display: 'flex', flexDirection: 'column', width: '1200px', maxWidth: '1200px'}}>
+      <div style={{ display: 'flex', flexDirection: 'column', width: '1100px', maxWidth: '1100px'}}>
         <DetailTitle
           title={detailAdd.titulo_residencia}
           city={detailAdd.ciudad_residencia}
@@ -77,6 +77,8 @@ function MoreInfoMyAds() {
           residenceUbication={detailAdd.ubicacion_residencia}
           wppNumber={detailAdd.telefono_usuario}
           daysMax={detailAdd.dias_max_residencia}
+          hostName={detailAdd.nombre_usuario}
+          hostPhoto={detailAdd.foto_usuario}
         />
 
         <DetailOffers

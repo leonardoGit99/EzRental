@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Rate, Form, Input, Button, message, Divider } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import { createReviewResidence } from '../../services/reviews';
+import { useAuth } from "../../contexts/authContext";
 import './addReviewStyles.css';
 
 function AddReview({ isRefresh, setRefresh, idAd }) {
+  const { user } = useAuth(); 
   const [form] = useForm();
   const [rating, setRating] = useState(null);
   const [bodyReview, setBodyReview] = useState({
@@ -26,8 +28,7 @@ function AddReview({ isRefresh, setRefresh, idAd }) {
     }))
   }
   const onFinish = async () => {
-    console.log(bodyReview, idAd);
-    await createReviewResidence(bodyReview, idAd, 1);
+    await createReviewResidence(bodyReview, idAd, user.uid);
     setRating();
     setBodyReview({ calificacion: null, comentario: "", });
     message.success('Reseña enviada exitosamente!');
