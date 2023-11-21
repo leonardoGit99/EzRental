@@ -11,7 +11,7 @@ const {
     getServ,
     updateResid,
     uploadImg, 
-     
+    getResidUsr
 } = require("../controllers/resid.controller");
 const { 
     getrent,
@@ -25,6 +25,7 @@ const {
 router.post('/api/upload', uploadImg);
 
 router.get("/resid", getAllResid);
+router.get("/resid/usuario/:codUsuario", getResidUsr);
 router.get("/resid/:idResid", getResid);
 router.delete("/resid/:idResid", deleteResid);
 router.post('/resid/:codUsuario', createResid);
