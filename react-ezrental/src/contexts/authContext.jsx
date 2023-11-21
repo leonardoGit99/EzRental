@@ -22,6 +22,7 @@ export function AuthProvider({children}) {
       displayName: fullname,
       photoURL: photo
     });
+    return userCredential.user;
   } 
 
   const login = async (email, password) => {

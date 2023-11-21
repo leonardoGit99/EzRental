@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import "./rentalFormStyles.css";
 import { Upload, Modal, message } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, FullscreenExitOutlined } from "@ant-design/icons";
 import DescriptionModal from "./DescriptionModal";
 import { createImgResidence } from "../../services/residences";
+import imageCompression from "browser-image-compression";
 
 function UploadComponent({ urls, setUrls, fileList, setFileList, setImageUploaded }) {
 
@@ -66,7 +67,10 @@ function UploadComponent({ urls, setUrls, fileList, setFileList, setImageUploade
   const uploadImage = async (options) => {
     setUploading(true);
     const { onSuccess, onError, file, onProgress } = options;
-
+    const compressedImage = await imageCompression(file, {
+      fileType: "image/webp",
+      maxSizeMB: 1
+    })
     const fmData = new FormData();
     const config = {
       headers: { "content-type": "multipart/form-data" },
@@ -76,7 +80,7 @@ function UploadComponent({ urls, setUrls, fileList, setFileList, setImageUploade
       },
     };
 
-    fmData.append("image", file);
+    fmData.append("image", compressedImage);
     console.log(fmData.get("image"));
 
     try {
@@ -121,9 +125,9 @@ function UploadComponent({ urls, setUrls, fileList, setFileList, setImageUploade
       return Upload.LIST_IGNORE;
     }
 
-    const validSize = file.size / 1024 / 1024 < 10;
+    const validSize = file.size / 1024 / 1024 < 5;
     if (!validSize) {
-      message.error('El peso máximo de la imagen no debe pasar 10MB');
+      message.error('El peso máximo de la imagen no debe pasar 5MB');
       return Upload.LIST_IGNORE;
     }
 
