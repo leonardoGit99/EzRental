@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Select, DatePicker, InputNumber, Slider, Button, Divider, Popover } from 'antd';
+import { Select, DatePicker, InputNumber, Slider, Button, Divider, Popover, Input } from 'antd';
 import { FilterOutlined } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGlobe, faEarthAmericas, faBuildingUser, faPersonWalkingLuggage } from '@fortawesome/free-solid-svg-icons';
@@ -14,7 +14,27 @@ function AdsFilter({ residences, filteredResidences, setFilteredResidences, coun
   const [dateRange, setDateRange] = useState(null);
   const [guestsCount, setGuestsCount] = useState(null);
   const [priceRange, setPriceRange] = useState([0, 5000]);
+  const [search, setSearch] = useState("");
   const { RangePicker } = DatePicker;
+  const { Search } = Input;
+  const handleSearchChange = (e) => {
+    const { value } = e.target;
+    console.log(value);
+    setSearch(value);
+    if (value === "") {
+      setFilteredResidences(residences);
+    }
+    //corregir o borrar logica...
+  }
+
+  const onSearch = () => {
+    const searchResults = residences.filter((residence) => {
+      const titleWords = residence.titulo_residencia.toLowerCase().split(' ');
+      return titleWords.includes(search.toLowerCase());
+    });
+    setFilteredResidences(searchResults);
+    // Corregir o borrar logica...
+  }
 
   const handleCountryChange = (value) => {
     setSelectedCountry(value); //Agrega el pais seleccionado al estado selectedCountry
@@ -135,6 +155,17 @@ function AdsFilter({ residences, filteredResidences, setFilteredResidences, coun
       />
       <div className="display-filter-ads">
         <div className="filter-ads-container">
+          <Search
+            className="filter-search-keyword"
+            placeholder="Buscar anuncio(s)"
+            value={search}
+            onChange={handleSearchChange}
+            onSearch={onSearch}
+            allowClear
+          >
+
+          </Search>
+          <Divider type='vertical' />
           <Select
             className="filter-country"
             placeholder={

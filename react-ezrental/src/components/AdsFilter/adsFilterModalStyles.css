@@ -24,6 +24,10 @@
   align-items: center;
 }
 
+.modal-search-keyword{
+  width: 250px;
+}
+
 .modal-filter-country {
   width: 250px !important;
 }

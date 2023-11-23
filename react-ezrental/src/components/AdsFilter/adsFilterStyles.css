@@ -6,7 +6,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 15px;
+  /* gap: 15px; */
   background-color: rgba(255, 255, 255, 0.33);
   box-shadow: 0px 8px 32px 0 rgba(0, 0, 255, 0.266);
   backdrop-filter: blur(3px);
@@ -17,6 +17,10 @@
   padding: 0 25px;
   margin: 0 30px;
   margin-bottom: 17px;
+}
+
+.filter-search-keyword {
+  width: 200px;
 }
 
 .filter-country {
