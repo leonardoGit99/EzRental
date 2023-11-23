@@ -69,7 +69,9 @@ const pool = require('../db')
           } = req.body;
           const idUsuarioResult = await pool.query("SELECT id_usuario FROM usuario WHERE codigo_usuario = $1", [codUsuario]);
           const idUsuario = idUsuarioResult.rows[0].id_usuario;
-          
+
+         
+
           const newEva = await pool.query(
             "INSERT INTO evaluacion (id_residencia, id_usuario, calificacion, comentario) VALUES ($1, $2, $3, $4)",
             [idResid, idUsuario, calificacion, comentario]
@@ -90,6 +92,14 @@ const pool = require('../db')
             foto
           } = req.body;
           
+          const codUsr = await pool.query(
+            "SELECT * FROM usuario WHERE LOWER(codigo_usuario) = LOWER($1);",
+            [codigo]
+          );
+          if (codUsr.rows.length > 0) {
+            return res.status(200).json({ data: 1 }); //si reciben 1 es error por codigo repetido
+          }
+
           const newUsr = await pool.query(
             "INSERT INTO usuario (codigo_usuario, nombre_usuario, correo_usuario, foto_usuario) VALUES ($1, $2, $3, $4)",
             [codigo, nombre, correo, foto]

@@ -284,11 +284,11 @@ const createResid = async (req, res) =>{
     const enlacesImagenes = imagen;
       console.log(enlacesImagenes);
     for (let i = 0; i < enlacesImagenes.length; i++) {
-      const {link, descripcion } = enlacesImagenes[i];
+      const {imagen_residencia, descripcion_imagen } = enlacesImagenes[i];
       
       const newImg = await pool.query(
         "INSERT INTO imagen (id_residencia, imagen_residencia, descripcion_imagen) VALUES ($1, $2, $3)",
-        [id_nuevoResid, link, descripcion]
+        [id_nuevoResid, imagen_residencia, descripcion_imagen]
       );
     }
     const newServ = await pool.query(
@@ -354,11 +354,11 @@ const createResid = async (req, res) =>{
       const enlacesImagenes = imagen;
       console.log(enlacesImagenes);
       for (let i = 0; i < enlacesImagenes.length; i++) {
-        const {link, descripcion } = enlacesImagenes[i];
+        const {imagen_residencia, descripcion_imagen } = enlacesImagenes[i];
         
         const newImg = await pool.query(
           "INSERT INTO imagen (id_residencia, imagen_residencia, descripcion_imagen) VALUES ($1, $2, $3)",
-          [idResid, link, descripcion]
+          [idResid, imagen_residencia, descripcion_imagen]
         );
       }
 
