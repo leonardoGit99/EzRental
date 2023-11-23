@@ -10,6 +10,7 @@ import DetailsForGuestOnly from '../components/DetailsForGuestOnly/DetailsForGue
 import AddReview from '../components/AddReview/AddReview';
 import ReviewsList from '../components/ReviewsList/ReviewsList';
 import { getAllReviewsByResidence } from '../services/reviews';
+import { getRentalsByResidence } from '../services/rentals';
 
 
 function MoreInfoAds() {
@@ -19,6 +20,7 @@ function MoreInfoAds() {
   const [imgsResidence, setImgsResidence] = useState([]);
   const [isRefresh, setIsRefresh] = useState(true);
   const [reviewsResidence, setReviewsResidence] = useState([]);
+  const [rentals, setRentals] = useState([]);
   const setRefresh = (status) => {
     setIsRefresh(status);
   }
@@ -50,9 +52,17 @@ function MoreInfoAds() {
       setRefresh(false);
     }
   }, [isRefresh])
+
+  useEffect(() => {
+    if (isRefresh) {
+      getRentalsByResidence(idAd).then((data) => {
+        setRentals(data);
+      })
+    }
+  }, [isRefresh])
   return (
     <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
-      <div style={{ display: 'flex', flexDirection: 'column', width: '1200px', maxWidth: '1200px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', width: '1100px', maxWidth: '1100px' }}>
         <DetailTitle
           title={detailAdd.titulo_residencia}
           city={detailAdd.ciudad_residencia}
@@ -62,12 +72,12 @@ function MoreInfoAds() {
             numberMaxOfGuests={detailAdd.huesped_max_residencia}
             initialDate={detailAdd.fecha_inicio_estado ? detailAdd.fecha_inicio_estado.split('T')[0].toString() : null}
             finalDate={detailAdd.fecha_fin_estado ? detailAdd.fecha_fin_estado.split('T')[0].toString() : null}
-            daysMin={detailAdd.dias_min_residencia}
             daysMax={detailAdd.dias_max_residencia - 1}
             isRefresh={isRefresh}
             setRefresh={setRefresh}
             priceResidence={detailAdd.precio_residencia}
             idAd={idAd}
+            rentals={rentals}
           />
 
         </DetailTitle>
@@ -90,6 +100,8 @@ function MoreInfoAds() {
           residenceUbication={detailAdd.ubicacion_residencia}
           wppNumber={detailAdd.telefono_usuario}
           daysMax={detailAdd.dias_max_residencia}
+          hostName={detailAdd.nombre_usuario}
+          hostPhoto={detailAdd.foto_usuario}
         />
 
         <DetailOffers
@@ -105,6 +117,7 @@ function MoreInfoAds() {
           idAd={idAd}
           isRefresh={isRefresh}
           setRefresh={setRefresh}
+          rentals={rentals}
         />
 
         <ReviewsList

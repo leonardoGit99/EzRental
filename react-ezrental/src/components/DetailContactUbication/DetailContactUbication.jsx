@@ -17,7 +17,7 @@ function DetailContactUbication({ residenceAddress, residenceTitle, residenceUbi
     <div className="detail-contact-ubication-flex-container">
       <div className='detail-contact-ubication-container'>
         <div className="detail-contact-container">
-          <h3>Contáctame previa tu llegada! </h3>
+          <h3>Contáctame previa tu llegada! &#10132; </h3>
           <Tooltip
             title={wppNumber}
           >

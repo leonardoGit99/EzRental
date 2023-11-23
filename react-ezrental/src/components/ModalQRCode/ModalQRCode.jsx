@@ -2,16 +2,19 @@ import React from 'react';
 import { Button, Divider, Modal, QRCode, message } from 'antd';
 import { createResidence } from '../../services/residences';
 import { createRental } from '../../services/rentals';
+import { useAuth } from "../../contexts/authContext";
 import './modalQRCodeStyles.css';
 
-function ModalQRCode({ isVisibleQRCode, setIsVisibleQRCode, closeModalQR, bodyReserve, setBodyReserve, closeReservationModal, priceResidence, selectedStartDate, selectedEndDate, idAd }) {
+function ModalQRCode({ isVisibleQRCode, setIsVisibleQRCode, closeModalQR, bodyReserve, setBodyReserve, closeReservationModal, priceResidence, selectedStartDate, selectedEndDate, idAd, isRefresh, setRefresh }) {
+  const { user } = useAuth(); 
   const daysDiff = selectedEndDate.diff(selectedStartDate, 'day');
   const totalPrice = priceResidence * daysDiff;
   bodyReserve["precio"] = totalPrice;
   
   const onFinish = async () => {
     try {
-      await createRental(bodyReserve, idAd, 1);
+      await createRental(bodyReserve, idAd, user.uid);
+      setRefresh(true);
       closeReservationModal();
       closeModalQR();
       message.success("Reservación exitosa!. Disfrute de su estadia");
