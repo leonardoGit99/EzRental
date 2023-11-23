@@ -92,7 +92,7 @@ function UploadComponent({ urls, setUrls, fileList, setFileList, setImageUploade
           //añadir url recibida del response al array urls
           // urls.push(`https://drive.google.com/uc?export=view&id=${res.data.fileId}`);
           
-          urls.push({link: response.data.imgUrl, descripcion: ""});
+          urls.push({imagen_residencia: response.data.imgUrl, descripcion_imagen: ""});
           // urls.push(response.data.imgUrl);
           
           setImageUploaded(urls.length > 4);

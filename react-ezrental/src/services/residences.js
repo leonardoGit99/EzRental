@@ -12,6 +12,16 @@ export const getOneResidence = async (id) => {
     return response.data;
 }
 
+export const getPublishedResidencesByUser = async (id) => {
+    const response = await axios.get(`${api}/resid/usuario/${id}`);
+    return response.data;
+}
+
+// export const getRentedResidencesByUser = async (id) => {
+//     const response = await axios.get(`${api}//${id}`);
+//     return response.data;
+// }
+
 export const getServicesByResidence = async (id) => {
     const response = await axios.get(`${api}/serv/${id}`);
     return response.data;

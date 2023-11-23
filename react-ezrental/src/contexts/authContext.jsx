@@ -31,7 +31,8 @@ export function AuthProvider({children}) {
   
   const googleLogin = async () => {
     const googleProvider = new GoogleAuthProvider();
-    return signInWithPopup(auth, googleProvider);
+    const userCredential = await signInWithPopup(auth, googleProvider);
+    return userCredential.user;
   }
 
   useEffect(() => {

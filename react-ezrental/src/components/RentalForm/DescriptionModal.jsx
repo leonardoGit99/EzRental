@@ -12,14 +12,14 @@ function DescriptionModal({ visible, urls, index, onClose, setUploading }) {
   const saveDescription = () => {
     if (selected == "Otro") {
       if (description != null && description != "") {
-        urls[index].descripcion = description;
+        urls[index].descripcion_imagen = description;
         onClose();
       } else {
         message.error("Ingrese una descripción");
       }
     } else {
       if (selected != null) {
-        urls[index].descripcion = selected;
+        urls[index].descripcion_imagen = selected;
         onClose();
       } else {
         message.error("Seleccione una descripción");
