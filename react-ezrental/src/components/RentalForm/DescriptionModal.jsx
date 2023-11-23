@@ -66,7 +66,7 @@ function DescriptionModal({ visible, urls, index, onClose, setUploading }) {
           style={{
             width: "100%",
           }}
-          src={urls[index].link}
+          src={urls[index].imagen_residencia}
         />
 
         {selected != "Otro" ? (
