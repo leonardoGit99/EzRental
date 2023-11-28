@@ -100,7 +100,6 @@ function AdsFilter({ residences, filteredResidences, setFilteredResidences, coun
       (!guestsCount || residence.huesped_max_residencia >= guestsCount) &&
       (!priceRange || ((priceRange[0] <= residence.precio_residencia) && (residence.precio_residencia <= priceRange[1])))
     ));
-    console.log(residence.fechas_renta)
   };
 
   const handleGuestsCountChange = (value) => {
