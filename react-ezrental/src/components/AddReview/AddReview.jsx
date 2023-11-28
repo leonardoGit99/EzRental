@@ -11,7 +11,7 @@ function AddReview({ isRefresh, setRefresh, idAd, rentals }) {
   const [form] = useForm();
   const [rating, setRating] = useState(null);
   const [bodyReview, setBodyReview] = useState({
-    calificacion: null,
+    calificacionLimpieza: null,
     comentario: ""
   });
 
