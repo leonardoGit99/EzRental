@@ -45,15 +45,15 @@ function AdsFilter({ residences, filteredResidences, setFilteredResidences, coun
     setFilteredResidences(residences.filter(residence => // Se realiza un mapeo de las residencias y se guarda en un arreglo solo los que cumplan con las condiciones, posteriormente se guarda en el estado local filteredResidences
       (!value || residence.pais_residencia === value) && // Si value es falsy (null, undefined, etc.) entonces toda la expresion en true, sino se evalua la segunda expresion residence.pais_residencia === value
       (!selectedCity || residence.ciudad_residencia === selectedCity) &&// Si value es falsy (null, undefined, etc.) entonces toda la expresion en true, sino se evalua la segunda expresion residence.ciudad_residencia === selectedCity
-      (
-        (!dateRange || (
+      (!dateRange ||(
+        (
           dateRange[0] >= dayjs(residence.fecha_inicio_estado[0]) &&
           dateRange[1] <= dayjs(residence.fecha_fin_estado[0]).add(1, 'day')
-        )) &&
+        ) &&
         !residence.fechas_renta.some(fechaRenta =>
           dayjs(dateRange[0]).format('YYYY-MM-DD') >= dayjs(fechaRenta[0]).format('YYYY-MM-DD') && dayjs(dateRange[0]).format('YYYY-MM-DD') <= dayjs(fechaRenta[1]).format('YYYY-MM-DD') ||
           dayjs(dateRange[1]).format('YYYY-MM-DD') <= dayjs(fechaRenta[1]).format('YYYY-MM-DD') && dayjs(dateRange[1]).format('YYYY-MM-DD') >= dayjs(fechaRenta[0]).format('YYYY-MM-DD')
-        )
+        ))
       ) &&
       (!guestsCount || residence.huesped_max_residencia >= guestsCount) &&
       (!priceRange || ((priceRange[0] <= residence.precio_residencia) && (residence.precio_residencia <= priceRange[1])))
@@ -65,15 +65,15 @@ function AdsFilter({ residences, filteredResidences, setFilteredResidences, coun
     setFilteredResidences(residences.filter(residence =>
       (!selectedCountry || residence.pais_residencia === selectedCountry) &&
       (!value || residence.ciudad_residencia === value) &&
-      (
-        (!dateRange || (
+      (!dateRange ||(
+        (
           dateRange[0] >= dayjs(residence.fecha_inicio_estado[0]) &&
           dateRange[1] <= dayjs(residence.fecha_fin_estado[0]).add(1, 'day')
-        )) &&
+        ) &&
         !residence.fechas_renta.some(fechaRenta =>
           dayjs(dateRange[0]).format('YYYY-MM-DD') >= dayjs(fechaRenta[0]).format('YYYY-MM-DD') && dayjs(dateRange[0]).format('YYYY-MM-DD') <= dayjs(fechaRenta[1]).format('YYYY-MM-DD') ||
           dayjs(dateRange[1]).format('YYYY-MM-DD') <= dayjs(fechaRenta[1]).format('YYYY-MM-DD') && dayjs(dateRange[1]).format('YYYY-MM-DD') >= dayjs(fechaRenta[0]).format('YYYY-MM-DD')
-        )
+        ))
       ) &&
       (!guestsCount || residence.huesped_max_residencia >= guestsCount) &&
       (!priceRange || ((priceRange[0] <= residence.precio_residencia) && (residence.precio_residencia <= priceRange[1])))
@@ -86,20 +86,21 @@ function AdsFilter({ residences, filteredResidences, setFilteredResidences, coun
     setFilteredResidences(residences.filter(residence =>
       (!selectedCountry || residence.pais_residencia === selectedCountry) &&
       (!selectedCity || residence.ciudad_residencia === selectedCity) &&
-      (
-        (!dates || (
+      (!dates || (
+        (
           dates[0] >= dayjs(residence.fecha_inicio_estado[0]) &&
           dates[1] <= dayjs(residence.fecha_fin_estado[0]).add(1, 'day')
-        )) &&
+        ) &&
         // Utilizamos el método some para verificar si alguna de las fechas_renta coincide con el rango de fechas seleccionado uwu
         !residence.fechas_renta.some(fechaRenta =>
           dayjs(dates[0]).format('YYYY-MM-DD') >= dayjs(fechaRenta[0]).format('YYYY-MM-DD') && dayjs(dates[0]).format('YYYY-MM-DD') <= dayjs(fechaRenta[1]).format('YYYY-MM-DD') ||
           dayjs(dates[1]).format('YYYY-MM-DD') <= dayjs(fechaRenta[1]).format('YYYY-MM-DD') && dayjs(dates[1]).format('YYYY-MM-DD') >= dayjs(fechaRenta[0]).format('YYYY-MM-DD')
-        )
+        ))
       ) &&
       (!guestsCount || residence.huesped_max_residencia >= guestsCount) &&
       (!priceRange || ((priceRange[0] <= residence.precio_residencia) && (residence.precio_residencia <= priceRange[1])))
     ));
+    console.log(residence.fechas_renta)
   };
 
   const handleGuestsCountChange = (value) => {
@@ -107,15 +108,15 @@ function AdsFilter({ residences, filteredResidences, setFilteredResidences, coun
     setFilteredResidences(residences.filter(residence =>
       (!selectedCountry || residence.pais_residencia === selectedCountry) &&
       (!selectedCity || residence.ciudad_residencia === selectedCity) &&
-      (
-        (!dateRange || (
+      (!dateRange ||(
+        (
           dateRange[0] >= dayjs(residence.fecha_inicio_estado[0]) &&
           dateRange[1] <= dayjs(residence.fecha_fin_estado[0]).add(1, 'day')
-        )) &&
+        ) &&
         !residence.fechas_renta.some(fechaRenta =>
           dayjs(dateRange[0]).format('YYYY-MM-DD') >= dayjs(fechaRenta[0]).format('YYYY-MM-DD') && dayjs(dateRange[0]).format('YYYY-MM-DD') <= dayjs(fechaRenta[1]).format('YYYY-MM-DD') ||
           dayjs(dateRange[1]).format('YYYY-MM-DD') <= dayjs(fechaRenta[1]).format('YYYY-MM-DD') && dayjs(dateRange[1]).format('YYYY-MM-DD') >= dayjs(fechaRenta[0]).format('YYYY-MM-DD')
-        )
+        ))
       ) &&
       (!value || residence.huesped_max_residencia >= value) &&
       (!priceRange || priceRange[0] <= residence.precio_residencia && residence.precio_residencia <= priceRange[1])
@@ -127,15 +128,15 @@ function AdsFilter({ residences, filteredResidences, setFilteredResidences, coun
     setFilteredResidences(residences.filter(residence =>
       (!selectedCountry || residence.pais_residencia === selectedCountry) &&
       (!selectedCity || residence.ciudad_residencia === selectedCity) &&
-      (
-        (!dateRange || (
+      (!dateRange ||(
+        (
           dateRange[0] >= dayjs(residence.fecha_inicio_estado[0]) &&
           dateRange[1] <= dayjs(residence.fecha_fin_estado[0]).add(1, 'day')
-        )) &&
+        ) &&
         !residence.fechas_renta.some(fechaRenta =>
           dayjs(dateRange[0]).format('YYYY-MM-DD') >= dayjs(fechaRenta[0]).format('YYYY-MM-DD') && dayjs(dateRange[0]).format('YYYY-MM-DD') <= dayjs(fechaRenta[1]).format('YYYY-MM-DD') ||
           dayjs(dateRange[1]).format('YYYY-MM-DD') <= dayjs(fechaRenta[1]).format('YYYY-MM-DD') && dayjs(dateRange[1]).format('YYYY-MM-DD') >= dayjs(fechaRenta[0]).format('YYYY-MM-DD')
-        )
+        ))
       ) &&
       (!guestsCount || residence.huesped_max_residencia >= guestsCount) &&
       (value[0] <= residence.precio_residencia && residence.precio_residencia <= value[1])
