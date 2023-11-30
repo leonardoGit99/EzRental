@@ -176,13 +176,13 @@ const getResid = async (req, res) =>{
   const idResid = req.params.idResid;
   try {
     const resultResid = await pool.query(`
-      WITH PromedioEvaluacion AS (
-        SELECT
+    WITH PromedioEvaluacion AS (
+      SELECT
           id_residencia,
-          AVG(exactitud) AS promedio 
-        FROM evaluacion
-        GROUP BY id_residencia
-      )
+          AVG((calificacion_limpieza + calificacion_exactitud + calificacion_comunicacion) / 3.0) AS promedio
+      FROM evaluacion
+      GROUP BY id_residencia
+  )
       SELECT 
       r.id_residencia, r.titulo_residencia, r.tipo_residencia, r.pais_residencia, r.ciudad_residencia, r.direccion_residencia, r.cama_residencia, r.habitacion_residencia, r.banio_residencia, r.descripcion_residencia, r.huesped_max_residencia, r.dias_max_residencia, r.precio_residencia, r.check_in_residencia, r.check_out_residencia, r.tipo_alojamiento, r.telefono_usuario, r.ubicacion_residencia,
       MAX(DISTINCT s.wifi_residencia) AS wifi_residencia,
