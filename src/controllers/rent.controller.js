@@ -3,11 +3,22 @@ const pool = require('../db')
   const getrent = async (req, res) =>{
     const idResid = req.params.idResid;
     try {
-      const resultRent = await pool.query("SELECT r.precio_total_reserva, r.fecha_inicio_reserva, r.fecha_fin_reserva, r.huespedes_reserva, u.nombre_usuario FROM reserva r, usuario u WHERE r.id_usuario = u.id_usuario and id_residencia = $1", [idResid]);
-      res.json(resultRent.rows);
+      const result = await pool.query(`
+      SELECT 
+      r.id_residencia, r.titulo_residencia,  r.pais_residencia, r.ciudad_residencia, r.precio_residencia, r.ubicacion_residencia,
+      array_agg(DISTINCT i.imagen_residencia) AS imagenes,
+      MAX(DISTINCT e.fecha_inicio_estado) AS fecha_inicio_estado,
+      MAX(DISTINCT e.fecha_fin_estado) AS fecha_fin_estado
+  FROM residencia r
+  LEFT JOIN imagen i ON r.id_residencia = i.id_residencia
+  LEFT JOIN estado e ON r.id_residencia = e.id_residencia
+  WHERE r.id_residencia = $1
+  GROUP BY r.id_residencia, r.titulo_residencia, r.pais_residencia, r.ciudad_residencia, r.precio_residencia, r.ubicacion_residencia;       
+        `,[idResid]);
+      
+      res.json(result.rows);
     } catch (err) {
-      console.error(err);
-      res.status(500).send("Error obteniendo alquiler");
+      res.status(500).send("Error obteniendo la información de las rentas");
     }
     };
     const getUsuario = async (req, res) =>{
@@ -23,20 +34,10 @@ const pool = require('../db')
   const getevalu = async (req, res) =>{
     const idResid = req.params.idResid;
     try {
-        const result = await pool.query(`
-        SELECT 
-        r.id_residencia, r.titulo_residencia,  r.pais_residencia, r.ciudad_residencia, r.precio_residencia, r.ubicacion_residencia,
-        array_agg(DISTINCT i.imagen_residencia) AS imagenes,
-        MAX(DISTINCT e.fecha_inicio_estado) AS fecha_inicio_estado,
-        MAX(DISTINCT e.fecha_fin_estado) AS fecha_fin_estado
-    FROM residencia r
-    LEFT JOIN imagen i ON r.id_residencia = i.id_residencia
-    LEFT JOIN estado e ON r.id_residencia = e.id_residencia
-    WHERE r.id_residencia = $1
-    GROUP BY r.id_residencia, r.titulo_residencia, r.pais_residencia, r.ciudad_residencia, r.precio_residencia, r.ubicacion_residencia;       
-          `,[idResid]);
+      const resultEvalu = await pool.query("SELECT e.id_evaluacion, e.calificacion_limpieza, e.calificacion_exactitud, e.calificacion_comunicacion, e.comentario, u.nombre_usuario FROM evaluacion e, usuario u WHERE u.id_usuario=e.id_usuario and e.id_residencia = $1 ", 
+      [idResid]);
         
-        res.json(result.rows);
+        res.json(resultEvalu.rows);
       } catch (err) {
         res.status(500).send("Error obteniendo la información de las evaluaciones");
       }
