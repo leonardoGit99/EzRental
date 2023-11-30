@@ -5,6 +5,7 @@ import ResidenceReview from '../ResidenceReview/ResidenceReview';
 import './reviewsListStyles.css';
 
 function ReviewsList({ detailReviews, isRefresh, setRefresh, averageRates }) {
+  console.log(detailReviews);
   const roundedAverageRates= Number(averageRates).toFixed(1);
   const customEmptyMessage = {
     emptyText: (
@@ -48,9 +49,11 @@ function ReviewsList({ detailReviews, isRefresh, setRefresh, averageRates }) {
           >
             <ResidenceReview
               idReview={review.id_evaluacion}
-              commentResidence={review.comentario}
-              rate={review.calificacion}
               reviewOwner={review.nombre_usuario}
+              cleaningRate={review.calificacion_limpieza}
+              accuracyRate={review.calificacion_exactitud}
+              comunicationRate={review.calificacion_comunicacion}
+              commentResidence={review.comentario}
               isRefresh={isRefresh}
               setRefresh={setRefresh}
             />

@@ -230,9 +230,22 @@ function EditRentalForm() {
                   placeholder="Seleccione el estado del anuncio"
                   onChange={(value) => handleSelectChange(value, "estadoAnuncio")}
                 >
-                  <Option value="Publicado"> Publicado </Option>
-                  <Option value="Pausado"> Pausado </Option>
-                  <Option value="Inactivo"> Inactivo </Option>
+                  {
+                    editBody.estado === "Alquilado"
+                      ? (
+                        <>
+                          <Option value="Pausado"> Pausado </Option>
+                          <Option value="Inactivo"> Inactivo </Option>
+                        </>
+                      )
+                      : (
+                        <>
+                          <Option value="Pausado"> Pausado </Option>
+                          <Option value="Inactivo"> Inactivo </Option>
+                          <Option value="Publicado"> Publicado </Option>
+                        </>
+                      )
+                  }
                 </Select>
               </Form.Item>
               <h3>Datos de la residencia</h3>

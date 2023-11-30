@@ -6,12 +6,16 @@ import { useAuth } from "../../contexts/authContext";
 import dayjs from 'dayjs';
 import './addReviewStyles.css';
 
-function AddReview({ isRefresh, setRefresh, idAd, rentals }) {
+function AddReview({ isRefresh, setRefresh, idAd, rentals, sevenDaysCompleted }) {
   const { user } = useAuth();
   const [form] = useForm();
-  const [rating, setRating] = useState(null);
+  const [ratingCleaning, setRatingCleaning] = useState(null);
+  const [ratingPromise, setRatingPromise] = useState(null);
+  const [ratingComunication, setRatingComunication] = useState(null);
   const [bodyReview, setBodyReview] = useState({
-    calificacionLimpieza: null,
+    limpieza: null,
+    exactitud: null,
+    comunicacion: null,
     comentario: ""
   });
 
@@ -23,22 +27,38 @@ function AddReview({ isRefresh, setRefresh, idAd, rentals }) {
   }
 
   const handleRatingChange = (value, name) => {
-    setRating(value);
+    if (name==="limpieza"){
+      setRatingCleaning(value);
+    } else if (name === "exactitud") {
+      setRatingPromise(value);
+    } else {
+      setRatingComunication(value);
+    }
     setBodyReview((prevBodyReview) => ({
       ...prevBodyReview, [name]: value,
     }))
   }
+
+  //limpieza
+  //exactitud
+  //comunicacion
+  //comentario
+  // console.log(bodyReview);
   const onFinish = async () => {
     await createReviewResidence(bodyReview, idAd, user.uid);
-    setRating();
-    setBodyReview({ calificacion: null, comentario: "", });
+    setRatingCleaning();
+    setRatingPromise();
+    setRatingComunication();
+    setBodyReview({ limpieza: null, exactitud:null, comunicacion:null, comentario: "", });
     message.success('Reseña enviada exitosamente!');
     setRefresh(true);
   }
 
   const onCancel = () => {
-    setRating();
-    setBodyReview({ calificacion: null, comentario: "", });
+    setRatingCleaning();
+    setRatingPromise();
+    setRatingComunication();
+    setBodyReview({ limpieza: null, exactitud:null, comunicacion:null, comentario: "", });
   }
 
   useEffect(() => {
@@ -48,9 +68,10 @@ function AddReview({ isRefresh, setRefresh, idAd, rentals }) {
   return (
     <>
       {
-        rentals && rentals.some((rental) => {
+        /* rentals && rentals.some((rental) => {
           return (rental.nombre_usuario === user.displayName) && (dayjs(rental.fecha_fin_reserva).isBefore(dayjs(rental.fecha_fin_reserva).add(1, 'days')))
-        })
+        }) */
+        sevenDaysCompleted
           ?
           <>
             <div className="review-form-container">
@@ -62,14 +83,38 @@ function AddReview({ isRefresh, setRefresh, idAd, rentals }) {
               >
                 <h2>Cuéntanos sobre tu experiencia!</h2>
                 <Form.Item
-                  name="calificacion"
+                  name="limpieza"
                   rules={[{ required: true, message: 'No olvide calificar su experiencia' }]}
                 >
-                  <h3>Calificar</h3>
+                  <h3>Limpieza</h3>
                   <Rate
-                    name="calificacion"
-                    value={rating}
-                    onChange={(value) => handleRatingChange(value, "calificacion")}
+                    name="limpieza"
+                    value={ratingCleaning}
+                    onChange={(value) => handleRatingChange(value, "limpieza")}
+                  />
+                </Form.Item>
+
+                <Form.Item
+                  name="exactitud"
+                  rules={[{ required: true, message: 'No olvide calificar su experiencia' }]}
+                >
+                  <h3>Exactitud de lo ofrecido con lo encontrado</h3>
+                  <Rate
+                    name="exactitud"
+                    value={ratingPromise}
+                    onChange={(value) => handleRatingChange(value, "exactitud")}
+                  />
+                </Form.Item>
+
+                <Form.Item
+                  name="comunicacion"
+                  rules={[{ required: true, message: 'No olvide calificar su experiencia' }]}
+                >
+                  <h3>Comunicación</h3>
+                  <Rate
+                    name="comunicacion"
+                    value={ratingComunication}
+                    onChange={(value) => handleRatingChange(value, "comunicacion")}
                   />
                 </Form.Item>
 
@@ -84,13 +129,13 @@ function AddReview({ isRefresh, setRefresh, idAd, rentals }) {
                       placeholder="Ingrese un comentario acerca de su experiencia..."
                       value={bodyReview.comentario}
                       autoSize={{ minRows: 5, maxRows: 5 }}
-                      maxLength={650}
+                      maxLength={200}
                       showCount
                       onChange={handleInputChange}
                     />
                   </Form.Item>
                   {
-                    (bodyReview.calificacion && bodyReview.comentario) && (
+                    (bodyReview.limpieza && bodyReview.exactitud && bodyReview.comunicacion && bodyReview.comentario) && (
                       <Form.Item>
                         <div className="btns-container">
                           <div>

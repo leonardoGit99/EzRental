@@ -21,6 +21,7 @@ function MoreInfoAds() {
   const [isRefresh, setIsRefresh] = useState(true);
   const [reviewsResidence, setReviewsResidence] = useState([]);
   const [rentals, setRentals] = useState([]);
+  const [sevenDaysCompleted, setSevenDaysCompleted] = useState(false);
   const setRefresh = (status) => {
     setIsRefresh(status);
   }
@@ -57,9 +58,13 @@ function MoreInfoAds() {
     if (isRefresh) {
       getRentalsByResidence(idAd).then((data) => {
         setRentals(data);
+        if (data.data && data.data === 7){
+          setSevenDaysCompleted(true);
+        }
       })
     }
   }, [isRefresh])
+  console.log(detailAdd);
   return (
     <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
       <div style={{ display: 'flex', flexDirection: 'column', width: '1100px', maxWidth: '1100px' }}>
@@ -118,6 +123,7 @@ function MoreInfoAds() {
           isRefresh={isRefresh}
           setRefresh={setRefresh}
           rentals={rentals}
+          sevenDaysCompleted={sevenDaysCompleted}
         />
 
         <ReviewsList
