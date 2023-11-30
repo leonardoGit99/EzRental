@@ -64,10 +64,11 @@ if (id_noti.length > 0) {
     WITH PromedioEvaluacion AS (
       SELECT
           id_residencia,
-          AVG(calificacion) AS promedio
+          AVG((calificacion_limpieza + calificacion_exactitud + calificacion_comunicacion) / 3.0) AS promedio
       FROM evaluacion
       GROUP BY id_residencia
-    )
+  )
+  
     SELECT 
     r.id_residencia, r.titulo_residencia, r.tipo_residencia, r.pais_residencia, r.ciudad_residencia, r.direccion_residencia, r.cama_residencia, r.habitacion_residencia, r.banio_residencia, r.descripcion_residencia, r.huesped_max_residencia, r.dias_max_residencia, r.precio_residencia, r.check_in_residencia, r.check_out_residencia, r.tipo_alojamiento, r.telefono_usuario, r.ubicacion_residencia,
     array_agg(DISTINCT i.imagen_residencia) AS imagenes,
@@ -110,10 +111,11 @@ const getResidUsr = async (req, res) => {
     WITH PromedioEvaluacion AS (
       SELECT
           id_residencia,
-          AVG(calificacion) AS promedio
+          AVG((calificacion_limpieza + calificacion_exactitud + calificacion_comunicacion) / 3.0) AS promedio
       FROM evaluacion
       GROUP BY id_residencia
-    )
+  )
+  
     SELECT 
     r.id_residencia, r.titulo_residencia, r.tipo_residencia, r.pais_residencia, r.ciudad_residencia, r.direccion_residencia, r.cama_residencia, r.habitacion_residencia, r.banio_residencia, r.descripcion_residencia, r.huesped_max_residencia, r.dias_max_residencia, r.precio_residencia, r.check_in_residencia, r.check_out_residencia, r.tipo_alojamiento, r.telefono_usuario, r.ubicacion_residencia,
     array_agg(DISTINCT i.imagen_residencia) AS imagenes,
@@ -158,7 +160,7 @@ const getResid = async (req, res) =>{
       WITH PromedioEvaluacion AS (
         SELECT
           id_residencia,
-          AVG(calificacion) AS promedio
+          AVG(exactitud) AS promedio 
         FROM evaluacion
         GROUP BY id_residencia
       )

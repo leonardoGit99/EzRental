@@ -21,14 +21,24 @@ const pool = require('../db')
       }
       };
   const getevalu = async (req, res) =>{
-      const idResid = req.params.idResid;
-      try {
-        const resultEvalu = await pool.query("SELECT e.id_evaluacion, e.calificacion, e.comentario, u.nombre_usuario FROM evaluacion e, usuario u WHERE u.id_usuario=e.id_usuario and e.id_residencia = $1 ", 
-        [idResid]);
-        res.json(resultEvalu.rows);
+    const idResid = req.params.idResid;
+    try {
+        const result = await pool.query(`
+        SELECT 
+        r.id_residencia, r.titulo_residencia,  r.pais_residencia, r.ciudad_residencia, r.precio_residencia, r.ubicacion_residencia,
+        array_agg(DISTINCT i.imagen_residencia) AS imagenes,
+        MAX(DISTINCT e.fecha_inicio_estado) AS fecha_inicio_estado,
+        MAX(DISTINCT e.fecha_fin_estado) AS fecha_fin_estado
+    FROM residencia r
+    LEFT JOIN imagen i ON r.id_residencia = i.id_residencia
+    LEFT JOIN estado e ON r.id_residencia = e.id_residencia
+    WHERE r.id_residencia = $1
+    GROUP BY r.id_residencia, r.titulo_residencia, r.pais_residencia, r.ciudad_residencia, r.precio_residencia, r.ubicacion_residencia;       
+          `,[idResid]);
+        
+        res.json(result.rows);
       } catch (err) {
-        console.error(err);
-        res.status(500).send("Error obteniendo evaluacion");
+        res.status(500).send("Error obteniendo la información de las evaluaciones");
       }
       };
 
@@ -64,20 +74,31 @@ const pool = require('../db')
         try {
           const { idResid, codUsuario } = req.params;
           const {
-            calificacion,
+            limpieza,
+            exactitud,
+            comunicacion,
             comentario
           } = req.body;
           const idUsuarioResult = await pool.query("SELECT id_usuario FROM usuario WHERE codigo_usuario = $1", [codUsuario]);
           const idUsuario = idUsuarioResult.rows[0].id_usuario;
 
-         
-
-          const newEva = await pool.query(
-            "INSERT INTO evaluacion (id_residencia, id_usuario, calificacion, comentario) VALUES ($1, $2, $3, $4)",
-            [idResid, idUsuario, calificacion, comentario]
+          const dias = await pool.query(
+            "SELECT * FROM reserva WHERE id_residencia = $1 AND id_usuario = $2 AND fecha_inicio_reserva >= CURRENT_DATE - INTERVAL '7 days'",
+            [idResid, idUsuario]
           );
-      
-          res.json({ message: "El comentario ha sido creado exitosamente", lot: newEva.rows[0] });
+          if (dias.rows.length > 0) {
+            const newEva = await pool.query(
+              "INSERT INTO evaluacion (id_residencia, id_usuario, calificacion_limpieza, calificacion_exactitud, calificacion_comunicacion, comentario) VALUES ($1, $2, $3, $4, $5, $6)",
+              [idResid, idUsuario, limpieza, exactitud, comunicacion, comentario]
+            );
+        
+            res.json({ message: "El comentario ha sido creado exitosamente", lot: newEva.rows[0] });
+            
+          }else{
+            return res.status(200).json({ data: 7 }); //si reciben 7 es por que ya pasaron 7 dias desde su reserva
+          }
+
+          
         } catch (error) {
           console.error(error);
           res.status(500).json({ error: "No se pudo realizar el comentario" });
