@@ -17,24 +17,34 @@ function AdsFilter({ residences, filteredResidences, setFilteredResidences, coun
   const [search, setSearch] = useState("");
   const { RangePicker } = DatePicker;
   const { Search } = Input;
-  const handleSearchChange = (e) => {
-    const { value } = e.target;
-    console.log(value);
-    setSearch(value);
-    if (value === "") {
-      setFilteredResidences(residences);
-    }
-    //corregir o borrar logica...
-  }
+const handleSearchChange = (e) => {
+  const { value } = e.target;
+  setSearch(value);
 
-  const onSearch = () => {
-    const searchResults = residences.filter((residence) => {
-      const titleWords = residence.titulo_residencia.toLowerCase().split(' ');
-      return titleWords.includes(search.toLowerCase());
-    });
-    setFilteredResidences(searchResults);
-    // Corregir o borrar logica...
+  // Si la cadena de búsqueda está vacía, restablece las residencias filtradas
+  if (value === "") {
+    setFilteredResidences(residences);
   }
+}
+
+const onSearch = () => {
+  // Obtén la cadena de búsqueda en minúsculas
+  const searchLower = search.toLowerCase();
+
+  // Filtra las residencias basadas en la cadena de búsqueda
+  const searchResults = residences.filter((residence) => {
+    // Convierte el título de la residencia a minúsculas para realizar una comparación insensible a mayúsculas y minúsculas
+    const residenceTitleLower = residence.titulo_residencia.toLowerCase();
+
+    // Verifica si la oración completa del título contiene la cadena de búsqueda
+    return residenceTitleLower.includes(searchLower);
+  });
+
+  // Actualiza las residencias filtradas
+  setFilteredResidences(searchResults);
+}
+
+
 
   const handleCountryChange = (value) => {
     setSelectedCountry(value); //Agrega el pais seleccionado al estado selectedCountry
@@ -184,6 +194,9 @@ function AdsFilter({ residences, filteredResidences, setFilteredResidences, coun
         residences={residences}
         filteredResidences={filteredResidences}
         setFilteredResidences={setFilteredResidences}
+        search={search}
+        handleSearchChange={handleSearchChange}
+        onSearch={onSearch}
       />
       <div className="display-filter-ads">
         <div className="filter-ads-container">

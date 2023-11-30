@@ -230,16 +230,23 @@ function RentalForm() {
               message: "Por favor, ingresa el precio de la residencia.",
             },
             {
-              validator: (_, value) =>
-                value && /^\d+$/.test(value) && parseInt(value, 10) <= 10000
-                  ? Promise.resolve()
-                  : Promise.reject(
-                    new Error(
-                      "Debe ingresar solo números y un valor igual o menor a 10,000"
-                    )
-                  ),
+              validator: (_, value) => {
+                
+                const numericValue = parseInt(value, 10);
+          
+                if (numericValue < 0) {
+                  return Promise.reject(new Error("El valor mínimo es 0."));
+                }
+          
+                if (numericValue > 10000) {
+                  return Promise.reject(new Error("El valor máximo es 10,000."));
+                }
+          
+                return Promise.resolve();
+              },
             },
           ]}
+          
           hasFeedback
         >
           <Input
@@ -297,23 +304,26 @@ function RentalForm() {
           rules={[
             {
               required: true,
-              message: "Por favor, ingresa el numero maximo de Huesped.",
+              message: "Por favor, ingresa el número máximo de huéspedes.",
             },
             {
               validator: (_, value) => {
                 const max = 10; // Establece el valor máximo permitido aquí
-                if (value && value.match("^0*[1-9][0-9]*") && parseInt(value, 10) <= max) {
-                  return Promise.resolve();
-                } else {
-                  return Promise.reject(
-                    new Error(
-                      `Debe ingresar solo números y un valor mayor a cero, pero no mayor que ${max}`
-                    )
-                  );
+                const numericValue = parseInt(value, 10)
+          
+                if (numericValue <= 0) {
+                  return Promise.reject(new Error("El valor debe ser mayor a cero."));
                 }
+          
+                if (numericValue > max) {
+                  return Promise.reject(new Error(`El valor máximo permitido es ${max}.`));
+                }
+          
+                return Promise.resolve();
               },
             },
           ]}
+          
           hasFeedback
         >
           <Input

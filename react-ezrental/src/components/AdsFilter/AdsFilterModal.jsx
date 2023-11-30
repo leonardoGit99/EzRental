@@ -6,7 +6,7 @@ import { faGlobe, faEarthAmericas, faBuildingUser, faPersonWalkingLuggage, faSli
 import dayjs from 'dayjs';
 import './adsFilterModalStyles.css';
 
-function AdsFilterModal({ selectedCountry, handleCountryChange, countries, selectedCity, cities, handleCityChange, dateRange, handleDateRangeChange, guestsCount, handleGuestsCountChange, priceRange, marks, handlePriceRangeChange, handleResetFilters, residences, filteredResidences, setFilteredResidences }) {
+function AdsFilterModal({ selectedCountry, handleCountryChange, countries, selectedCity, cities, handleCityChange, dateRange, handleDateRangeChange, guestsCount, handleGuestsCountChange, priceRange, marks, handlePriceRangeChange, handleResetFilters, residences, filteredResidences, setFilteredResidences,search,handleSearchChange,onSearch }) {
   const { RangePicker } = DatePicker;
   const { Search } = Input;
   const [filterModal, setFilterModal] = useState(false);
@@ -36,6 +36,9 @@ function AdsFilterModal({ selectedCountry, handleCountryChange, countries, selec
           <Search
             className="modal-search-keyword"
             placeholder="Ingrese palabra clave"
+            value={search}
+            onChange={handleSearchChange}
+            onSearch={onSearch}
             allowClear
           >
 
