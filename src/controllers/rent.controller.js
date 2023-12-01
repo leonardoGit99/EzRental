@@ -5,15 +5,18 @@ const pool = require('../db')
     try {
       const result = await pool.query(`
       SELECT 
-      r.id_residencia, r.titulo_residencia,  r.pais_residencia, r.ciudad_residencia, r.precio_residencia, r.ubicacion_residencia,
-      array_agg(DISTINCT i.imagen_residencia) AS imagenes,
-      MAX(DISTINCT e.fecha_inicio_estado) AS fecha_inicio_estado,
-      MAX(DISTINCT e.fecha_fin_estado) AS fecha_fin_estado
-  FROM residencia r
-  LEFT JOIN imagen i ON r.id_residencia = i.id_residencia
-  LEFT JOIN estado e ON r.id_residencia = e.id_residencia
-  WHERE r.id_residencia = $1
-  GROUP BY r.id_residencia, r.titulo_residencia, r.pais_residencia, r.ciudad_residencia, r.precio_residencia, r.ubicacion_residencia;       
+  r.id_residencia, r.titulo_residencia, r.pais_residencia, r.ciudad_residencia, r.precio_residencia, r.ubicacion_residencia,
+  array_agg(DISTINCT i.imagen_residencia) AS imagenes,
+  MAX(DISTINCT e.fecha_inicio_estado) AS fecha_inicio_estado,
+  MAX(DISTINCT e.fecha_fin_estado) AS fecha_fin_estado
+FROM residencia r
+LEFT JOIN imagen i ON r.id_residencia = i.id_residencia
+LEFT JOIN estado e ON r.id_residencia = e.id_residencia
+INNER JOIN reserva re ON r.id_residencia = re.id_residencia
+INNER JOIN usuario u ON re.id_usuario = u.id_usuario
+WHERE r.id_residencia = $1
+GROUP BY r.id_residencia, r.titulo_residencia, r.pais_residencia, r.ciudad_residencia, r.precio_residencia, r.ubicacion_residencia;
+       
         `,[idResid]);
       
       res.json(result.rows);
@@ -21,6 +24,16 @@ const pool = require('../db')
       res.status(500).send("Error obteniendo la información de las rentas");
     }
     };
+    const getrentUser = async (req, res) =>{
+      const idResid = req.params.idResid;
+      try {
+        const resultRent = await pool.query("SELECT r.precio_total_reserva, r.fecha_inicio_reserva, r.fecha_fin_reserva, r.huespedes_reserva, u.nombre_usuario FROM reserva r, usuario u WHERE r.id_usuario = u.id_usuario and id_residencia = $1", [idResid]);
+        
+        res.json(resultRent.rows);
+      } catch (err) {
+        res.status(500).send("Error obteniendo la información mis reservas");
+      }
+      };
     const getUsuario = async (req, res) =>{
       const codUsuario = req.params.codUsuario;
       try {
@@ -139,5 +152,6 @@ const pool = require('../db')
         createRent,
         createEvalu,
         createUsuario,
-        getUsuario
+        getUsuario,
+        getrentUser
     };
