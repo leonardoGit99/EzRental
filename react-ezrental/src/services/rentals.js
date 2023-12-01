@@ -7,7 +7,7 @@ export const createRental = async (body, id, idUser) => {
 }
 
 export const getRentalsByResidence = async (idResidence) => {
-  const response = await axios.get(`${api}/rent/${idResidence}`);
+  const response = await axios.get(`${api}/rent/user/${idResidence}`);
   return response.data;
 }
 

@@ -71,7 +71,7 @@ function AddReview({ isRefresh, setRefresh, idAd, rentals, sevenDaysCompleted })
         /* rentals && rentals.some((rental) => {
           return (rental.nombre_usuario === user.displayName) && (dayjs(rental.fecha_fin_reserva).isBefore(dayjs(rental.fecha_fin_reserva).add(1, 'days')))
         }) */
-        sevenDaysCompleted
+        sevenDaysCompleted === true
           ?
           <>
             <div className="review-form-container">
