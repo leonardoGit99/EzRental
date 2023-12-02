@@ -1,23 +1,45 @@
 const pool = require('../db')
 
-  const getrent = async (req, res) =>{
+const getrentResid = async (req, res) =>{
+  try {
     const idResid = req.params.idResid;
+    const result = await pool.query(`
+        SELECT 
+      u.id_usuario, u.nombre_usuario, u.correo_usuario, u.foto_usuario, 
+      r.id_residencia, r.titulo_residencia, r.tipo_residencia, r.pais_residencia, r.ciudad_residencia,
+      re.id_reserva, re.precio_total_reserva, re.fecha_inicio_reserva, re.fecha_fin_reserva
+    FROM usuario u
+    JOIN reserva re ON u.id_usuario = re.id_usuario
+    JOIN residencia r ON re.id_residencia = r.id_residencia
+    WHERE re.id_residencia = $1;
+ 
+      `,[idResid]);
+    
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).send("Error obteniendo la información de la reserva");
+  }
+  };
+  const getrent = async (req, res) =>{
     try {
+      const codUsuario = req.params.codUsuario;
+      const idUsuarioResult = await pool.query("SELECT id_usuario FROM usuario WHERE codigo_usuario = $1", [codUsuario]);
+      const idUsuario = idUsuarioResult.rows[0].id_usuario;
       const result = await pool.query(`
       SELECT 
-  r.id_residencia, r.titulo_residencia, r.pais_residencia, r.ciudad_residencia, r.precio_residencia, r.ubicacion_residencia,
-  array_agg(DISTINCT i.imagen_residencia) AS imagenes,
-  MAX(DISTINCT e.fecha_inicio_estado) AS fecha_inicio_estado,
-  MAX(DISTINCT e.fecha_fin_estado) AS fecha_fin_estado
-FROM residencia r
-LEFT JOIN imagen i ON r.id_residencia = i.id_residencia
-LEFT JOIN estado e ON r.id_residencia = e.id_residencia
-INNER JOIN reserva re ON r.id_residencia = re.id_residencia
-INNER JOIN usuario u ON re.id_usuario = u.id_usuario
-WHERE r.id_residencia = $1
-GROUP BY r.id_residencia, r.titulo_residencia, r.pais_residencia, r.ciudad_residencia, r.precio_residencia, r.ubicacion_residencia;
-       
-        `,[idResid]);
+        r.id_residencia, r.titulo_residencia, r.pais_residencia, r.ciudad_residencia, r.precio_residencia, r.ubicacion_residencia,
+        array_agg(DISTINCT i.imagen_residencia) AS imagenes,
+        MAX(DISTINCT e.fecha_inicio_estado) AS fecha_inicio_estado,
+        MAX(DISTINCT e.fecha_fin_estado) AS fecha_fin_estado
+      FROM residencia r
+      LEFT JOIN imagen i ON r.id_residencia = i.id_residencia
+      LEFT JOIN estado e ON r.id_residencia = e.id_residencia
+      INNER JOIN reserva re ON r.id_residencia = re.id_residencia
+      INNER JOIN usuario u ON re.id_usuario = u.id_usuario
+      WHERE u.id_usuario = $1
+      GROUP BY r.id_residencia, r.titulo_residencia, r.pais_residencia, r.ciudad_residencia, r.precio_residencia, r.ubicacion_residencia;
+            
+        `,[idUsuario]);
       
       res.json(result.rows);
     } catch (err) {
@@ -153,5 +175,6 @@ GROUP BY r.id_residencia, r.titulo_residencia, r.pais_residencia, r.ciudad_resid
         createEvalu,
         createUsuario,
         getUsuario,
-        getrentUser
+        getrentUser,
+        getrentResid
     };
