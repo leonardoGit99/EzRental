@@ -1,6 +1,6 @@
 .review-card {
   width: 450px;
-  height: 170px;
+  height: 180px;
   white-space: normal;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -11,12 +11,12 @@
 }
 
 
-.review-card.overflowed .ant-card-meta-description {
+.comment-experience {
   white-space: normal;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 3; 
+  -webkit-line-clamp: 2; 
   -webkit-box-orient: vertical;
 }
 
