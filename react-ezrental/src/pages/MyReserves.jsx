@@ -13,7 +13,7 @@ function MyReserves() {
   const setRefresh = (status) => {
     setIsRefresh(status);
   }
-
+console.log(user.uid);
   useEffect(() => {
     if (isRefresh) {
       getAllRentalsByUser(user.uid).then((data) => {
@@ -84,7 +84,7 @@ function MyReserves() {
           }, pageSize: 12,
         }}
         locale={customEmptyMessage}
-        dataSource={/* reserves */ reservesJsonSim}
+        dataSource={reserves && reserves  /* reservesJsonSim */}
         renderItem={(reserve) => (
           <Item
             style={
@@ -97,14 +97,14 @@ function MyReserves() {
             }
           >
             <MyReserveCard
-              idResidence={reserve.idResidence}
-              country={reserve.country}
-              city={reserve.city}
-              titleAd={reserve.titleAd}
-              startReserveDate={reserve.startReserveDate}
-              endReserveDate={reserve.endReserveDate}
-              totalPrice={reserve.totalPrice}
-              images={reserve.images[0]}
+              idResidence={reserve.id_residencia}
+              country={reserve.pais_residencia}
+              city={reserve.ciudad_residencia}
+              titleAd={reserve.titulo_residencia}
+              startReserveDate={reserve.fecha_inicio_estado ? reserve.fecha_inicio_estado .split('T')[0].toString() : 'Sin fecha'}
+              endReserveDate={reserve.fecha_fin_estado ? reserve.fecha_fin_estado.split('T')[0].toString() : 'Sin fecha'}
+              totalPrice={reserve.precio_residencia}
+              images={reserve.imagenes[0]}
               setRefresh={setRefresh}
             />
           </Item>
