@@ -2,18 +2,33 @@ const pool = require('../db')
 
 const getrentResid = async (req, res) =>{
   try {
-    const idResid = req.params.idResid;
+    const codUsuario = req.params.codUsuario;
+    const idUsuarioResult = await pool.query("SELECT id_usuario FROM usuario WHERE codigo_usuario = $1", [codUsuario]);
+    const idUsuario = idUsuarioResult.rows[0].id_usuario;
     const result = await pool.query(`
-        SELECT 
-      u.id_usuario, u.nombre_usuario, u.correo_usuario, u.foto_usuario, 
-      r.id_residencia, r.titulo_residencia, r.tipo_residencia, r.pais_residencia, r.ciudad_residencia,
-      re.id_reserva, re.precio_total_reserva, re.fecha_inicio_reserva, re.fecha_fin_reserva
-    FROM usuario u
-    JOIN reserva re ON u.id_usuario = re.id_usuario
+    SELECT
+    re.id_reserva,
+    re.id_residencia,
+    re.precio_total_reserva,
+    re.fecha_inicio_reserva,
+    re.fecha_fin_reserva,
+    r.id_residencia,
+    r.titulo_residencia,
+    r.tipo_residencia,
+    r.pais_residencia,
+    r.ciudad_residencia,
+    u.id_usuario,
+    u.nombre_usuario,
+    u.correo_usuario,
+    u.foto_usuario,
+    ARRAY[r.tipo_residencia, r.pais_residencia, r.ciudad_residencia] AS tags
+    FROM reserva re
     JOIN residencia r ON re.id_residencia = r.id_residencia
-    WHERE re.id_residencia = $1;
+    JOIN usuario u ON re.id_usuario = u.id_usuario
+    WHERE r.id_usuario = $1
+    GROUP BY re.id_reserva, r.id_residencia, u.id_usuario;
  
-      `,[idResid]);
+      `,[idUsuario]);
     
     res.json(result.rows);
   } catch (err) {
