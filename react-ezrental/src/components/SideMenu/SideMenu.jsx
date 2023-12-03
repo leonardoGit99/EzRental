@@ -19,7 +19,8 @@ function SideMenu({ sideMenuCollapsed, displaySideMenu, switchMode, setSwitchMod
     {
       key: 2, label: 'Modo Anfitrion', icon: <FormOutlined />, children: [
         { key: "aniadir-anuncio", label: (<Link to="aniadir-anuncio" onClick={!sideMenuCollapsed ? displaySideMenu : null}>Añadir Anuncio</Link>) },
-        { key: "mis-anuncios", label: (<Link to="mis-anuncios" onClick={!sideMenuCollapsed ? displaySideMenu : null}>Mis Anuncios</Link>) }
+        { key: "mis-anuncios", label: (<Link to="mis-anuncios" onClick={!sideMenuCollapsed ? displaySideMenu : null}>Mis Anuncios</Link>) },
+        { key: "myRents", label: (<Link to="myRents" onClick={!sideMenuCollapsed ? displaySideMenu : null}>Mis Reservas</Link>) }
       ]
     },
   ];
