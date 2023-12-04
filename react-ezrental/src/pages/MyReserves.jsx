@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Empty, List } from 'antd';
+import { Empty, List, Spin } from 'antd';
 import MyReserveCard from '../components/MyReserveCard/MyReserveCard';
 import { useAuth } from '../contexts/authContext';
 import { getAllRentalsByUser } from '../services/rentals';
@@ -9,17 +9,18 @@ function MyReserves() {
   const { user } = useAuth();
   const [reserves, setReserves] = useState([]);
   const [isRefresh, setIsRefresh] = useState(true);
+  const [loading, setLoading] = useState(true);
   const { Item } = List;
   const setRefresh = (status) => {
     setIsRefresh(status);
   }
-console.log(user.uid);
   useEffect(() => {
     if (isRefresh) {
       getAllRentalsByUser(user.uid).then((data) => {
         setReserves(data);
       })
       setRefresh(false);
+      setLoading(false);
     }
   }, [isRefresh]);
 
@@ -42,33 +43,8 @@ console.log(user.uid);
       </>),
   };
 
-  const reservesJsonSim = [
-    {
-      idResidence: "2",
-      country: "Bolivia",
-      city: "Cochabamba",
-      titleAd: "titulo del anuncio",
-      startReserveDate: "2023-11-11",
-      endReserveDate: "2023-11-15",
-      totalPrice: 1900,
-      images: [
-        "https://hospitecnia.com/sites/default/files/styles/node_teaser/public/2020-06/cabecera-vitaller-residencias-03.jpg?itok=LkIifrPr",
-      ]
-    }, {
-      idResidence: "3",
-      country: "Chile",
-      city: "Santiago de Chile",
-      titleAd: "titulo del anuncio 2",
-      startReserveDate: "2023-11-15",
-      endReserveDate: "2023-11-19",
-      totalPrice: 2500,
-      images: [
-        "https://realestatemarket.com.mx/images/2019/05-Mayo/1005/arquitectura_dia_madres_g.jpg",
-      ]
-    }
-  ]
   return (
-    <>
+    <Spin spinning={loading} tip="Cargando...">
       <List
         grid={{
           xs: 1,
@@ -84,7 +60,7 @@ console.log(user.uid);
           }, pageSize: 12,
         }}
         locale={customEmptyMessage}
-        dataSource={reserves && reserves  /* reservesJsonSim */}
+        dataSource={reserves && reserves}
         renderItem={(reserve) => (
           <Item
             style={
@@ -101,7 +77,7 @@ console.log(user.uid);
               country={reserve.pais_residencia}
               city={reserve.ciudad_residencia}
               titleAd={reserve.titulo_residencia}
-              startReserveDate={reserve.fecha_inicio_estado ? reserve.fecha_inicio_estado .split('T')[0].toString() : 'Sin fecha'}
+              startReserveDate={reserve.fecha_inicio_estado ? reserve.fecha_inicio_estado.split('T')[0].toString() : 'Sin fecha'}
               endReserveDate={reserve.fecha_fin_estado ? reserve.fecha_fin_estado.split('T')[0].toString() : 'Sin fecha'}
               totalPrice={reserve.precio_residencia}
               images={reserve.imagenes[0]}
@@ -110,7 +86,7 @@ console.log(user.uid);
           </Item>
         )}
       />
-    </>
+    </Spin>
   )
 }
 

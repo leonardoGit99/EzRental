@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Button, Select, Checkbox, DatePicker, message, Divider } from 'antd';
+import { Form, Input, Button, Select, Checkbox, DatePicker, message, Divider, Spin } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faScrewdriverWrench } from '@fortawesome/free-solid-svg-icons';
 import { getImagesByResidence, getOneResidence, updateResidence } from '../../services/residences';
@@ -21,6 +21,7 @@ function EditRentalForm() {
   const [isAtLeastFiveChecked, setIsAtLeastFiveChecked] = useState(false);
   const [rangeDatesBody, setRangeDatesBody] = useState([null, null]);
   const [isImageUploaded, setIsImageUploaded] = useState(false);
+  const [loading, setLoading] = useState(true);
   const setImageUploaded = (status) => {
     setIsImageUploaded(status)
   }
@@ -113,6 +114,7 @@ function EditRentalForm() {
     const fetchData = async () => {
       const data = await getOneResidence(idMyAd);
       setDataAd(data);
+      setLoading(false);
     }
     fetchData();
   }, [idMyAd])
@@ -132,6 +134,7 @@ function EditRentalForm() {
       )
     }
     setIsImageUploaded(true);
+    setLoading(false);
     fetchImgs();
   }, [idMyAd]);
 
@@ -177,6 +180,7 @@ function EditRentalForm() {
 
   useEffect(() => {
     form.setFieldsValue(editBody);
+    setLoading(false);
   }, [editBody]);
 
 
@@ -204,7 +208,7 @@ function EditRentalForm() {
   }
 
   return (
-    <>
+    <Spin spinning={loading} tip="Cargando...">
       <div className="edit-form-container">
         <h2><FontAwesomeIcon icon={faScrewdriverWrench} /> Edite su anuncio</h2>
         <Divider />
@@ -977,7 +981,7 @@ function EditRentalForm() {
 
         </Form >
       </div >
-    </>
+    </Spin>
   );
 
 }

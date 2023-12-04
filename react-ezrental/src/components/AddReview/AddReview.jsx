@@ -45,18 +45,26 @@ function AddReview({ isRefresh, setRefresh, idAd, rentals, reviewsResidence }) {
   //comentario
   // console.log(bodyReview);
   console.log(reviewsResidence);
+  console.log(rentals);
   const onFinish = async () => {
     await createReviewResidence(bodyReview, idAd, user.uid).then((data) => {
-      if (data.data && data.data === 7) {
-        Modal.error({ content: "Se cumplió el tiempo limite de 7 días. Ya no puede enviar su reseña :(", okText: "Ok" });
+      const userIsRentedEverThisResidence = rentals.some((rental) => {
+        return (rental.nombre_usuario).toLowerCase() === (user.displayName).toLowerCase();
+      })
+      if (userIsRentedEverThisResidence === true) {
+        if (data && data.data && data.data === 7) {
+          Modal.error({ content: "Se cumplió el tiempo limite de 7 días. Ya no puede enviar su reseña :(", okText: "Ok" });
+        } else {
+          message.success('Reseña enviada exitosamente!');
+        }
       } else {
-        message.success('Reseña enviada exitosamente!');
+        Modal.warning({ content: "Debe reservar para agregar su reseña del lugar!", okText: "Ok" });
       }
-      setRatingCleaning();
-      setRatingPromise();
-      setRatingComunication();
-      setBodyReview({ limpieza: null, exactitud: null, comunicacion: null, comentario: "", });
     });
+    setRatingCleaning();
+    setRatingPromise();
+    setRatingComunication();
+    setBodyReview({ limpieza: null, exactitud: null, comunicacion: null, comentario: "", });
     setRefresh(true);
   }
 
