@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Empty, List } from 'antd';
+import { Empty, List, Spin } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import GuestCard from '../components/GuestCard/GuestCard';
 import { getAllResidences } from '../services/residences';
@@ -10,6 +10,7 @@ function Home() {
   const [isRefresh, setIsRefresh] = useState(true);
   const [filteredResidences, setFilteredResidences] = useState([]);
   const [countries, setCountries] = useState([]);
+  const [loading, setLoading] = useState(true);
   const setRefresh = (status) => {
     setIsRefresh(status);
   }
@@ -23,6 +24,7 @@ function Home() {
         setCountries(uniqueCountries);
       })
       setRefresh(false);
+      setLoading(false);
     }
   }, [setRefresh, isRefresh]);
 
@@ -45,7 +47,7 @@ function Home() {
   };
 
   return (
-    <>
+    <Spin spinning={loading} tip="Cargando...">
       <AdsFilter
         residences={residences}
         filteredResidences={filteredResidences}
@@ -96,7 +98,7 @@ function Home() {
           </List.Item>
         )}
       />
-    </>
+    </Spin>
   );
 };
 

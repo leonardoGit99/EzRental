@@ -24,23 +24,21 @@ function MoreInfoMyAds() {
       getOneResidence(idMyAd).then((data) => setDetailAdd(data));
       setRefresh(false);
     }
-  }, [setRefresh, isRefresh]);
+  }, [setRefresh, isRefresh, idMyAd]);
 
   useEffect(() => {
     if (isRefresh) {
       getServicesByResidence(idMyAd).then((data) => setDetailServices(data));
       setRefresh(false);
     }
-  }, [setRefresh, isRefresh]);
+  }, [setRefresh, isRefresh, idMyAd]);
 
   useEffect(() => {
     if (isRefresh) {
       getImagesByResidence(idMyAd).then((data) => setImgsResidence(data))
       setRefresh(false);
     }
-  }, [setRefresh, isRefresh]);
-
-    console.log(imgsResidence);
+  }, [setRefresh, isRefresh, idMyAd]);
   return (
     <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
       <div style={{ display: 'flex', flexDirection: 'column', width: '1100px', maxWidth: '1100px'}}>

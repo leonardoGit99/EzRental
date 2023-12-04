@@ -7,7 +7,6 @@ import './residenceReviewStyles.css';
 
 function ResidenceReview({ commentResidence, idReview, cleaningRate, accuracyRate, comunicationRate, reviewOwner }) {
   const cardRef = useRef(null);
-  const [isOverflowed, setIsOverflowed] = useState(false);
   const [moreReviewModal, setMoreReviewModal] = useState(false);
 
   const averageSegmentedRate= ((cleaningRate + accuracyRate + comunicationRate)/3).toFixed(0);
@@ -19,21 +18,10 @@ function ResidenceReview({ commentResidence, idReview, cleaningRate, accuracyRat
     setMoreReviewModal(false);
   }
 
-  useEffect(() => {
-    if (cardRef.current) {
-      const isOverflowedValue = cardRef.current.scrollHeight > 180;
-      setIsOverflowed(isOverflowedValue);
-    }
-  }, [commentResidence]);
-
   return (
     <>
-      <Popover
-        content={commentResidence}
-        trigger={isOverflowed ? "hover" : ""}
-      >
         <Card
-          className={`review-card ${isOverflowed ? "overflowed" : ""}`}
+          className="review-card"
           ref={cardRef}
         >
           <Meta
@@ -45,7 +33,9 @@ function ResidenceReview({ commentResidence, idReview, cleaningRate, accuracyRat
                   disabled
                   defaultValue={averageSegmentedRate}
                 />
-                <p>{commentResidence}</p>
+                <div className='comment-experience'>
+                  <p>{commentResidence}</p>
+                </div>
                 <Button type='link' style={{ padding: 0 }} onClick={openMoreReviewModal}>Mostrar más</Button>
                 <ViewMoreReviewModal 
                   moreReviewModal={moreReviewModal}
@@ -62,8 +52,6 @@ function ResidenceReview({ commentResidence, idReview, cleaningRate, accuracyRat
             }
           />
         </Card>
-      </Popover>
-
     </>
   )
 }

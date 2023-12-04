@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Empty, List } from 'antd';
+import { Empty, List, Spin } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import homePageEnDesarrollo from '../assets/homePageEnDesarrollo.jpg';
 import HostCard from '../components/HostCard/HostCard';
@@ -9,6 +9,7 @@ import { useAuth } from '../contexts/authContext';
 function MyAds() {
   const [residences, setResidences] = useState([]);
   const [isRefresh, setIsRefresh] = useState(true);
+  const [loading, setLoading] = useState(true);
 /*   const [urls, setUrls] = useState([]);
   const [fileList, setFileList] = useState([]); */
 
@@ -22,6 +23,7 @@ function MyAds() {
     if (isRefresh) {
       getPublishedResidencesByUser(user.uid).then((data) => setResidences(data));
       setRefresh(false);
+      setLoading(false);
     }
   }, [setRefresh, isRefresh]);
 
@@ -59,7 +61,7 @@ function MyAds() {
   }
 
   return (
-    <>
+    <Spin spinning={loading} tip="Cargando...">
       <List
         grid={{
           xs: 1,
@@ -102,7 +104,7 @@ function MyAds() {
           </List.Item >
         )}
       />
-    </>
+    </Spin>
   );
 };
 

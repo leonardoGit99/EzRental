@@ -12,7 +12,7 @@ export const getRentalsByResidence = async (idResidence) => {
 }
 
 export const getAllRentalsByUser = async (idUser) => {
-  const response = await axios.get(`${api}/rent/${idUser}`);
+  const response = await axios.get(`${api}/resid/rent/user/${idUser}`);
   return response.data;
 }
 

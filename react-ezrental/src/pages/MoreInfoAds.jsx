@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { Spin } from 'antd';
 import DetailTitle from '../components/DetailTitle/DetailTitle';
 import DetailImgs from '../components/DetailImgs/DetailImgs';
 import DetailDescription from '../components/DetailDescription/DetailDescription';
@@ -21,7 +22,7 @@ function MoreInfoAds() {
   const [isRefresh, setIsRefresh] = useState(true);
   const [reviewsResidence, setReviewsResidence] = useState([]);
   const [rentals, setRentals] = useState([]);
-  const [sevenDaysCompleted, setSevenDaysCompleted] = useState(false);
+  const [loading, setLoading] = useState(true);
   const setRefresh = (status) => {
     setIsRefresh(status);
   }
@@ -30,108 +31,112 @@ function MoreInfoAds() {
     if (isRefresh) {
       getOneResidence(idAd).then((data) => setDetailAdd(data));
       setRefresh(false);
+      setLoading(false);
     }
-  }, [setRefresh, isRefresh]);
+  }, [setRefresh, isRefresh, idAd]);
 
   useEffect(() => {
     if (isRefresh) {
       getServicesByResidence(idAd).then((data) => setDetailServices(data))
       setRefresh(false);
+      setLoading(false);
     }
-  }, [setRefresh, isRefresh]);
+  }, [setRefresh, isRefresh, idAd]);
 
   useEffect(() => {
     if (isRefresh) {
       getImagesByResidence(idAd).then((data) => setImgsResidence(data))
       setRefresh(false);
+      setLoading(false);
     }
-  }, [setRefresh, isRefresh]);
+  }, [setRefresh, isRefresh, idAd]);
 
   useEffect(() => {
     if (isRefresh) {
       getAllReviewsByResidence(idAd).then((data) => setReviewsResidence(data));
       setRefresh(false);
+      setLoading(false);
     }
-  }, [isRefresh])
+  }, [isRefresh, idAd])
 
   useEffect(() => {
     if (isRefresh) {
       getRentalsByResidence(idAd).then((data) => {
         setRentals(data);
-        if (data.data && data.data === 7){
-          setSevenDaysCompleted(true);
-        }
+        setRefresh(false);
+        setLoading(false);
       })
     }
-  }, [isRefresh])
-  console.log(detailAdd);
+  }, [isRefresh, idAd])
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
-      <div style={{ display: 'flex', flexDirection: 'column', width: '1100px', maxWidth: '1100px' }}>
-        <DetailTitle
-          title={detailAdd.titulo_residencia}
-          city={detailAdd.ciudad_residencia}
-          country={detailAdd.pais_residencia}
-        >
-          <DetailsForGuestOnly
-            numberMaxOfGuests={detailAdd.huesped_max_residencia}
-            initialDate={detailAdd.fecha_inicio_estado ? detailAdd.fecha_inicio_estado.split('T')[0].toString() : null}
-            finalDate={detailAdd.fecha_fin_estado ? detailAdd.fecha_fin_estado.split('T')[0].toString() : null}
-            daysMax={detailAdd.dias_max_residencia - 1}
-            isRefresh={isRefresh}
+    <Spin spinning={loading} tip="Cargando...">
+      <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', width: '1100px', maxWidth: '1100px' }}>
+          <DetailTitle
+            title={detailAdd.titulo_residencia}
+            city={detailAdd.ciudad_residencia}
+            country={detailAdd.pais_residencia}
+          >
+            <DetailsForGuestOnly
+              numberMaxOfGuests={detailAdd.huesped_max_residencia}
+              initialDate={detailAdd.fecha_inicio_estado ? detailAdd.fecha_inicio_estado.split('T')[0].toString() : null}
+              finalDate={detailAdd.fecha_fin_estado ? detailAdd.fecha_fin_estado.split('T')[0].toString() : null}
+              daysMax={detailAdd.dias_max_residencia - 1}
+              isRefresh={isRefresh}
+              setRefresh={setRefresh}
+              priceResidence={detailAdd.precio_residencia}
+              idAd={idAd}
+              rentals={rentals}
+            />
+
+          </DetailTitle>
+
+          <DetailImgs
+            images={imgsResidence}
             setRefresh={setRefresh}
-            priceResidence={detailAdd.precio_residencia}
-            idAd={idAd}
-            rentals={rentals}
           />
 
-        </DetailTitle>
+          <DetailDescription
+            residenceType={detailAdd.tipo_residencia}
+            spaceType={detailAdd.tipo_alojamiento}
+            description={detailAdd.descripcion_residencia}
+            numberOfGuests={detailAdd.huesped_max_residencia}
+            numberOfRooms={detailAdd.habitacion_residencia}
+            numberOfBeds={detailAdd.cama_residencia}
+            numberOfBathrooms={detailAdd.banio_residencia}
+            residenceTitle={detailAdd.titulo_residencia}
+            residenceAddress={detailAdd.direccion_residencia}
+            residenceUbication={detailAdd.ubicacion_residencia}
+            wppNumber={detailAdd.telefono_usuario}
+            daysMax={detailAdd.dias_max_residencia}
+            hostName={detailAdd.nombre_usuario}
+            hostPhoto={detailAdd.foto_usuario}
+          />
 
-        <DetailImgs
-          images={imgsResidence}
-          setRefresh={setRefresh}
-        />
+          <DetailOffers
+            services={detailServices}
+          />
 
-        <DetailDescription
-          residenceType={detailAdd.tipo_residencia}
-          spaceType={detailAdd.tipo_alojamiento}
-          description={detailAdd.descripcion_residencia}
-          numberOfGuests={detailAdd.huesped_max_residencia}
-          numberOfRooms={detailAdd.habitacion_residencia}
-          numberOfBeds={detailAdd.cama_residencia}
-          numberOfBathrooms={detailAdd.banio_residencia}
-          residenceTitle={detailAdd.titulo_residencia}
-          residenceAddress={detailAdd.direccion_residencia}
-          residenceUbication={detailAdd.ubicacion_residencia}
-          wppNumber={detailAdd.telefono_usuario}
-          daysMax={detailAdd.dias_max_residencia}
-          hostName={detailAdd.nombre_usuario}
-          hostPhoto={detailAdd.foto_usuario}
-        />
+          <DetailCheckInOut
+            checkIn={detailAdd.check_in_residencia}
+            checkOut={detailAdd.check_out_residencia}
+          />
 
-        <DetailOffers
-          services={detailServices}
-        />
+          <AddReview
+            idAd={idAd}
+            isRefresh={isRefresh}
+            setRefresh={setRefresh}
+            rentals={rentals}
+            reviewsResidence={reviewsResidence}
+          />
 
-        <DetailCheckInOut
-          checkIn={detailAdd.check_in_residencia}
-          checkOut={detailAdd.check_out_residencia}
-        />
-
-        <AddReview
-          idAd={idAd}
-          isRefresh={isRefresh}
-          setRefresh={setRefresh}
-          rentals={rentals}
-          sevenDaysCompleted={sevenDaysCompleted}
-        />
-
-        <ReviewsList
-          detailReviews={reviewsResidence}
-          averageRates={detailAdd.promedio}
-        />
+          <ReviewsList
+            detailReviews={reviewsResidence}
+            averageRates={detailAdd.promedio}
+          />
+        </div>
       </div>
-    </div>
+    </Spin>
   )
 }
 
