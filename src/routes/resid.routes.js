@@ -21,7 +21,9 @@ const {
     createUsuario,
     getUsuario,
     getrentUser,
-    getrentResid
+    getrentResid,
+    getEvaUser,
+    createEvaluUser
 } = require("../controllers/rent.controller");
 
 router.post('/api/upload', uploadImg);
@@ -45,4 +47,7 @@ router.post("/evalu/:idResid/:codUsuario", createEvalu);
 
 router.get("/usr/:codUsuario", getUsuario);
 router.post("/usr", createUsuario);
+
+router.get("/user/evalu/:codUsuario", getEvaUser);
+router.post("/user/evalu/:codUsuario", createEvaluUser);
 module.exports = router;

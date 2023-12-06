@@ -81,6 +81,16 @@ const getrentResid = async (req, res) =>{
         res.status(500).send("Error obteniendo usuario");
       }
       };
+  const getEvaUser = async (req, res) => {
+    try{
+      const codUsuario = req.params.codUsuario;
+      const getEvaUsr = await pool.query("SELECT e.id_evaluacion_usuario, e.calificacion_limpieza_usu, e.calificacion_puntualidad, e.calificacion_comunicacion_usu, e.comentario_usu, u.nombre_usuario FROM evaluacion_usuario e, usuario u WHERE u.id_usuario=e.id_usuario and u.codigo_usuario = $1 ", 
+      [codUsuario]);
+      res.json(getEvaUsr.rows);
+    }catch{
+      res.status(500).send("Error obteniendo la información de las evaluaciones");  
+    }
+  }
   const getevalu = async (req, res) =>{
     const idResid = req.params.idResid;
     try {
@@ -183,6 +193,31 @@ const getrentResid = async (req, res) =>{
           res.status(500).json({ error: "No se pudo crear el usuario" });
         }
       };
+      const createEvaluUser = async (req, res) => {
+        try {
+          const { codUsuario } = req.params;
+          const {
+            limpieza,
+            puntualidad,
+            comunicacion,
+            comentario
+          } = req.body;
+          const idUsuarioResult = await pool.query("SELECT id_usuario FROM usuario WHERE codigo_usuario = $1", [codUsuario]);
+          const idUsuario = idUsuarioResult.rows[0].id_usuario;
+
+            const newEva = await pool.query(
+              "INSERT INTO evaluacion_usuario (id_usuario, calificacion_limpieza_usu, calificacion_puntualidad, calificacion_comunicacion_usu, comentario_usu) VALUES ($1, $2, $3, $4, $5)",
+              [idUsuario, limpieza, puntualidad, comunicacion, comentario]
+            );
+        
+            res.json({ message: "El comentario ha sido creado exitosamente", lot: newEva.rows[0] });
+            
+          
+        } catch (error) {
+          console.error(error);
+          res.status(500).json({ error: "No se pudo realizar el comentario" });
+        }
+      };
     module.exports = {
         getrent,
         getevalu,
@@ -191,5 +226,7 @@ const getrentResid = async (req, res) =>{
         createUsuario,
         getUsuario,
         getrentUser,
-        getrentResid
+        getrentResid,
+        getEvaUser,
+        createEvaluUser
     };
