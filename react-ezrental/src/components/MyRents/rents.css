@@ -1,10 +1,10 @@
 
-.ant-table-thead {
+.table-my-host-rents .ant-table-thead {
     background-color: lightblue;
     text-align: center; 
   }
   
-  .ant-table-cell {
+  .table-my-host-rents .ant-table-cell {
     border: 2px solid rgb(92, 95, 95); 
     text-align: center; 
     padding: 8px; 
@@ -12,16 +12,16 @@
   }
   
 
-  .ant-table-cell.ant-table-cell-1,
-  .ant-table-cell.ant-table-cell-2,
-  .ant-table-thead th {
+  .table-my-host-rents .ant-table-cell.ant-table-cell-1,
+  .table-my-host-rents .ant-table-cell.ant-table-cell-2,
+  .table-my-host-rents .ant-table-thead th {
     text-align: center;
   }
   
-  .ant-table-tbody tr td {
+  .table-my-host-rents .ant-table-tbody tr td {
     background-color: #c1e4e9; /
   }
   
-  .ant-table-column-title {
+  .table-my-host-rents .ant-table-column-title {
     text-align: center;
   }

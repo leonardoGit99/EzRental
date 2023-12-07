@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Empty, List, Spin } from 'antd';
+import { Button, Empty, List, Spin, Table } from 'antd';
+import { CalendarOutlined } from '@ant-design/icons'; 
+import TableGuestReserves from '../components/TableGuestReserves/TableGuestReserves';
 import MyReserveCard from '../components/MyReserveCard/MyReserveCard';
 import { useAuth } from '../contexts/authContext';
 import { getAllRentalsByUser } from '../services/rentals';
+import { useNavigate } from 'react-router-dom';
 
 
 function MyReserves() {
@@ -11,6 +14,7 @@ function MyReserves() {
   const [isRefresh, setIsRefresh] = useState(true);
   const [loading, setLoading] = useState(true);
   const { Item } = List;
+  const navigate = useNavigate();
   const setRefresh = (status) => {
     setIsRefresh(status);
   }
@@ -42,10 +46,9 @@ function MyReserves() {
         </Empty>
       </>),
   };
-
   return (
     <Spin spinning={loading} tip="Cargando...">
-      <List
+      {/* <List
         grid={{
           xs: 1,
           sm: 2,
@@ -85,6 +88,10 @@ function MyReserves() {
             />
           </Item>
         )}
+      /> */}
+      <h2 style={{textAlign:"center"}}><CalendarOutlined /> Historial de reservas &bull;  Huésped. {user.displayName}</h2>
+      <TableGuestReserves 
+        loading={loading}
       />
     </Spin>
   )

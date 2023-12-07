@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, Form, DatePicker, Select, Button, Divider } from 'antd';
+import { Modal, Form, DatePicker, Select, Button, Divider, Grid } from 'antd';
 import dayjs from 'dayjs';
 import ModalQRCode from '../ModalQRCode/ModalQRCode';
 import './reserveModalStyles.css';
@@ -114,7 +114,10 @@ function ReserveModal({ reservationModal, closeReservationModal, numberMaxOfGues
         name="reserve-form"
         onFinish={onFinish}
       >
-        <h4>Llegada / Salida </h4>
+        <div className="label-range-reserve-dates">
+          <h4>Llegada</h4>
+          <h4>Salida</h4>
+        </div>
         <Form.Item
           name="fechasLlegadaSalida"
           rules={[{ required: true, message: 'Por favor, seleccione las fechas de llegada y salida' }]}

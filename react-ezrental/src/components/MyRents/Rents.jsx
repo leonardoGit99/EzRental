@@ -205,7 +205,7 @@ const Rents = () => {
     },
   ];
 
-  return <Table dataSource={data} columns={columns} />;
+  return <Table className="table-my-host-rents" dataSource={data} columns={columns} />;
 };
 
 export default Rents;
