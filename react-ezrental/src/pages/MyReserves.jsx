@@ -28,24 +28,6 @@ function MyReserves() {
     }
   }, [isRefresh]);
 
-
-  const customEmptyMessage = {
-    emptyText: (
-      <>
-        <Empty
-          image={Empty.PRESENTED_IMAGE_SIMPLE}
-          imageStyle={{
-            height: 60,
-          }}
-          description={
-            <span>
-              No existen Reservas
-            </span>
-          }
-        >
-        </Empty>
-      </>),
-  };
   return (
     <Spin spinning={loading} tip="Cargando...">
       {/* <List
@@ -91,6 +73,7 @@ function MyReserves() {
       /> */}
       <h2 style={{textAlign:"center"}}><CalendarOutlined /> Historial de reservas &bull;  Huésped. {user.displayName}</h2>
       <TableGuestReserves 
+        reserves={reserves}
         loading={loading}
       />
     </Spin>
