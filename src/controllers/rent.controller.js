@@ -20,6 +20,7 @@ const getrentResid = async (req, res) =>{
     re.precio_total_reserva,
     re.fecha_inicio_reserva,
     re.fecha_fin_reserva,
+    re.estado_reserva,
     r.id_residencia,
     r.titulo_residencia,
     r.tipo_residencia,
@@ -95,7 +96,7 @@ GROUP BY
       try {
         const resultRent = await pool.query("SELECT r.precio_total_reserva, r.fecha_inicio_reserva, r.fecha_fin_reserva, r.huespedes_reserva, u.nombre_usuario FROM reserva r, usuario u WHERE r.id_usuario = u.id_usuario and id_residencia = $1", [idResid]);
         
-        res.json(resultRent.rows);
+        res.json(resultRent.rows); 
       } catch (err) {
         res.status(500).send("Error obteniendo la información mis reservas");
       }
@@ -113,7 +114,8 @@ GROUP BY
   const getEvaUser = async (req, res) => {
     try{
       const codUsuario = req.params.codUsuario;
-      const getEvaUsr = await pool.query("SELECT e.id_evaluacion_usuario, e.calificacion_limpieza_usu, e.calificacion_puntualidad, e.calificacion_comunicacion_usu, e.comentario_usu, u.nombre_usuario FROM evaluacion_usuario e, usuario u WHERE u.id_usuario=e.id_usuario and u.codigo_usuario = $1 ", 
+      const getEvaUsr = await pool.query(
+        "SELECT e.id_evaluacion_usuario, e.calificacion_limpieza_usu, e.calificacion_puntualidad, e.calificacion_comunicacion_usu, e.comentario_usu, e.resenia_usuario, u.nombre_usuario FROM evaluacion_usuario e, usuario u WHERE u.id_usuario=e.id_usuario and e.resenia_usuario = $1 ", 
       [codUsuario]);
       res.json(getEvaUsr.rows);
     }catch{
@@ -151,16 +153,12 @@ GROUP BY
           const fechaFinFormateada = new Date(fechaFin).toISOString().split('T')[0];
 
           const newRent = await pool.query(
-            "INSERT INTO reserva (id_residencia, id_usuario, precio_total_reserva, fecha_inicio_reserva, fecha_fin_reserva, huespedes_reserva) VALUES ($1, $2, $3, $4, $5, $6)",
+            "INSERT INTO reserva (id_residencia, id_usuario, precio_total_reserva, fecha_inicio_reserva, fecha_fin_reserva, huespedes_reserva, estado_reserva) VALUES ($1, $2, $3, $4, $5, $6, 'pendiente')",
             [idResid, idUsuario, precio, fechaIni, fechaFin, huespedes]
           );
           const userEmailHostResult = await pool.query("SELECT u.correo_usuario FROM residencia re JOIN usuario u ON u.id_usuario = re.id_usuario WHERE id_residencia=$1",[idResid]);
           const userEmailHost = userEmailHostResult.rows[0].correo_usuario;
           
-          
-          
-          await pool.query("UPDATE estado SET estado_residencia = 'Alquilado' WHERE id_residencia = $1", 
-          [idResid]);
 
            // Obtener la ruta de la imagen local
            const imagePath = path.join(__dirname, '../assets/EzRental_Transparente_v2 _Loading.webp');
@@ -196,6 +194,30 @@ GROUP BY
           res.status(500).json({ error: "No se pudo realizar la reserva." });
         }
       };
+      const updateRent = async (req, res) => {
+        try {
+          const {idRent, idResid} = req.params;
+          const {
+            estado
+          } = req.body;
+
+          const newRent = await pool.query(
+            "UPDATE reserva SET estado_reserva = $2 WHERE id_reserva = $1",
+            [idRent, estado]
+          );
+          
+          if(estado=='alquilado'){
+          await pool.query(
+            "UPDATE estado SET estado_residencia = 'Alquilado' WHERE id_residencia = $1", 
+          [idResid]);
+          }
+      
+          res.json({ message: "La reserva ha sido actualizada exitosamente", lot: newRent.rows[0] });
+        } catch (error) {
+          console.error(error);
+          res.status(500).json({ error: "No se pudo realizar la reserva." });
+        }
+      };
       const createEvalu = async (req, res) => {
         try {
           const { idResid, codUsuario } = req.params;
@@ -209,7 +231,7 @@ GROUP BY
           const idUsuario = idUsuarioResult.rows[0].id_usuario;
 
           const dias = await pool.query(
-            "SELECT * FROM reserva WHERE id_residencia = $1 AND id_usuario = $2 AND fecha_inicio_reserva >= CURRENT_DATE - INTERVAL '7 days'",
+            "SELECT * FROM reserva WHERE id_residencia = $1 AND id_usuario = $2 AND fecha_fin_reserva >= CURRENT_DATE - INTERVAL '7 days'",
             [idResid, idUsuario]
           );
           if (dias.rows.length > 0) {
@@ -265,14 +287,15 @@ GROUP BY
             limpieza,
             puntualidad,
             comunicacion,
-            comentario
+            comentario,
+            codigoAlUsuario
           } = req.body;
           const idUsuarioResult = await pool.query("SELECT id_usuario FROM usuario WHERE codigo_usuario = $1", [codUsuario]);
           const idUsuario = idUsuarioResult.rows[0].id_usuario;
 
             const newEva = await pool.query(
-              "INSERT INTO evaluacion_usuario (id_usuario, calificacion_limpieza_usu, calificacion_puntualidad, calificacion_comunicacion_usu, comentario_usu) VALUES ($1, $2, $3, $4, $5)",
-              [idUsuario, limpieza, puntualidad, comunicacion, comentario]
+              "INSERT INTO evaluacion_usuario (id_usuario, calificacion_limpieza_usu, calificacion_puntualidad, calificacion_comunicacion_usu, comentario_usu, resenia_usuario) VALUES ($1, $2, $3, $4, $5, $6)",
+              [idUsuario, limpieza, puntualidad, comunicacion, comentario, codigoAlUsuario]
             );
         
             res.json({ message: "El comentario ha sido creado exitosamente", lot: newEva.rows[0] });
@@ -293,5 +316,6 @@ GROUP BY
         getrentUser,
         getrentResid,
         getEvaUser,
-        createEvaluUser
+        createEvaluUser,
+        updateRent
     };

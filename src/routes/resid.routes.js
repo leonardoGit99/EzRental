@@ -23,7 +23,8 @@ const {
     getrentUser,
     getrentResid,
     getEvaUser,
-    createEvaluUser
+    createEvaluUser,
+    updateRent
 } = require("../controllers/rent.controller");
 
 router.post('/api/upload', uploadImg);
@@ -42,6 +43,8 @@ router.get("/resid/rent/:codUsuario", getrentResid); //para tabla de Richard
 router.get("/resid/rent/user/:codUsuario", getrent); //para historial de reservas de un usuario
 router.get("/rent/user/:idResid", getrentUser); //para controlar fechas
 router.post("/rent/:idResid/:codUsuario", createRent);
+router.put("/rent/:idRent/:idResid", updateRent);
+
 router.get("/evalu/:idResid", getevalu);
 router.post("/evalu/:idResid/:codUsuario", createEvalu);
 
