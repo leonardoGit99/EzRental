@@ -61,7 +61,7 @@ function TableGuestReserves({ loading, reserves }) {
         columns={columnsData}
         dataSource={reserves}
         rowKey={record=>record.id_reserva}
-        locale={loading ? { emptyText: (<div><Spin spinning={loading} tip="Cargando..." /></div>) } : customEmptyMessage}
+        locale={loading ? { emptyText: (<Spin spinning={loading} tip="Cargando..." > &nbsp; </Spin>) } : customEmptyMessage}
         pagination={{ pageSize: 7, pagination: true, position: ["bottomRight"] }}
         bordered={true}
       >

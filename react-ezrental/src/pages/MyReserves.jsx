@@ -29,7 +29,7 @@ function MyReserves() {
   }, [isRefresh]);
 
   return (
-    <Spin spinning={loading} tip="Cargando...">
+    <>
       {/* <List
         grid={{
           xs: 1,
@@ -76,7 +76,7 @@ function MyReserves() {
         reserves={reserves}
         loading={loading}
       />
-    </Spin>
+    </>
   )
 }
 
