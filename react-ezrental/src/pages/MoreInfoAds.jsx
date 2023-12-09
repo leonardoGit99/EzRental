@@ -11,7 +11,8 @@ import DetailsForGuestOnly from '../components/DetailsForGuestOnly/DetailsForGue
 import AddReview from '../components/AddReview/AddReview';
 import ReviewsList from '../components/ReviewsList/ReviewsList';
 import { getAllReviewsByResidence } from '../services/reviews';
-import { getRentalsByResidence } from '../services/rentals';
+import { getAllRentalsByUser, getRentalsByResidence } from '../services/rentals';
+import { useAuth } from '../contexts/authContext';
 
 
 function MoreInfoAds() {
@@ -22,7 +23,10 @@ function MoreInfoAds() {
   const [isRefresh, setIsRefresh] = useState(true);
   const [reviewsResidence, setReviewsResidence] = useState([]);
   const [rentals, setRentals] = useState([]);
+  const [reservesByUser, setReservesByUser] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
+
   const setRefresh = (status) => {
     setIsRefresh(status);
   }
@@ -68,6 +72,16 @@ function MoreInfoAds() {
       })
     }
   }, [isRefresh, idAd])
+
+  useEffect(() => {
+    if (isRefresh) {
+      getAllRentalsByUser(user.uid).then((data) => {
+        setReservesByUser(data);
+      })
+      setRefresh(false);
+      setLoading(false);
+    }
+  }, [isRefresh]);
   return (
     <Spin spinning={loading} tip="Cargando...">
       <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
@@ -111,6 +125,7 @@ function MoreInfoAds() {
             daysMax={detailAdd.dias_max_residencia}
             hostName={detailAdd.nombre_usuario}
             hostPhoto={detailAdd.foto_usuario}
+            reservesByUser={reservesByUser}
           />
 
           <DetailOffers

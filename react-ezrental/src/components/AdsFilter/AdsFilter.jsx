@@ -13,7 +13,7 @@ function AdsFilter({ residences, filteredResidences, setFilteredResidences, coun
   const [selectedCity, setSelectedCity] = useState(null);
   const [dateRange, setDateRange] = useState(null);
   const [guestsCount, setGuestsCount] = useState(null);
-  const [priceRange, setPriceRange] = useState([0, 5000]);
+  const [priceRange, setPriceRange] = useState([0, 10000]);
   const [search, setSearch] = useState("");
   const { RangePicker } = DatePicker;
   const { Search } = Input;
@@ -154,11 +154,11 @@ const onSearch = () => {
 
   const marks = {
     0: 'Bs.0',
-    1000: '1000',
     2000: '2000',
-    3000: '3000',
     4000: '4000',
-    5000: 'Bs.5000',
+    6000: '6000',
+    8000: '8000',
+    10000: 'Bs.10000',
   }
 
   const handleResetFilters = () => {
@@ -169,7 +169,7 @@ const onSearch = () => {
     setCities([]);
     setDateRange(null);
     setGuestsCount(null);
-    setPriceRange([0, 5000]);
+    setPriceRange([0, 10000]);
     setFilteredResidences(residences);
   };
 
@@ -282,7 +282,7 @@ const onSearch = () => {
                 range
                 marks={marks}
                 min={0}
-                max={5000}
+                max={10000}
                 step={100}
                 defaultValue={priceRange}
                 onChange={handlePriceRangeChange}

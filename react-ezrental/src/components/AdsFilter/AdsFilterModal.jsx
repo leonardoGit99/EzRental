@@ -114,7 +114,7 @@ function AdsFilterModal({ selectedCountry, handleCountryChange, countries, selec
                 range
                 marks={marks}
                 min={0}
-                max={5000}
+                max={10000}
                 step={100}
                 defaultValue={priceRange}
                 onChange={handlePriceRangeChange}
