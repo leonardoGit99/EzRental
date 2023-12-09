@@ -63,7 +63,8 @@ const getrentResid = async (req, res) =>{
     re.id_reserva,
     re.precio_total_reserva,
     re.fecha_inicio_reserva,
-    re.fecha_fin_reserva
+    re.fecha_fin_reserva,
+    re.estado_reserva
 FROM residencia r
 LEFT JOIN imagen i ON r.id_residencia = i.id_residencia
 LEFT JOIN estado e ON r.id_residencia = e.id_residencia
@@ -82,7 +83,8 @@ GROUP BY
     re.id_reserva,
     re.precio_total_reserva,
     re.fecha_inicio_reserva,
-    re.fecha_fin_reserva;
+    re.fecha_fin_reserva,
+    re.estado_reserva;
             
         `,[idUsuario]);
       
@@ -210,8 +212,13 @@ GROUP BY
           await pool.query(
             "UPDATE estado SET estado_residencia = 'Alquilado' WHERE id_residencia = $1", 
           [idResid]);
+          }else{
+          if(estado=='cancelado'){
+            await pool.query(
+              "DELETE FROM reserva WHERE id_reserva = $1", 
+            [idRent]);
+            }
           }
-      
           res.json({ message: "La reserva ha sido actualizada exitosamente", lot: newRent.rows[0] });
         } catch (error) {
           console.error(error);
@@ -230,22 +237,29 @@ GROUP BY
           const idUsuarioResult = await pool.query("SELECT id_usuario FROM usuario WHERE codigo_usuario = $1", [codUsuario]);
           const idUsuario = idUsuarioResult.rows[0].id_usuario;
 
-          const dias = await pool.query(
-            "SELECT * FROM reserva WHERE id_residencia = $1 AND id_usuario = $2 AND fecha_fin_reserva >= CURRENT_DATE - INTERVAL '7 days'",
+          const diasDespues = await pool.query(
+            "SELECT * FROM reserva WHERE id_residencia = $1 AND id_usuario = $2 AND fecha_fin_reserva >= CURRENT_DATE - INTERVAL '8 days'",
             [idResid, idUsuario]
           );
-          if (dias.rows.length > 0) {
-            const newEva = await pool.query(
+          const diasAntes = await pool.query(
+            "SELECT * FROM reserva WHERE id_residencia = $1 AND id_usuario = $2 AND fecha_inicio_reserva < CURRENT_DATE",
+            [idResid, idUsuario]
+          );
+          if (diasDespues.rows.length > 0 ) {
+            if (diasAntes.rows.length > 0 ) {
+              const newEva = await pool.query(
               "INSERT INTO evaluacion (id_residencia, id_usuario, calificacion_limpieza, calificacion_exactitud, calificacion_comunicacion, comentario) VALUES ($1, $2, $3, $4, $5, $6)",
               [idResid, idUsuario, limpieza, exactitud, comunicacion, comentario]
-            );
+              );
         
-            res.json({ message: "El comentario ha sido creado exitosamente", lot: newEva.rows[0] });
+              res.json({ message: "El comentario ha sido creado exitosamente", lot: newEva.rows[0] });
             
+            }else{
+            return res.status(200).json({ data: 1 }); //si reciben 1 es por que todavía no empezó su reserva
+            }
           }else{
             return res.status(200).json({ data: 7 }); //si reciben 7 es por que ya pasaron 7 dias desde su reserva
-          }
-
+            }
           
         } catch (error) {
           console.error(error);

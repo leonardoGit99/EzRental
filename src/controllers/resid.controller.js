@@ -55,9 +55,9 @@ if (id_noti.length > 0) {
 */
 
     // Lógica para actualizar el estado aquí
-    await pool.query("UPDATE estado SET estado_residencia = 'Inactivo', fecha_inicio_estado = null, fecha_fin_estado = null WHERE estado_residencia = 'Publicado' AND fecha_fin_estado < CURRENT_DATE - INTERVAL '1 days'"
+    await pool.query("UPDATE estado SET estado_residencia = 'Inactivo', fecha_inicio_estado = null, fecha_fin_estado = null WHERE estado_residencia = 'Publicado' AND fecha_fin_estado < CURRENT_DATE"
     );
-    await pool.query("UPDATE estado SET estado_residencia = 'Publicado', fecha_inicio_estado = CURRENT_DATE, fecha_fin_estado = CURRENT_DATE + INTERVAL '30 days' WHERE estado_residencia = 'Pausado' AND fecha_fin_estado < CURRENT_DATE - INTERVAL '1 days'"
+    await pool.query("UPDATE estado SET estado_residencia = 'Publicado', fecha_inicio_estado = CURRENT_DATE, fecha_fin_estado = CURRENT_DATE + INTERVAL '30 days' WHERE estado_residencia = 'Pausado' AND fecha_fin_estado < CURRENT_DATE"
     );
 
     const result = await pool.query(`
