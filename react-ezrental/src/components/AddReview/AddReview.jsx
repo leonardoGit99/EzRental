@@ -53,12 +53,14 @@ function AddReview({ isRefresh, setRefresh, idAd, rentals, reviewsResidence }) {
       })
       if (userIsRentedEverThisResidence === true) {
         if (data && data.data && data.data === 7) {
-          Modal.error({ content: "Se cumplió el tiempo limite de 7 días. Ya no puede enviar su reseña :(", okText: "Ok" });
+          Modal.error({ content: "Se cumplió el tiempo limite de 7 días. Ya no puede enviar su reseña :(", okText: "Entendido" });
+        } else if (data && data.data && data.data === 1){
+          Modal.error({ content: "Aún no comenzó su estadía en la residencia. Por lo tanto, no puede enviar su reseña :(", okText: "Entendido" });
         } else {
           message.success('Reseña enviada exitosamente!');
         }
       } else {
-        Modal.warning({ content: "Debe reservar para agregar su reseña del lugar!", okText: "Ok" });
+        Modal.warning({ content: "Debe reservar para agregar su reseña del lugar!", okText: "Entendido" });
       }
     });
     setRatingCleaning();
