@@ -137,14 +137,6 @@ function MoreInfoAds() {
             checkOut={detailAdd.check_out_residencia}
           />
 
-          <AddReview
-            idAd={idAd}
-            isRefresh={isRefresh}
-            setRefresh={setRefresh}
-            rentals={rentals}
-            reviewsResidence={reviewsResidence}
-          />
-
           <ReviewsList
             detailReviews={reviewsResidence}
             averageRates={detailAdd.promedio}
