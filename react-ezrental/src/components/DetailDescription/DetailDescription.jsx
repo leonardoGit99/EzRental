@@ -18,20 +18,22 @@ function DetailDescription({ residenceType, spaceType, description, numberOfGues
 
   // Verifica si el huesped tiene reservacion vigente en la residencia 
   const verifyGuestReservations = () => {
-    const estado = "alquilado";// Estado que vendrá en el json reservesByUser
-    if ((reservesInOneResidenceByGuest.length !== 0) && (estado == "alquilado")) { // Verifica si se tiene al menos una reserva y que el estado sea alquilado
+    /* console.log(reserveIsWithinTheAllowedRange.length!==0);
+    console.log(reservesInOneResidenceByGuest.estado_reserva === "alquilado"); */
+    if ((reservesInOneResidenceByGuest.length !== 0)) { // Verifica si se tiene al menos una reserva y que el estado sea alquilado
       const reserveDates = reservesInOneResidenceByGuest.map((reserve) => ({ // Guarda en un arreglo solo las fechas de inicio y fin de la reserva
         startReserveDate: dayjs(reserve.fecha_inicio_reserva),
         endReserveDate: dayjs(reserve.fecha_fin_reserva),
+        stateReserve: reserve.estado_reserva,
       }));
 
       const highestReserve = reserveDates.reduce((prevDate, currentDate) => { // Encuentra la reserva con la fecha fin mas alta. Y devuelve fecha inicio y fecha fin de la reserva 
         return currentDate.endReserveDate.isAfter(prevDate.endReserveDate) ? currentDate : prevDate;
       }, {})
-
+      
       // Determina si se debe mostrar el componente DetailContactUbication
-      const reserveIsWithinRange = (dayjs(highestReserve.startReserveDate).isAfter(dayjs(highestReserve.endReserveDate)) || dayjs(highestReserve.startReserveDate).isSame(dayjs(highestReserve.endReserveDate))) || highestReserve.endReserveDate.isAfter(dayjs().add(7, "day")); // Determina si pasaron 7 dias en base a la fecha fin mas alta 
-      setReserveIsWithinTheAllowedRange(reserveIsWithinRange);
+      const reserveIsWithinRange = dayjs(highestReserve.startReserveDate).isAfter(dayjs(highestReserve.endReserveDate) || dayjs(highestReserve.startReserveDate).isSame(dayjs(highestReserve.endReserveDate))) || highestReserve.endReserveDate.isAfter(dayjs().add(7, "day")); // Determina si pasaron 7 dias en base a la fecha fin mas alta 
+      setReserveIsWithinTheAllowedRange(highestReserve.stateReserve == "alquilado" && reserveIsWithinRange);
     }
     console.log(reserveIsWithinTheAllowedRange);
   }

@@ -4,25 +4,39 @@ import { createResidence } from '../../services/residences';
 import { createRental } from '../../services/rentals';
 import { useAuth } from "../../contexts/authContext";
 import './modalQRCodeStyles.css';
+import { useNavigate } from 'react-router-dom';
 
 function ModalQRCode({ isVisibleQRCode, setIsVisibleQRCode, closeModalQR, bodyReserve, setBodyReserve, closeReservationModal, priceResidence, selectedStartDate, selectedEndDate, idAd, isRefresh, setRefresh }) {
-  const { user } = useAuth(); 
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const daysDiff = selectedEndDate.diff(selectedStartDate, 'day');
   const totalPrice = priceResidence * daysDiff;
   bodyReserve["precio"] = totalPrice;
-  
+
   const onFinish = async () => {
     try {
       await createRental(bodyReserve, idAd, user.uid);
       setRefresh(true);
       closeReservationModal();
       closeModalQR();
-      message.success("Reservación exitosa!. Disfrute de su estadia");
+      navigate('/mis-reservas');
+      Modal.info(
+        {
+          content:
+            <>
+              <p>
+                Estimado {user.displayName}:<br />
+                En este apartado puede verificar el estado de su reserva. Si no acepté su solicitud de reserva, NO aparecerá en este apartado :( <br />
+                Si acepté su solicitud, podrá volver al anuncio para visualizar mi Whatsapp y la ubicación exacta de la residencia.<br />
+                Atte. El Anfitrión.
+              </p>
+            </>,
+          okText: "Entendido"
+        });
     } catch (error) {
       message.error("Algo salió mal. Inténtelo más tarde");
     }
   }
-
 
 
   return (

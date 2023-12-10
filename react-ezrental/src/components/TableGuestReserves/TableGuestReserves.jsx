@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button, Empty, Modal, Spin, Table } from 'antd';
-import { EyeTwoTone } from '@ant-design/icons';
+import { Badge, Button, Empty, Modal, Spin, Table } from 'antd';
+import { EyeTwoTone, ClockCircleTwoTone, CheckCircleTwoTone } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import './tableGuestReservesStyles.css';
 
@@ -25,6 +25,16 @@ function TableGuestReserves({ loading, reserves }) {
       }, {
         title: "Fecha fin", dataIndex: "fecha_fin_reserva", key: "fecha_fin_reserva", render: (endReserveDate) => { return endReserveDate && endReserveDate.split('T')[0].toString() }
       }]
+    },
+    {
+      title: "Estado  de la Reserva", dataIndex: "estado_reserva", key: "estado_reserva",
+      render: (stateReserve) => {
+        return (
+          stateReserve === "alquilado"
+          ? <><CheckCircleTwoTone twoToneColor={"#52c41a"}/> <span style={{fontWeight:"500"}}>Alquilado</span></>
+          : <><ClockCircleTwoTone twoToneColor={"#BFBFBF"}/> <span style={{fontWeight:"500"}}>Pendiente</span></>
+        )
+      }
     },
     { title: "Acciones", key: "acciones", render: (reserve) => (<Button type="link" onClick={() => { viewAdd(reserve) }}> <EyeTwoTone /> Ver anuncio</Button>) },
   ]
@@ -60,7 +70,7 @@ function TableGuestReserves({ loading, reserves }) {
         className="table-my-guest-reserves"
         columns={columnsData}
         dataSource={reserves}
-        rowKey={record=>record.id_reserva}
+        rowKey={record => record.id_reserva}
         locale={loading ? { emptyText: (<Spin spinning={loading} tip="Cargando..." > &nbsp; </Spin>) } : customEmptyMessage}
         pagination={{ pageSize: 7, pagination: true, position: ["bottomRight"] }}
         bordered={true}
