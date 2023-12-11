@@ -5,8 +5,10 @@ const fs = require('fs');
 const path = require('path');
 const { promisify } = require('util');
 const readFileAsync = promisify(fs.readFile);
+const { transporter } = require('../Mail');
 
-const resend = new Resend("re_Gi6HF8xH_FyvKokTNVq6UhA6u8wu4HH8F");
+
+//const resend = new Resend("re_Gi6HF8xH_FyvKokTNVq6UhA6u8wu4HH8F");
 
 const getrentResid = async (req, res) =>{
   try {
@@ -158,16 +160,15 @@ GROUP BY
             "INSERT INTO reserva (id_residencia, id_usuario, precio_total_reserva, fecha_inicio_reserva, fecha_fin_reserva, huespedes_reserva, estado_reserva) VALUES ($1, $2, $3, $4, $5, $6, 'pendiente')",
             [idResid, idUsuario, precio, fechaIni, fechaFin, huespedes]
           );
-          const userEmailHostResult = await pool.query("SELECT u.correo_usuario FROM residencia re JOIN usuario u ON u.id_usuario = re.id_usuario WHERE id_residencia=$1",[idResid]);
-          const userEmailHost = userEmailHostResult.rows[0].correo_usuario;
+          const userHostResult = await pool.query("SELECT u.correo_usuario, re.titulo_residencia, u.nombre_usuario FROM residencia re JOIN usuario u ON u.id_usuario = re.id_usuario WHERE id_residencia=$1",[idResid]);
+          const userEmailHost = userHostResult.rows[0].correo_usuario;
+          const nombreResid = userHostResult.rows[0].titulo_residencia;
+          const userName = userHostResult.rows[0].nombre_usuario;
           
 
-           // Obtener la ruta de la imagen local
-           const imagePath = path.join(__dirname, '../assets/EzRental_Transparente_v2 _Loading.webp');
-
           // Enviar notificación por correo electrónico
-          const data = await resend.emails.send({
-          from: 'Acme <onboarding@resend.dev>',
+          await transporter.sendMail({
+          from: '"Confirmación de reserva 🏠" <error.404.qa@gmail.com>', 
           to: [userEmailHost],
           subject: 'Confirmación de reserva',
           html: `
@@ -175,21 +176,28 @@ GROUP BY
             <h1 style="color: #333; text-align: center;">¡Solicitud de Reserva!</h1>
             <p style="font-size: 16px; color: #555;">Tu residencia ha recibido una solicitud de reserva. Aquí están los detalles:</p>
             <ul>
-              <li><strong>Fechas : </strong> ${fechaInicioFormateada}  -  ${fechaFinFormateada}</li>
-              <li><strong>Precio : </strong> ${precio}</li>
+              <li><strong>Nombre de la residencia:</strong> ${nombreResid}</li>
+              <li><strong>Fechas solicitadas para el alquiler: </strong> ${fechaInicioFormateada}  -  ${fechaFinFormateada}</li>
+              <li><strong>Precio total del alquiler : </strong> ${precio}</li>
               <li><strong>Número de huéspedes:</strong> ${huespedes}</li>
+              <li><strong>Nombre de la persona que está solicitando la reserva : </strong> ${userName}</li>
               <li><strong>Correo Electrónico de la persona que está solicitando la reserva : </strong> ${userEmail}</li>
               <li><strong>Tu correo Electronico : </strong> ${userEmailHost}</li>
               <li></li>
               <a href="http://localhost:5173/myRents/">Visita EzRental para gestionar tus Residencias</a>
             </ul>
             <p style="text-align: center;">
-              <img src="data:image/jpg;base64,${imagePath}" alt="Imagen de confirmación" style="max-width: 100%; height: auto;">
+              <img src="cid:EzRental" alt="Imagen de confirmación" style="max-width: 100%; height: auto;"/>
             </p>
           </div>
-      `,
+          `,
+          attachments: [{   // stream as an attachment
+            filename: 'EzRental.webp',
+            path: __dirname + '/EzRental.webp',
+            cid: 'EzRental'
+          }]
         }); 
-      
+       
           res.json({ message: "La reserva ha sido creado exitosamente", lot: newRent.rows[0] });
         } catch (error) {
           console.error(error);
@@ -207,18 +215,91 @@ GROUP BY
             "UPDATE reserva SET estado_reserva = $2 WHERE id_reserva = $1",
             [idRent, estado]
           );
+
+          const userResult = await pool.query("SELECT u.correo_usuario, re.titulo_residencia, u.nombre_usuario, r.fecha_inicio_reserva, r.fecha_fin_reserva, r.precio_total_reserva FROM reserva r JOIN usuario u ON u.id_usuario = r.id_usuario JOIN residencia re ON re.id_residencia = r.id_residencia WHERE r.id_reserva= $1",[idRent]);
+          const userEmail = userResult.rows[0].correo_usuario;
+          const nombreResid = userResult.rows[0].titulo_residencia;
+          const userName = userResult.rows[0].nombre_usuario; 
+          const fecha_inicio = userResult.rows[0].fecha_inicio_reserva; 
+          const fecha_fin = userResult.rows[0].fecha_fin_reserva; 
+          const precio = userResult.rows[0].precio_total_reserva;
+
+          const fechaInicioFormateada = new Date(fecha_inicio).toISOString().split('T')[0];
+          const fechaFinFormateada = new Date(fecha_fin).toISOString().split('T')[0];
           
           if(estado=='alquilado'){
           await pool.query(
             "UPDATE estado SET estado_residencia = 'Alquilado' WHERE id_residencia = $1", 
           [idResid]);
+
+          // Enviar notificación por correo electrónico
+          await transporter.sendMail({
+            from: '"Confirmación de reserva 🏠" <error.404.qa@gmail.com>', 
+            to: [userEmail],
+            subject: 'Confirmación de reserva',
+            html: `
+            <div style="border: 2px solid #eaeaea; padding: 20px; border-radius: 10px;">
+              <h1 style="color: #333; text-align: center;">¡Solicitud de Reserva Aceptada!</h1>
+              <p style="font-size: 16px; color: #555;">${userName} su solicitud fue Aceptada</p>
+              <ul>
+                <li><strong>Nombre de la residencia:</strong> ${nombreResid}</li>
+                <li><strong>Fechas del alquiler: </strong> ${fechaInicioFormateada}  -  ${fechaFinFormateada}</li>
+                <li><strong>Precio total del alquiler : </strong> ${precio}</li>
+                <li><strong>Tu correo Electronico : </strong> ${userEmail}</li>
+                <li><strong></strong></li>
+                <li></li>
+                <a href="http://localhost:5173/mis-reservas/">Visita EzRental para ver tus Reservas</a>
+              </ul>
+              <p style="text-align: center;">
+                <img src="cid:EzRental" alt="Imagen de confirmación" style="max-width: 100%; height: auto;"/>
+              </p>
+            </div>
+            `,
+            attachments: [{   // stream as an attachment
+              filename: 'EzRental.webp',
+              path: __dirname + '/EzRental.webp',
+              cid: 'EzRental'
+            }]
+          }); 
+          
           }else{
           if(estado=='cancelado'){
             await pool.query(
               "DELETE FROM reserva WHERE id_reserva = $1", 
             [idRent]);
             }
+
+            await transporter.sendMail({
+              from: '"Cancelacion de reserva 🏠" <error.404.qa@gmail.com>', 
+              to: [userEmail],
+              subject: 'Cancelacion de reserva',
+              html: `
+              <div style="border: 2px solid #eaeaea; padding: 20px; border-radius: 10px;">
+                <h1 style="color: #333; text-align: center;">¡Solicitud de Reserva Cancelada!</h1>
+                <p style="font-size: 16px; color: #555;">${userName} su solicitud fue Cancelada</p>
+                <ul>
+                  <li><strong>Nombre de la residencia:</strong> ${nombreResid}</li>
+                  <li><strong>Fechas del alquiler: </strong> ${fechaInicioFormateada}  -  ${fechaFinFormateada}</li>
+                  <li><strong>Precio total del alquiler : </strong> ${precio}</li>
+                  <li><strong>Tu correo Electronico : </strong> ${userEmail}</li>
+                  <li><strong>Lo sentimos, parece que su solicitud fue cancelada por el Host</strong></li>
+                  <li><strong></strong></li>
+                  <li></li>
+                  <a href="http://localhost:5173/mis-reservas/">Visita EzRental para ver tus Reservas</a>
+                </ul>
+                <p style="text-align: center;">
+                  <img src="cid:EzRental" alt="Imagen de confirmación" style="max-width: 100%; height: auto;"/>
+                </p>
+              </div>
+              `,
+              attachments: [{   // stream as an attachment
+              filename: 'EzRental.webp',
+              path: __dirname + '/EzRental.webp',
+              cid: 'EzRental'
+              }]
+            }); 
           }
+
           res.json({ message: "La reserva ha sido actualizada exitosamente", lot: newRent.rows[0] });
         } catch (error) {
           console.error(error);
