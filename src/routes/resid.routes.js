@@ -46,7 +46,7 @@ router.post("/rent/:idResid/:codUsuario", createRent);
 router.put("/rent/:idRent/:idResid", updateRent);
 
 router.get("/evalu/:idResid", getevalu);
-router.post("/evalu/:idResid/:codUsuario", createEvalu);
+router.post("/evalu/:idResid/:codUsuario/:idRent", createEvalu);
 
 router.get("/usr/:codUsuario", getUsuario);
 router.post("/usr", createUsuario);

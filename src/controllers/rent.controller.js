@@ -29,6 +29,8 @@ const getrentResid = async (req, res) =>{
     r.pais_residencia,
     r.ciudad_residencia,
     u.id_usuario,
+    u.id_usuario,
+    u.codigo_usuario,
     u.nombre_usuario,
     u.correo_usuario,
     u.foto_usuario,
@@ -308,7 +310,7 @@ GROUP BY
       };
       const createEvalu = async (req, res) => {
         try {
-          const { idResid, codUsuario } = req.params;
+          const { idResid, codUsuario, idRent } = req.params;
           const {
             limpieza,
             exactitud,
@@ -319,12 +321,12 @@ GROUP BY
           const idUsuario = idUsuarioResult.rows[0].id_usuario;
 
           const diasDespues = await pool.query(
-            "SELECT * FROM reserva WHERE id_residencia = $1 AND id_usuario = $2 AND fecha_fin_reserva >= CURRENT_DATE - INTERVAL '8 days'",
-            [idResid, idUsuario]
+            "SELECT * FROM reserva WHERE id_reserva = $1 AND fecha_fin_reserva >= CURRENT_DATE - INTERVAL '8 days'",
+            [idRent]
           );
           const diasAntes = await pool.query(
-            "SELECT * FROM reserva WHERE id_residencia = $1 AND id_usuario = $2 AND fecha_inicio_reserva < CURRENT_DATE",
-            [idResid, idUsuario]
+            "SELECT * FROM reserva WHERE id_reserva = $1 AND fecha_inicio_reserva < CURRENT_DATE",
+            [idRent]
           );
           if (diasDespues.rows.length > 0 ) {
             if (diasAntes.rows.length > 0 ) {
