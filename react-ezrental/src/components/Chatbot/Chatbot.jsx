@@ -49,7 +49,7 @@ function Chatbot() {
       const reply = analyze(text);
       list = [...list, { message: reply }];
 
-      if (reply === 'Mis Reservas') {
+      if (reply === 'Historial de Reservas') {
         navigate('/mis-reservas');
       } else if (reply === 'Home') {
         navigate('/');
@@ -57,7 +57,9 @@ function Chatbot() {
         navigate('/mis-anuncios');
       } else if (reply === 'Añadir Anuncio') {
         navigate('/aniadir-anuncio');
-      } else if (text.toLowerCase().includes('salir') || text.includes('6')) {
+      }else if (reply === 'Gestionar Residencias Reservadas') {
+        navigate('/myRents'); 
+      }else if (text.toLowerCase().includes('salir') || text.includes('7')) {
         setConversationEnded(true);
       }
     } else {
@@ -74,13 +76,14 @@ function Chatbot() {
             <span key="menu" style={{ fontWeight: 'bold' }}>Elige una opción como usuario:</span>,
             <span key="guest" style={{ fontWeight: 'bold' }}>Huésped:</span>,
             "1. Home",
-            "2. Mis Reservas",
+            "2. Historial de Reservas",
             <span key="host" style={{ fontWeight: 'bold' }}>Anfitrión:</span>,
             "3. Añadir Anuncio",
             "4. Mis Anuncios",
+            "5. Gestionar Residencias Reservadas",
             <span key="options" style={{ fontWeight: 'bold' }}>Otras opciones:</span>,
-            "5. Ayuda",
-            "6. Salir"
+            "6. Ayuda",
+            "7. Salir"
           ].map((line, index) => (
             <React.Fragment key={index}>
               {line}
