@@ -1,103 +1,79 @@
 import React, { useState, useEffect } from 'react';
-import { Space, Table, Tag, Button, List, Popconfirm, Badge  } from 'antd';
-import { useAuth } from '../../contexts/authContext';
-import { getAllMyRentalsByUserHost } from '../../services/rentals';
 import { Link } from 'react-router-dom';
+import { Space, Table, Tag, Button, List, Popconfirm, Badge, Spin, Empty } from 'antd';
+import { updateRentalHost } from '../../services/rentals';
+import ModalReviewHost from '../ModalReviewHost/ModalReviewHost';
 import { format, isToday, parseISO } from 'date-fns';
-import './rents.css'
+import './rents.css';
 
-const { Column, ColumnGroup } = Table;
-
-const Rents = () => {
-  
-  const { user } = useAuth();
-  const [reservas, setReservas] = useState([]);
-  const [isRefresh, setIsRefresh] = useState(true);
-  const { Item } = List;
-  const setRefresh = (status) => {
-    setIsRefresh(status);
-  }
-
-  
-  useEffect(() => {
-    if (isRefresh) {
-      getAllMyRentalsByUserHost(user.uid).then((data) => {
-        setReservas(data);
-      })
-      setRefresh(false);
-    }
-  }, [isRefresh]);
-
+function Rents({ loading, setRefresh, reservas }) {
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [selectedReservation, setSelectedReservation] = useState(null);
   /*De backend estoy obteniendo estos datos:
-  "id_reserva": 40,
-    "id_residencia": 11,
-    "precio_total_reserva": 460,
+  {
+    "id_reserva": 21,
+    "id_residencia": 3,
+    "precio_total_reserva": 123,
     "fecha_inicio_reserva": "2023-12-08T04:00:00.000Z",
-    "fecha_fin_reserva": "2023-12-09T04:00:00.000Z",
-    "titulo_residencia": "Casa Maruecos",
-    "tipo_residencia": "Casa",
+    "fecha_fin_reserva": "2023-12-08T04:00:00.000Z",
+    "estado_reserva": "pendiente",
+    "titulo_residencia": "Hotel Ecoresort La Colina",
+    "tipo_residencia": "Hotel",
     "pais_residencia": "Bolivia",
     "ciudad_residencia": "Cochabamba",
-    "id_usuario": 9,
-    "nombre_usuario": "Leonardo Fuentes Claros",
-    "correo_usuario": "leonardofuentesclaros@gmail.com",
-    "foto_usuario": "https://drive.google.com/uc?id=12kpAgADb25FzbH07NXnX6gIByMU5Z0td",
+    "id_usuario": 4,
+    "nombre_usuario": "Jose Montaño",
+    "correo_usuario": "alejomont25@gmail.com",
+    "foto_usuario": "https://drive.google.com/uc?id=1Lxk93YjzhtZ-ad7gdGcZBFwbk0TUEoha",
     "tags": [
-      "Casa",
+      "Hotel",
       "Bolivia",
       "Cochabamba"
     ]
+  },
   */
- //Importante aun me faltan los datos de Status y saber si en una residencia ya escribiste su receñia
-  const [data, setData] = useState([]);
+  //Importante aun me faltan los datos de estado_reserva y saber si en una residencia ya escribiste su receñia
 
-  useEffect(() => {
-    const transformedData = reservas.map((reserva) => ({
-      id_usuario: reserva.id_usuario,
-      nombre_usuario: reserva.nombre_usuario,
-      correo_usuario: reserva.correo_usuario,
-      id_residencia: reserva.id_residencia,
-      titulo_residencia: reserva.titulo_residencia,
-      tags: reserva.tags,  // son los datos de r.tipo_residencia, r.pais_residencia, r.ciudad_residencia
-      id_reserva: reserva.id_reserva,
-      precio_total_reserva: reserva.precio_total_reserva,
-      fecha_inicio_reserva: reserva.fecha_inicio_reserva,
-      fecha_fin_reserva: reserva.fecha_fin_reserva,
-      status: reserva.status,
-      resenia: reserva.resenia,
-    }));
-    setData(transformedData);
-  }, [reservas]);
-
-  const handleConfirmClick = async (record) => {
+  const updateRentalestado_reserva = async (record, newestado_reserva) => {
     try {
-      // Simulación de la petición al backend para cambiar el estado a Rentado
-      const updatedData = data.map((item) =>
-        item.id_usuario === record.id_usuario ? { ...item, status: 'Rentado' } : item
-      );
-      setData(updatedData);
+      const updatedData = {
+        estado: newestado_reserva,
+        // ... otros campos
+      };
+      await updateRentalHost(updatedData, record.id_reserva, record.id_residencia);
+      setRefresh(true);
+      console.log(`Estado cambiado a ${newestado_reserva} exitosamente`); //solo para pruebas UwU
+      //para incrementar algo mas luego de actualizar como redireccionar o mostrar un mensaje
     } catch (error) {
-      console.error('Error al cambiar el estado a Rentado:', error);
+      console.error(`Error al cambiar el estado a ${newestado_reserva}:`, error);
     }
+  };
+
+  const handleConfirmClick = (record) => {
+    updateRentalestado_reserva(record, 'alquilado');
+  };
+
+  const handleCancelClick = (record) => {
+    updateRentalestado_reserva(record, 'cancelado');
   };
 
   const handleWriteReviewClick = (record) => {
     // Aquí puedes "Escribir Reseña del huesped"
-    console.log(`Escribir reseña para la reserva con ID: ${record.id_reserva}`);
-    //abrir un modal.
+    
+    // abrir un modal.
+    setSelectedReservation(record);
+    setIsReviewModalOpen(true);
   };
 
-  const handleCancelClick = async (record) => {
-    try {
-      // Simulación de la petición al backend para borrar la fila
-      const updatedData = data.map((item) =>
-      item.id_usuario === record.id_usuario ? { ...item, status: 'Cancelado' } : item
-    );
-
-    setData(updatedData);
-    } catch (error) {
-      console.error('Error al borrar la fila:', error);
+  const shouldShowWriteReview = (record) => {
+    const today = new Date();
+    const endDate = parseISO(record.fecha_fin_reserva);
+    if (endDate < today) {
+      const daysDifference = Math.floor((today - endDate) / (24 * 60 * 60 * 1000));
+      return daysDifference <= 7;
     }
+
+    return false;
   };
 
   const columns = [
@@ -110,7 +86,7 @@ const Rents = () => {
           key: 'nombre_usuario',
           align: 'center',
           render: (text, record) => (
-            <Link to={`/usuario/${record.id_usuario}`}>{text}</Link>
+            <Link to={`/usuario/${record.codigo_usuario}`}>{text}</Link>
           ),
         },
         { title: 'Correo', dataIndex: 'correo_usuario', key: 'correo_usuario', align: 'center', },
@@ -139,13 +115,19 @@ const Rents = () => {
       ],
     },
     {
-      title: 'Status',
-      key: 'state',
+      title: 'Estado',
+      key: 'estado_reserva',
       align: 'center',
       render: (_, record) => (
         <Badge
-          status={record.status === 'Rentado' ? 'success' : record.status === 'Cancelado' ? 'error' : 'default'}
-          text={record.status}
+          status={
+            record.estado_reserva === 'alquilado'
+              ? 'success'
+              : record.estado_reserva === 'cancelado'
+                ? 'error'
+                : 'default'
+          }
+          text={record.estado_reserva}
         />
       ),
     },
@@ -165,12 +147,12 @@ const Rents = () => {
       ),
     },
     {
-      title: 'Action',
+      title: 'Acciones',
       key: 'action',
       align: 'center',
       render: (_, record) => (
         <Space size="middle">
-          {record.status === 'Confirmar' && (
+          {record.estado_reserva === 'pendiente' && (
             <>
               <Popconfirm
                 title="¿Estás seguro de confirmar la reserva?"
@@ -188,24 +170,56 @@ const Rents = () => {
               </Popconfirm>
             </>
           )}
-          {record.status === 'Rentado' && (
-            <>
-              <Button disabled>Rentado</Button>
-              {record.resenia === false && isToday(parseISO(record.fecha_fin_reserva)) && (
-                <Button onClick={() => handleWriteReviewClick(record)}>Escribir Reseña del huesped</Button>
-              )}
-            </>
-          )}
-          {record.status === 'Cancelado' && (
+          {record.estado_reserva === 'cancelado' && (
             <Button disabled>Cancelado</Button>
           )}
-           <Button onClick={() => handleWriteReviewClick(record)}>Escribir Reseña del huesped</Button>
+          {record.estado_reserva === 'alquilado' && shouldShowWriteReview(record) && (
+            <Button onClick={() => handleWriteReviewClick(record)}>Escribir Reseña del huésped</Button>
+          )}
         </Space>
       ),
     },
   ];
 
-  return <Table dataSource={data} columns={columns} />;
+  const customEmptyMessage = {
+    emptyText: (
+      <>
+        <Empty
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          imageStyle={{
+            height: 60,
+          }}
+          description={
+            <span>
+              No existen Reservas
+            </span>
+          }
+        >
+        </Empty>
+      </>),
+  };
+
+  return (
+    <div>
+      <Table
+        className="table-my-host-rents"
+        dataSource={reservas}
+        columns={columns}
+        rowKey={record => record.id_reserva}
+        locale={loading ? { emptyText: (<Spin spinning={loading} tip="Cargando..." > &nbsp; </Spin>) } : customEmptyMessage}
+        pagination={{ pageSize: 7, pagination: true, position: ["bottomRight"] }}
+        bordered={true}
+      />
+      {selectedReservation && (
+        <ModalReviewHost
+          visible={isReviewModalOpen}
+          setVisible={setIsReviewModalOpen}
+          onCancel={() => setIsReviewModalOpen(false)}
+          userId={selectedReservation.codigo_usuario}
+        />
+      )}
+    </div>
+  );
 };
 
 export default Rents;

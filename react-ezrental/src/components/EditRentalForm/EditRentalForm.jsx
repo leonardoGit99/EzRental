@@ -22,6 +22,7 @@ function EditRentalForm() {
   const [rangeDatesBody, setRangeDatesBody] = useState([null, null]);
   const [isImageUploaded, setIsImageUploaded] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [stateAd, setStateAd] = useState("");
   const setImageUploaded = (status) => {
     setIsImageUploaded(status)
   }
@@ -180,13 +181,13 @@ function EditRentalForm() {
 
   useEffect(() => {
     form.setFieldsValue(editBody);
+    setStateAd(editBody.estado);
     setLoading(false);
   }, [editBody]);
 
-
   const onFinish = async () => {
     try {
-      if (editBody.estado === "Inactivo") {
+      if (stateAd === "Inactivo") {
         editBody.fechaIniEst = null;
         editBody.fechaFinEst = null;
       } else if ((rangeDatesBody[0] && rangeDatesBody[1]) !== null) {
@@ -235,20 +236,30 @@ function EditRentalForm() {
                   onChange={(value) => handleSelectChange(value, "estadoAnuncio")}
                 >
                   {
-                    editBody.estado === "Alquilado"
-                      ? (
-                        <>
-                          <Option value="Pausado"> Pausado </Option>
-                          <Option value="Inactivo"> Inactivo </Option>
-                        </>
-                      )
-                      : (
-                        <>
-                          <Option value="Pausado"> Pausado </Option>
-                          <Option value="Inactivo"> Inactivo </Option>
-                          <Option value="Publicado"> Publicado </Option>
-                        </>
-                      )
+                    dataAd.estado_residencia === "Alquilado" ? (
+                      <>
+                        <Option value="Pausado"> Pausado </Option>
+                        <Option value="Inactivo"> Inactivo </Option>
+                      </>
+                    ) : dataAd.estado_residencia === "Pausado" ? (
+                      <>
+                        <Option value="Pausado"> Pausado </Option>
+                        <Option value="Inactivo"> Inactivo </Option>
+                        <Option value="Publicado"> Publicado </Option>
+                      </>
+                    ) : dataAd.estado_residencia === "Inactivo" ? (
+                      <>
+                        <Option value="Inactivo"> Inactivo </Option>
+                        <Option value="Pausado"> Pausado </Option>
+                        <Option value="Publicado"> Publicado </Option>
+                      </>
+                    ) : (
+                      <>
+                        <Option value="Publicado"> Publicado </Option>
+                        <Option value="Pausado"> Pausado </Option>
+                        <Option value="Inactivo"> Inactivo </Option>
+                      </>
+                    )
                   }
                 </Select>
               </Form.Item>
@@ -258,7 +269,7 @@ function EditRentalForm() {
                 label="Título de la Residencia"
                 rules={[
                   {
-                    required: ((editBody.estado === "Publicado") || (editBody.estado === "En Construcción") || (editBody.estado === "Previsualización") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, ingresa el título de la residencia.',
+                    required: ((stateAd === "Publicado") || (stateAd === "En Construcción") || (stateAd === "Previsualización") || (stateAd === "Pausado") || (stateAd === "Inactivo")), message: 'Por favor, ingresa el título de la residencia.',
                   }, {
                     validator: (_, value) => {
                       if (value) {
@@ -301,7 +312,7 @@ function EditRentalForm() {
                 label="Número de Whatsapp"
                 rules={[
                   {
-                    required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, ingrese su número de Whatsapp.'
+                    required: ((stateAd === "Publicado") || (stateAd === "Pausado") || (stateAd === "Inactivo")), message: 'Por favor, ingrese su número de Whatsapp.'
                   }, {
                     validator: (_, value) => {
                       if (!value) {
@@ -335,7 +346,7 @@ function EditRentalForm() {
                 name="descripResid"
                 rules={[
                   {
-                    required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, ingresa una descripción del espacio.'
+                    required: ((stateAd === "Publicado") || (stateAd === "Pausado") || (stateAd === "Inactivo")), message: 'Por favor, ingresa una descripción del espacio.'
                   }, {
                     whitespace: true,
                     message: "No puede dejar en blanco este campo"
@@ -359,7 +370,7 @@ function EditRentalForm() {
                 label="Dirección"
                 rules={[
                   {
-                    required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, ingresa la dirección.'
+                    required: ((stateAd === "Publicado") || (stateAd === "Pausado") || (stateAd === "Inactivo")), message: 'Por favor, ingresa la dirección.'
                   }, {
                     whitespace: true,
                     message: "No puede dejar este espacio en blanco",
@@ -380,7 +391,7 @@ function EditRentalForm() {
                 label="Ubicación"
                 rules={[
                   {
-                    required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, ingrese un enlace de google maps.'
+                    required: ((stateAd === "Publicado") || (stateAd === "Pausado") || (stateAd === "Inactivo")), message: 'Por favor, ingrese un enlace de google maps.'
                   }, {
                     validator: (_, value) => {
                       if (!value) {
@@ -408,7 +419,7 @@ function EditRentalForm() {
               <Form.Item
                 name="paisResid"
                 label="País"
-                rules={[{ required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, seleccione su país.' }]
+                rules={[{ required: ((stateAd === "Publicado") || (stateAd === "Pausado") || (stateAd === "Inactivo")), message: 'Por favor, seleccione su país.' }]
                 }
                 hasFeedback
               >
@@ -429,7 +440,7 @@ function EditRentalForm() {
               <Form.Item
                 name="ciudadResid"
                 label="Ciudad"
-                rules={[{ required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, seleccione su ciudad.' }]
+                rules={[{ required: ((stateAd === "Publicado") || (stateAd === "Pausado") || (stateAd === "Inactivo")), message: 'Por favor, seleccione su ciudad.' }]
                 }
                 hasFeedback
               >
@@ -452,7 +463,7 @@ function EditRentalForm() {
                 label="Precio"
                 rules={[
                   {
-                    required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, ingresa el precio de la residencia.'
+                    required: ((stateAd === "Publicado") || (stateAd === "Pausado") || (stateAd === "Inactivo")), message: 'Por favor, ingresa el precio de la residencia.'
                   }, {
                     validator: (_, value) =>
                       value && /^\d+$/.test(value) && parseInt(value, 10) <= 10000
@@ -479,7 +490,7 @@ function EditRentalForm() {
               <Form.Item
                 name="tipoResid"
                 label="Tipo de Residencia"
-                rules={[{ required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, seleccione el tipo de residencia.' }]
+                rules={[{ required: ((stateAd === "Publicado") || (stateAd === "Pausado") || (stateAd === "Inactivo")), message: 'Por favor, seleccione el tipo de residencia.' }]
                 }
                 hasFeedback
               >
@@ -498,7 +509,7 @@ function EditRentalForm() {
               <Form.Item
                 name="tipoAlojam"
                 label="Tipo de Alojamiento"
-                rules={[{ required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, seleccione el tipo de alojamiento.' }]}
+                rules={[{ required: ((stateAd === "Publicado") || (stateAd === "Pausado") || (stateAd === "Inactivo")), message: 'Por favor, seleccione el tipo de alojamiento.' }]}
                 hasFeedback
               >
                 <Select
@@ -517,7 +528,7 @@ function EditRentalForm() {
                 label="Número Máximo de dias"
                 rules={[
                   {
-                    required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, ingresa el numero maximo de dias.'
+                    required: ((stateAd === "Publicado") || (stateAd === "Pausado") || (stateAd === "Inactivo")), message: 'Por favor, ingresa el numero maximo de dias.'
                   }, {
                     validator: (_, value) => {
                       const max = 10; // Establece el valor máximo permitido aquí
@@ -549,7 +560,7 @@ function EditRentalForm() {
                 label="Número Máximo de Huéspedes"
                 rules={[
                   {
-                    required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, ingresa el numero maximo de Huesped.'
+                    required: ((stateAd === "Publicado") || (stateAd === "Pausado") || (stateAd === "Inactivo")), message: 'Por favor, ingresa el numero maximo de Huesped.'
                   }, {
                     validator: (_, value) => {
                       const max = 10; // Establece el valor máximo permitido aquí
@@ -582,7 +593,7 @@ function EditRentalForm() {
                 label="Número de Camas"
                 rules={[
                   {
-                    required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, ingresa el número de camas.'
+                    required: ((stateAd === "Publicado") || (stateAd === "Pausado") || (stateAd === "Inactivo")), message: 'Por favor, ingresa el número de camas.'
                   }, {
                     validator: (_, value) => {
                       const max = 100; // Establece el valor máximo permitido aquí
@@ -614,7 +625,7 @@ function EditRentalForm() {
                 label="Número de Habitaciones"
                 rules={[
                   {
-                    required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo") || (editBody.estado === "Inactivo")), message: 'Por favor, ingresa el número de habitaciones.'
+                    required: ((stateAd === "Publicado") || (stateAd === "Pausado") || (stateAd === "Inactivo") || (stateAd === "Inactivo")), message: 'Por favor, ingresa el número de habitaciones.'
                   }, {
                     validator: (_, value) => {
                       const max = 100; // Establece el valor máximo permitido aquí
@@ -646,7 +657,7 @@ function EditRentalForm() {
                 label="Número de Baños"
                 rules={[
                   {
-                    required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, ingresa el número de baños.'
+                    required: ((stateAd === "Publicado") || (stateAd === "Pausado") || (stateAd === "Inactivo")), message: 'Por favor, ingresa el número de baños.'
                   }, {
                     validator: (_, value) => {
                       const max = 10; // Establece el valor máximo permitido aquí
@@ -680,7 +691,7 @@ function EditRentalForm() {
                 name="servicios"
                 label="Comodidades"
                 rules={[
-                  { required: ((editBody.estado === "Publicado") || (editBody.estado === "En Construcción") || (editBody.estado === "Previsualización") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")) && !isAtLeastFiveChecked },
+                  { required: ((stateAd === "Publicado") || (stateAd === "En Construcción") || (stateAd === "Previsualización") || (stateAd === "Pausado") || (stateAd === "Inactivo")) && !isAtLeastFiveChecked },
                   {
                     validator: (_, values) => {
                       if (isAtLeastFiveChecked) {
@@ -742,7 +753,7 @@ function EditRentalForm() {
                 name="servicios"
                 label="Caracteristicas"
                 rules={[
-                  { required: ((editBody.estado === "Publicado") || (editBody.estado === "En Construcción") || (editBody.estado === "Previsualización") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")) && !isAtLeastFiveChecked },
+                  { required: ((stateAd === "Publicado") || (stateAd === "En Construcción") || (stateAd === "Previsualización") || (stateAd === "Pausado") || (stateAd === "Inactivo")) && !isAtLeastFiveChecked },
                   {
                     validator: (_, values) => {
                       if (isAtLeastFiveChecked) {
@@ -805,7 +816,7 @@ function EditRentalForm() {
                 name="servicios"
                 label="Seguridad"
                 rules={[
-                  { required: ((editBody.estado === "Publicado") || (editBody.estado === "En Construcción") || (editBody.estado === "Previsualización") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")) && !isAtLeastFiveChecked },
+                  { required: ((stateAd === "Publicado") || (stateAd === "En Construcción") || (stateAd === "Previsualización") || (stateAd === "Pausado") || (stateAd === "Inactivo")) && !isAtLeastFiveChecked },
                   {
                     validator: (_, values) => {
                       if (isAtLeastFiveChecked) {
@@ -840,7 +851,7 @@ function EditRentalForm() {
 
               </Form.Item>
 
-              {editBody.estado !== "En Construcción" && editBody.estado !== "Previsualización" && editBody.estado !== "Inactivo" ?
+              {stateAd !== "En Construcción" && stateAd !== "Previsualización" && stateAd !== "Inactivo" && stateAd !== "Alquilado" ?
                 (
                   <div className="dates-edit-form-container">
                     <h3>Fechas de duracion del anuncio</h3>
@@ -848,7 +859,7 @@ function EditRentalForm() {
                       name="rangeDates"
                       label="Fechas Inicio/Fin"
                       rules={[
-                        { required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado")), message: "" },
+                        { required: ((stateAd === "Publicado") || (stateAd === "Pausado")), message: "" },
                         {
                           validator: (_, values) => {
                             if ((rangeDatesBody[0] && rangeDatesBody[1]) !== null) {
@@ -892,7 +903,7 @@ function EditRentalForm() {
 
                   rules={[
                     {
-                      required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, ingrese las intrucciones de check-in.'
+                      required: ((stateAd === "Publicado") || (stateAd === "Pausado") || (stateAd === "Inactivo")), message: 'Por favor, ingrese las intrucciones de check-in.'
                     }, {
                       whitespace: true,
                       message: "No puede dejar en blanco este campo"
@@ -916,7 +927,7 @@ function EditRentalForm() {
                   label="Check Out"
                   rules={[
                     {
-                      required: ((editBody.estado === "Publicado") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")), message: 'Por favor, ingrese las instrucciones de check-out.'
+                      required: ((stateAd === "Publicado") || (stateAd === "Pausado") || (stateAd === "Inactivo")), message: 'Por favor, ingrese las instrucciones de check-out.'
                     }, {
                       whitespace: true,
                       message: "No puede dejar en blanco este campo"
@@ -942,7 +953,7 @@ function EditRentalForm() {
             <Form.Item
               name="imagen"
               rules={[
-                { required: ((editBody.estado === "Publicado") || (editBody.estado === "En Construcción") || (editBody.estado === "Previsualización") || (editBody.estado === "Pausado") || (editBody.estado === "Inactivo")) && !isImageUploaded, message: "" },
+                { required: ((stateAd === "Publicado") || (stateAd === "En Construcción") || (stateAd === "Previsualización") || (stateAd === "Pausado") || (stateAd === "Inactivo")) && !isImageUploaded, message: "" },
                 {
                   validator: (_, value) => {
                     if (isImageUploaded) {

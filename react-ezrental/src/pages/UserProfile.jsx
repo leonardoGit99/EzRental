@@ -4,24 +4,106 @@ import { getUser } from "../services/users";
 import { getPublishedResidencesByUser } from "../services/residences";
 import { Avatar, Empty, List } from "antd";
 import GuestCard from "../components/GuestCard/GuestCard";
-import ReviewsList from "../components/ReviewsList/ReviewsList";
+import UserReviews from "../components/UserReviews/UserReviews";
+import { getAllReviewsByResidence, getAsGuestUserReviews } from "../services/reviews";
 import { useAuth } from "../contexts/authContext";
+import { faWineBottle } from "@fortawesome/free-solid-svg-icons";
 
 
 function UserProfile() {
+
   let { userId } = useParams();
-  const {user} = useAuth();
+  const { user } = useAuth();
+
   const [userData, setUserData] = useState({});
   const [residences, setResidences] = useState([]);
+  const [asGuestReviews, setAsGuestReviews] = useState([]);
+  const [asHostReviews, setAsHostReviews] = useState([]);
+  const [userResidencesId, setUserResidencesId] = useState([]);
+  const [asHostAverage, setAsHostAverage] = useState("");
+  const [asGuestAverage, setAsGuestAverage] = useState("");
+
 
   useEffect(() => {
     getUser(userId).then((data) => setUserData(data));
   }, [userId]);
 
   useEffect(() => {
-    getPublishedResidencesByUser(userId).then((data) => setResidences(data));
+    getPublishedResidencesByUser(userId).then((data) => {
+      setResidences(data)
+      
+      const residenceIds = data.map(residence => residence.id_residencia);
+
+      setUserResidencesId(residenceIds);
+    });
   }, [userId]);
-console.log(residences);
+
+  useEffect(() => {
+    const promises = userResidencesId.map(id => getAllReviewsByResidence(id));
+  
+    Promise.all(promises)
+      .then(reviewsArrays => {
+
+        const allReviews = [].concat(...reviewsArrays);
+        
+        setAsHostReviews(allReviews);
+      })
+    
+  }, [userId, userResidencesId]);
+
+  useEffect(() => {
+    const averageArray = asHostReviews.map(review => {
+      return (Number(review.calificacion_comunicacion) + Number(review.calificacion_exactitud) + Number(review.calificacion_limpieza))/3
+    })
+
+    if (averageArray.length === 0) {
+      setAsHostAverage(0);
+      return;
+    }
+  
+    const totalAverage = averageArray.reduce((total, average) => total + average, 0);
+  
+    const average = totalAverage / averageArray.length;
+  
+    setAsHostAverage(average);
+
+  }, [asHostReviews])
+  
+  useEffect(() => {
+    
+    getAsGuestUserReviews(userId).then( async (data) =>{
+
+      const corregido = data.map((review) => ({
+        id_evaluacion: review.id_evaluacion_usuario,
+        nombre_usuario: review.nombre_usuario,
+        calificacion_limpieza: review.calificacion_limpieza_usu,
+        calificacion_exactitud: review.calificacion_puntualidad,
+        calificacion_comunicacion: review.calificacion_comunicacion_usu,
+        comentario: review.comentario_usu,
+      }))
+
+      setAsGuestReviews(corregido)
+
+      const averageArray = await corregido.map(review => {
+        return (Number(review.calificacion_comunicacion) + Number(review.calificacion_exactitud) + Number(review.calificacion_limpieza))/3
+      })
+  
+      if (averageArray.length === 0) {
+        setAsGuestAverage(0);
+        return;
+      }
+
+      const totalAverage = await averageArray.reduce((total, average) => total + average, 0);
+    
+      const average = await totalAverage / averageArray.length;
+    
+      setAsGuestAverage(average);
+    
+    })
+  }, [userId]);
+
+
+
   const customEmptyMessage = {
     emptyText: (
       <>
@@ -40,26 +122,10 @@ console.log(residences);
       </>),
   };
 
-  const reseñasComoHuespedSimul = [
-    {
-        mensaje: "FEO EL LUGAR",
-        resñador: "Juanito pepe"
-    }, {
-        mensaje: "LINDO EL LUGAR",
-        resñador: " pepe"
-    }, {
-        mensaje: "AAAXD EL LUGAR",
-        resñador: "Super pepe"
-    }, {
-        mensaje: "DONDE QUEDA EL LUGAR",
-        resñador: "Jacintoe"
-    }, 
-  ]
-
-  const reseñasComoHostSimul = "OBTENIDO DE RESEÑAS DE RESIDENCIAS";
+  
 
   return(
-    <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
+    <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>
       <div style={{ display: 'flex', flexDirection: 'column', width: '1100px', maxWidth: '1100px' }}>
       <h2 style={{ textAlign: 'center', marginBottom: '20px', fontSize: '24px', borderBottom: '2px solid var(--ikx-k-pe)' }}>Datos del usuario</h2>
 {
@@ -71,6 +137,7 @@ console.log(residences);
             borderRadius: '8px', 
             padding: '20px',
             boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+            marginBottom: '25px'
         }}>
             <div style={{ marginRight: '20px' }}>
                 <Avatar shape="circle" size={180} src={userData.foto_usuario} style={{ boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)' }} />
@@ -127,16 +194,16 @@ console.log(residences);
               promedio={Number(residence.promedio).toFixed(1)}
               small
             />
-            
           </List.Item>
         )}
       />
-      <h2 style={{ margin: 'auto' }}>Reseñas del usuario</h2>
 
-        {/* <ReviewsList 
-            detailReviews={}
-            averageRates={}
-        /> */}
+      <UserReviews 
+        asHostReviews={asHostReviews}
+        asGuestReviews={asGuestReviews}
+        asGuestAverage={asGuestAverage}
+        asHostAverage={asHostAverage}
+      />
 
       </div>
     </div>

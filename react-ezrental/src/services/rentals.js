@@ -20,3 +20,8 @@ export const getAllMyRentalsByUserHost = async (idUser) => {
   const response = await axios.get(`${api}/resid/rent/${idUser}`);
   return response.data;
 }
+
+export const updateRentalHost = async (body, idReserva, idResidence) => {
+  const response = await axios.put(`${api}/rent/${idReserva}/${idResidence}`, JSON.stringify(body), {headers });
+  return response.data;
+}

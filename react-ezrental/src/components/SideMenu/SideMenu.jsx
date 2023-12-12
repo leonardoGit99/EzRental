@@ -5,24 +5,20 @@ import { MenuUnfoldOutlined, MenuFoldOutlined, HomeOutlined, FormOutlined, Logou
 import { useAuth } from '../../contexts/authContext';
 import Logo from '../Logo/Logo';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCalendarCheck } from '@fortawesome/free-solid-svg-icons';
+import { faCalendarCheck, faAddressBook } from '@fortawesome/free-solid-svg-icons';
 import './SideMenuStyles.css';
 
 function SideMenu({ sideMenuCollapsed, displaySideMenu, switchMode, setSwitchMode }) {
 
   const itemsGuest = [
     { key: "/", label: (<Link to="/" onClick={!sideMenuCollapsed ? displaySideMenu : null}>Home</Link>), icon: <HomeOutlined /> },
-    { key: "mis-reservas", label: (<Link to="mis-reservas" onClick={!sideMenuCollapsed? displaySideMenu : null}>Mis Reservas</Link>), icon:<FontAwesomeIcon icon={faCalendarCheck} /> },
+    { key: "mis-reservas", label: (<Link to="mis-reservas" onClick={!sideMenuCollapsed ? displaySideMenu : null}>Mis Reservas</Link>), icon: <FontAwesomeIcon icon={faCalendarCheck} /> },
   ];
 
   const itemsHost = [
-    {
-      key: 2, label: 'Modo Anfitrion', icon: <FormOutlined />, children: [
-        { key: "aniadir-anuncio", label: (<Link to="aniadir-anuncio" onClick={!sideMenuCollapsed ? displaySideMenu : null}>Añadir Anuncio</Link>) },
-        { key: "mis-anuncios", label: (<Link to="mis-anuncios" onClick={!sideMenuCollapsed ? displaySideMenu : null}>Mis Anuncios</Link>) },
-        { key: "myRents", label: (<Link to="myRents" onClick={!sideMenuCollapsed ? displaySideMenu : null}>Mis Reservas</Link>) }
-      ]
-    },
+    { key: "aniadir-anuncio", label: (<Link to="aniadir-anuncio" onClick={!sideMenuCollapsed ? displaySideMenu : null}>Añadir Anuncio</Link>), icon: <FormOutlined /> },
+    { key: "mis-anuncios", label: (<Link to="mis-anuncios" onClick={!sideMenuCollapsed ? displaySideMenu : null}>Mis Anuncios</Link>), icon: <FontAwesomeIcon icon={faAddressBook} /> },
+    { key: "myRents", label: (<Link to="myRents" onClick={!sideMenuCollapsed ? displaySideMenu : null}>Mis Reservas</Link>), icon: <FontAwesomeIcon icon={faCalendarCheck} /> }
   ];
 
   const location = useLocation();

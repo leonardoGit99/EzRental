@@ -93,8 +93,11 @@ function LoginForm({ formFlag, switchForm }) {
         </Divider>
         <Divider style={{borderColor: 'black', fontSize: '18px'}}>O ingrese con</Divider>
         <div className="social-login">
-          <GoogleOutlined className="social-icon" style={{color: 'red'}} onClick={handleGoogleLogin}></GoogleOutlined>
-          <FacebookFilled className="social-icon" style={{color: 'blue'}} onClick={()=>{message.info("Aún en desarrollo ( ͡° ͜ʖ ͡°)")}}></FacebookFilled>
+          <div onClick={handleGoogleLogin} style={{cursor:"pointer"}}>
+            <GoogleOutlined className="social-icon" style={{color: "#EA4335"}}></GoogleOutlined>
+            <b style={{color: "#EA4335"}}>oogle</b>
+            {/* <FacebookFilled className="social-icon" style={{color: 'blue'}} onClick={()=>{message.info("Aún en desarrollo ( ͡° ͜ʖ ͡°)")}}></FacebookFilled> */}
+          </div>
         </div>
         <Divider style={{ borderColor: 'black', fontSize: '18px' }}>¿Aún no tiene una cuenta?</Divider>
         <div>

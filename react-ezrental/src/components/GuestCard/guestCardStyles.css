@@ -22,3 +22,16 @@
   overflow: hidden !important;
   text-overflow: ellipsis !important;
 }
+
+.guest-card-small {
+  width: 250px;
+  margin-top: 3vh;
+}
+
+.img-guest-card-carousel-small {
+  width: 250px;
+  height: 120px;
+  object-fit: cover;
+  margin: auto;
+  /* margin-top: 20px; */
+}
