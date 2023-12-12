@@ -5,6 +5,7 @@ import HeaderContent from '../../components/HeaderContent/HeaderContent';
 import SideMenu from '../../components/SideMenu/SideMenu';
 import PagesContainer from '../../components/PagesContainer/PagesContainer';
 import FooterContent from '../../components/FooterContent/FooterContent';
+import Chatbot from '../../components/Chatbot/Chatbot';
 import './layoutEzRentalStyles.css';
 
 
@@ -32,6 +33,7 @@ function LayoutEzRental() {
         </Header>
         <Content className="app-content-container" >
           <PagesContainer>
+            <Chatbot/>
             {/* 
               Contenido de las distintas vistas mediante rutas.
               El componente Outlet de react-router-dom funciona como un placeholder,

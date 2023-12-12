@@ -39,6 +39,13 @@
   }
 }
 
+.review-modal{
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  height: 78% !important;
+}
+
 /* @media (768px <=width <=1024px) {}
 
 @media (1024px <=width <=1200px) {}

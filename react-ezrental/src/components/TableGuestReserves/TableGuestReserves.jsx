@@ -1,10 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Badge, Button, Empty, Modal, Spin, Table } from 'antd';
-import { EyeTwoTone, ClockCircleTwoTone, CheckCircleTwoTone } from '@ant-design/icons';
+import { EyeTwoTone, ClockCircleTwoTone, CheckCircleTwoTone, CommentOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import './tableGuestReservesStyles.css';
+import AddReview from '../AddReview/AddReview';
 
 function TableGuestReserves({ loading, reserves }) {
+  const [reviewModal, setReviewModal] = useState(false);
+  const [idReserve, setIdReserve] = useState("");
+  const [idResidence, setIdResidence] = useState("");
+  const [stateReserve, setStateReserve] = useState("");
+  const openReviewModal = (reserve) => {
+    setIdReserve(reserve.id_reserva);
+    setIdResidence(reserve.id_residencia);
+    setStateReserve(reserve.estado_reserva);
+    setReviewModal(true);
+  }
+  const closeReviewModal = () => {
+    setReviewModal(false);
+  }
   const navigate = useNavigate();
   const columnsData = [
     { title: "Id reserva", dataIndex: "id_reserva", key: "id_reserva", defaultSortOrder: "descend", sorter: (idA, idB) => idA.id_reserva - idB.id_reserva },
@@ -31,12 +45,23 @@ function TableGuestReserves({ loading, reserves }) {
       render: (stateReserve) => {
         return (
           stateReserve === "alquilado"
-          ? <><CheckCircleTwoTone twoToneColor={"#52c41a"}/> <span style={{fontWeight:"500"}}>Alquilado</span></>
-          : <><ClockCircleTwoTone twoToneColor={"#BFBFBF"}/> <span style={{fontWeight:"500"}}>Pendiente</span></>
+            ? <><CheckCircleTwoTone twoToneColor={"#52c41a"} /> <span style={{ fontWeight: "500" }}>Alquilado</span></>
+            : <><ClockCircleTwoTone twoToneColor={"#BFBFBF"} /> <span style={{ fontWeight: "500" }}>Pendiente</span></>
         )
       }
     },
-    { title: "Acciones", key: "acciones", render: (reserve) => (<Button type="link" onClick={() => { viewAdd(reserve) }}> <EyeTwoTone /> Ver anuncio</Button>) },
+    {
+      title: "Acciones", key: "acciones",
+      render: (reserve) => (
+        <>
+          <Button type="link" onClick={() => { viewAdd(reserve) }}> <EyeTwoTone /> Ver anuncio </Button>
+          {
+            reserve.estado_reserva == "alquilado"
+              ? <Button type="link" onClick={() => openReviewModal(reserve)}> <CommentOutlined /> Dejar Reseña </Button>
+              : null
+          }
+        </>)
+    },
   ]
 
   const viewAdd = (reserve) => {
@@ -76,6 +101,19 @@ function TableGuestReserves({ loading, reserves }) {
         bordered={true}
       >
       </Table>
+      <Modal
+        className="review-modal"
+        open={reviewModal}
+        onCancel={closeReviewModal}
+        footer={null}
+      >
+        <AddReview
+          idReserve={idReserve}
+          idResidence={idResidence}
+          stateReserve={stateReserve}
+          closeReviewModal={closeReviewModal}
+        />
+      </Modal>
     </>
   )
 }
