@@ -62,11 +62,14 @@ function SideMenu({ sideMenuCollapsed, displaySideMenu, switchMode, setSwitchMod
       />
       <div className="user-info">
         {sideMenuCollapsed
-          ? <Avatar
+        ? 
+        <Link to={`/usuario/${user.uid}`}>
+          <Avatar
             src={user.photoURL}
             alt={<UserOutlined />}
             size={50}
           />
+        </Link>
           :
           <>
             <div className="avatar-username-container">
