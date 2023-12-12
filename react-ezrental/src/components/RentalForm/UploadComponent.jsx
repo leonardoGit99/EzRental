@@ -45,7 +45,7 @@ function UploadComponent({ urls, setUrls, fileList, setFileList, setImageUploade
     setPreviewTitle(
       file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
     );
-    setPreviewDescription(urls[index].descripcion);
+    setPreviewDescription(urls[index].descripcion_imagen);
   };
 
   const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);

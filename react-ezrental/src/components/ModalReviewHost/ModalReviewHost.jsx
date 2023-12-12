@@ -1,23 +1,27 @@
 import React, { useState } from 'react';
 import { Button, Modal } from 'antd';
 import AddReview from '../AddReview/AddReview';
+import HostToGuestReview from '../HostToGuestReview/HostToGuestReview';
 
-const ModalReviewHost = ({ visible, onCancel}) => {
+const ModalReviewHost = ({setVisible, visible, onCancel, userId}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
-    setIsModalOpen(true);
+    setVisible(true);
   };
   const handleOk = () => {
-    setIsModalOpen(false);
+    setVisible(false);
   };
   const handleCancel = () => {
-    setIsModalOpen(false);
+    setVisible(false);
   };
   return (
     <>
-      <Modal title="Escribir Reseña del Huésped" visible={visible} onCancel={onCancel} footer={null}>
+      <Modal visible={visible} onCancel={handleCancel} onOk={handleOk} footer={null}>
       <div style={{ width: '100%' }}>
-        <AddReview />
+        <HostToGuestReview 
+          closeModal={handleCancel}
+          userId={userId}
+        />
       </div>
     </Modal>
     </>

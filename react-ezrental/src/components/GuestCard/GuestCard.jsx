@@ -4,7 +4,7 @@ import { Card, Tooltip } from 'antd';
 import { StarFilled } from '@ant-design/icons';
 import './guestCardStyles.css';
 
-function GuestCard({ idResidencia, imagen, titulo, ciudad, pais, fechaIni, fechaFin, precio, setRefresh, promedio }) {
+function GuestCard({ idResidencia, imagen, titulo, ciudad, pais, fechaIni, fechaFin, precio, setRefresh, promedio, small }) {
   const { Meta } = Card;
 
   return (
@@ -12,11 +12,11 @@ function GuestCard({ idResidencia, imagen, titulo, ciudad, pais, fechaIni, fecha
       <Link to={`/${idResidencia}`}>
         <Tooltip title={/* description */ `Clic para ver más detalles`} placement="right">
           <Card
-            className="guest-card"
+            className= { small ? "guest-card-small" : "guest-card"}
             hoverable
             cover={
               <img
-                className="img-guest-card-carousel"
+                className={ small ? "img-guest-card-carousel-small" : "img-guest-card-carousel"} 
                 src={/* imagen === "Sin imagen" ? defaultLogo : */imagen}
                 alt="Algo salió mal..."
               />

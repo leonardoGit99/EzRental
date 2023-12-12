@@ -4,7 +4,7 @@ import { ExclamationCircleOutlined, StarFilled } from '@ant-design/icons';
 import ResidenceReview from '../ResidenceReview/ResidenceReview';
 import './reviewsListStyles.css';
 
-function ReviewsList({ detailReviews, isRefresh, setRefresh, averageRates }) {
+function ReviewsList({ detailReviews, isRefresh, setRefresh, averageRates, hostReviews }) {
   console.log(detailReviews);
   const roundedAverageRates= Number(averageRates).toFixed(1);
   const customEmptyMessage = {
@@ -56,6 +56,7 @@ function ReviewsList({ detailReviews, isRefresh, setRefresh, averageRates }) {
               commentResidence={review.comentario}
               isRefresh={isRefresh}
               setRefresh={setRefresh}
+              hostReviews
             />
           </List.Item>
         )}

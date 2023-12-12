@@ -5,7 +5,7 @@ import ViewMoreReviewModal from '../ViewMoreReviewModal/ViewMoreReviewModal';
 import './residenceReviewStyles.css';
 
 
-function ResidenceReview({ commentResidence, idReview, cleaningRate, accuracyRate, comunicationRate, reviewOwner }) {
+function ResidenceReview({ commentResidence, idReview, cleaningRate, accuracyRate, comunicationRate, reviewOwner, hostReviews }) {
   const cardRef = useRef(null);
   const [moreReviewModal, setMoreReviewModal] = useState(false);
 
@@ -47,6 +47,7 @@ function ResidenceReview({ commentResidence, idReview, cleaningRate, accuracyRat
                   accuracyRate={accuracyRate}
                   comunicationRate={comunicationRate}
                   commentResidence={commentResidence}
+                  hostReviews
                 />
               </>
             }
