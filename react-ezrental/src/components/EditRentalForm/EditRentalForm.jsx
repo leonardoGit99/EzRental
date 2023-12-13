@@ -7,6 +7,7 @@ import UploadComponent from '../RentalForm/UploadComponent';
 import { useNavigate, useParams } from 'react-router-dom';
 import dayjs from "dayjs";
 import "./editRentalFormStyles.css"
+import { getRentalsByResidence } from '../../services/rentals';
 
 function EditRentalForm() {
   let { idMyAd } = useParams();
@@ -20,9 +21,12 @@ function EditRentalForm() {
   const [form] = Form.useForm();
   const [isAtLeastFiveChecked, setIsAtLeastFiveChecked] = useState(false);
   const [rangeDatesBody, setRangeDatesBody] = useState([null, null]);
+  const [selectedStartDate, setSelectedStartDate] = useState(null);
+  const [selectedEndDate, setSelectedEndDate] = useState(null);
   const [isImageUploaded, setIsImageUploaded] = useState(false);
   const [loading, setLoading] = useState(true);
   const [stateAd, setStateAd] = useState("");
+  const [rentals, setRentals] = useState([]);
   const setImageUploaded = (status) => {
     setIsImageUploaded(status)
   }
@@ -101,6 +105,8 @@ function EditRentalForm() {
         ...prevEditBody, rangeDates: rangeDatesFormat,
       }
       setRangeDatesBody(updatedEditBody.rangeDates);
+      selectedStartDate(updatedEditBody.rangeDates[0]);
+      selectedEndDate(updatedEditBody.rangeDates[1]);
       return updatedEditBody;
     })
   };
@@ -206,6 +212,57 @@ function EditRentalForm() {
   const onCancel = () => {
     navigate("/mis-anuncios");
     message.info("No se realizó ninguna modificación", 2);
+  }
+  
+
+  useEffect(() => {
+      getRentalsByResidence(idMyAd).then((data) => {
+        setRentals(data);
+        setLoading(false);
+      })
+    
+  }, [ idMyAd])
+
+console.log(rentals);
+  const isDateDisabled = (current) => { //current es un dia del calendario, esta funcion se ejecuta por cada dia y evalua si debe estar deshabilitado
+    const startDate = dayjs(dataAd.fecha_inicio_estado);
+    const endDate = dayjs(dataAd.fecha_fin_estado).add(1, 'day'); // Se incrementa un dia para asegurar que la fecha final este incluida o habilitada
+    const actualDate = dayjs();
+
+    // booleano que determina si el current esta dentro de algun rango de reserva
+    const isWithinReservationRange = rentals.some((rental) => { // Verifica si al menos un elemento del arreglo de objetos rentals cumple con cierta condicion
+      const startPrevRental = dayjs(rental.fecha_inicio_reserva);
+      const endPrevRental = dayjs(rental.fecha_fin_reserva).add(1, 'day'); // Se incrementa un dia para asegurar que la fecha final este incluida
+
+      return (current.isAfter(startPrevRental) || current.isSame(startPrevRental)) && (current.isBefore(endPrevRental) || current.isSame(endPrevRental)); // Retorna true si la fecha_inicio_reserva se encuentra antes  o igual que el current y la fecha_fin_reserva se encuentra despues o igual que el current
+    });
+
+    // Entra al condicional cuando el usuario selecciona una fecha de inicio 
+    if (selectedStartDate!==null) {
+      const nextReservation = rentals.reduce((accumulator, rental) => { // Devuelve una fecha de inicio de la reservacion mas cercana, el reduce acumula segun la condicion
+        const startRental = dayjs(rental.fecha_inicio_reserva);
+        if (startRental.isAfter(selectedStartDate) && startRental.isBefore(accumulator)) {
+          return startRental;
+        }
+        return accumulator;
+      }, dayjs().add(1000, 'years'));// Valor inicial del acumulador, que representa una fecha futura muy lejana, se utiliza para garantizar que cualquier fecha futura sea considerada mas cercana que la fecha inicial ficticia
+
+
+      const limitDate =  nextReservation; // El limite de la fecha fin cuando se selecciona una fecha de inicio será la fecha inicio de la reserva mas cercana si la fecha maxima esta antes de la reservacion mas cercana, caso contrario el limite de la fecha fin será la fecha maxima que el usuario pueda seleccionar
+      //Determina si una fecha (current) está deshabilitada o no
+      if (selectedStartDate.isBefore(limitDate) || selectedStartDate.isSame(limitDate)) { // Si la fecha limite que es la reserva mas cercana o la fecha maxima permitida por el host es menor o igual a la fecha final del anuncio, significa que hay disponibilidad
+        return current.isBefore(selectedStartDate) || current.isAfter(limitDate) || isWithinReservationRange; // Evalua si la fecha actual es anterior a la fecha de inicio seleccionada ||  Evalua si la fecha actual es posterior a la fecha limite (reserva mas cercana o fecha maxima permitida por el host)  || Evalua si la fecha actual esta dentro de alguna de las reservas existentes
+      } 
+    }
+
+    // Determina las fechas deshabilitadas al abrir el calendario de reserva
+    if (startDate && endDate) {
+      return (
+        (current.isBefore(actualDate, 'day') || isWithinReservationRange)
+      );
+    }
+
+    return false; // Habilita las fechas que no se hayan considerado en los condicionales
   }
 
   return (
@@ -885,9 +942,7 @@ function EditRentalForm() {
                         className="range-picker-edit-form"
                         placeholder={['Fecha Inicio', 'Fecha Fin']}
                         onChange={handleDateChange}
-                        disabledDate={(current) => {
-                          return dayjs().add(-1, 'days') >= current;
-                        }}
+                        disabledDate={isDateDisabled}
                       />
                     </Form.Item>
                   </div>
