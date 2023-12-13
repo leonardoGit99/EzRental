@@ -384,8 +384,8 @@ const createResid = async (req, res) =>{
       
       if(estado === 'Pausado'){
         const newResid = await pool.query(
-          "UPDATE residencia SET titulo_residencia = $1, tipo_residencia = $2, pais_residencia = $3, ciudad_residencia = $4, direccion_residencia= $5, cama_residencia = $6, habitacion_residencia = $7, banio_residencia = $8, descripcion_residencia = $9, huesped_max_residencia= $10, dias_max_residencia = $11, precio_residencia = $12, check_in_residencia= $13, check_out_residencia= $14, tipo_alojamiento= $15, telefono_usuario= $16, ubicacion_residencia= $17, estado_residencia=$19 WHERE id_residencia = $18 ",
-          [tituloResid, tipoResid, paisResid, ciudadResid, direcResid, camaResid, habitResid, banioResid, descripResid, huesMaxResid, diasMaxResid, precioResid, checkInResid, checkOutResid, tipoAlojam, telefono, ubicacion, idResid, estado]
+          "UPDATE residencia SET titulo_residencia = $1, tipo_residencia = $2, pais_residencia = $3, ciudad_residencia = $4, direccion_residencia= $5, cama_residencia = $6, habitacion_residencia = $7, banio_residencia = $8, descripcion_residencia = $9, huesped_max_residencia= $10, dias_max_residencia = $11, precio_residencia = $12, check_in_residencia= $13, check_out_residencia= $14, tipo_alojamiento= $15, telefono_usuario= $16, ubicacion_residencia= $17 WHERE id_residencia = $18 ",
+          [tituloResid, tipoResid, paisResid, ciudadResid, direcResid, camaResid, habitResid, banioResid, descripResid, huesMaxResid, diasMaxResid, precioResid, checkInResid, checkOutResid, tipoAlojam, telefono, ubicacion, idResid]
         );
         const newEst2 = await pool.query(
           "INSERT INTO estado (id_residencia, fecha_inicio_pausado, fecha_fin_pausado) VALUES ($1, $2, $3)",
@@ -393,8 +393,8 @@ const createResid = async (req, res) =>{
         );
       }else{
         const newResid = await pool.query(
-          "UPDATE residencia SET titulo_residencia = $1, tipo_residencia = $2, pais_residencia = $3, ciudad_residencia = $4, direccion_residencia= $5, cama_residencia = $6, habitacion_residencia = $7, banio_residencia = $8, descripcion_residencia = $9, huesped_max_residencia= $10, dias_max_residencia = $11, precio_residencia = $12, check_in_residencia= $13, check_out_residencia= $14, tipo_alojamiento= $15, telefono_usuario= $16, ubicacion_residencia= $17, estado_residencia=$19, fecha_inicio_publicado=$20, fecha_fin_publicado=$21 WHERE id_residencia = $18 ",
-          [tituloResid, tipoResid, paisResid, ciudadResid, direcResid, camaResid, habitResid, banioResid, descripResid, huesMaxResid, diasMaxResid, precioResid, checkInResid, checkOutResid, tipoAlojam, telefono, ubicacion, idResid, estado, fechaIniEst, fechaFinEst]
+          "UPDATE residencia SET titulo_residencia = $1, tipo_residencia = $2, pais_residencia = $3, ciudad_residencia = $4, direccion_residencia= $5, cama_residencia = $6, habitacion_residencia = $7, banio_residencia = $8, descripcion_residencia = $9, huesped_max_residencia= $10, dias_max_residencia = $11, precio_residencia = $12, check_in_residencia= $13, check_out_residencia= $14, tipo_alojamiento= $15, telefono_usuario= $16, ubicacion_residencia= $17, fecha_inicio_publicado=$19, fecha_fin_publicado=$20 WHERE id_residencia = $18 ",
+          [tituloResid, tipoResid, paisResid, ciudadResid, direcResid, camaResid, habitResid, banioResid, descripResid, huesMaxResid, diasMaxResid, precioResid, checkInResid, checkOutResid, tipoAlojam, telefono, ubicacion, idResid, fechaIniEst, fechaFinEst]
         );
       }
       
