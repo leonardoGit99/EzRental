@@ -62,8 +62,8 @@ const getrentResid = async (req, res) =>{
     r.precio_residencia, 
     r.ubicacion_residencia,
     ARRAY_AGG(i.imagen_residencia) AS imagenes,
-    e.fecha_inicio_estado,
-    e.fecha_fin_estado,
+    r.fecha_inicio_publicado,
+    r.fecha_fin_publicado,
     re.id_reserva,
     re.precio_total_reserva,
     re.fecha_inicio_reserva,
@@ -82,8 +82,8 @@ GROUP BY
     r.ciudad_residencia, 
     r.precio_residencia, 
     r.ubicacion_residencia,
-    e.fecha_inicio_estado,
-    e.fecha_fin_estado,
+    r.fecha_inicio_publicado,
+    r.fecha_fin_publicado,
     re.id_reserva,
     re.precio_total_reserva,
     re.fecha_inicio_reserva,
@@ -230,10 +230,6 @@ GROUP BY
           const fechaFinFormateada = new Date(fecha_fin).toISOString().split('T')[0];
           
           if(estado=='alquilado'){
-          await pool.query(
-            "UPDATE estado SET estado_residencia = 'Alquilado' WHERE id_residencia = $1", 
-          [idResid]);
-
           // Enviar notificación por correo electrónico
           await transporter.sendMail({
             from: '"Confirmación de reserva 🏠" <error.404.qa@gmail.com>', 

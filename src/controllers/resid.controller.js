@@ -34,31 +34,12 @@ const uploadImg = (req, res, next) => {
 
 const getAllResid = async (req, res) => {
   try {
- /* // Lógica para mandar mensaje
-const estados = await pool.query("SELECT estado_residencia FROM estado WHERE fecha_fin_estado < CURRENT_DATE+1");
-const id_noti = await pool.query("SELECT id_residencia FROM estado WHERE fecha_fin_estado < CURRENT_DATE+1");
-console.log(id_noti)
-
-// Verifica si id_noti tiene resultados antes de usarlo
-if (id_noti.length > 0) {
-  const idResidencia = id_noti[0].id_residencia;
-  const titulo = await pool.query("SELECT titulo_residencia FROM residencia WHERE id_residencia = $1", [idResidencia]);
-  
-  if (titulo.length > 0) {
-    const mensajeFrontend = `La residencia con título '${titulo[0].titulo_residencia}' cambiará su estado a '${estados[0].estado_residencia}' mañana.`;
-    
-    // Enviar el mensaje al frontend como una respuesta JSON
-    console.log(mensajeFrontend);
-    res.json({ message: mensajeFrontend });
-  }
-}else{console.log("No hay nada en id_noti");}
-*/
+ 
 
     // Lógica para actualizar el estado aquí
-    //await pool.query("UPDATE estado SET estado_residencia = 'Inactivo', fecha_inicio_estado = null, fecha_fin_estado = null WHERE estado_residencia = 'Publicado' AND fecha_fin_estado < CURRENT_DATE"
-   // );
-   // await pool.query("UPDATE estado SET estado_residencia = 'Publicado', fecha_inicio_estado = CURRENT_DATE, fecha_fin_estado = CURRENT_DATE + INTERVAL '30 days' WHERE estado_residencia = 'Pausado' AND fecha_fin_estado < CURRENT_DATE"
-    //);
+    await pool.query("UPDATE residencia SET estado_residencia = 'Inactivo', fecha_inicio_publicado = null, fecha_fin_publicado = null WHERE estado_residencia = 'Publicado' AND fecha_fin_publicado < CURRENT_DATE"
+    );
+    
 
     const result = await pool.query(`
     WITH PromedioEvaluacion AS (
@@ -67,7 +48,7 @@ if (id_noti.length > 0) {
           AVG((calificacion_limpieza + calificacion_exactitud + calificacion_comunicacion) / 3.0) AS promedio
       FROM evaluacion
       GROUP BY id_residencia
-  )
+    )
   
     SELECT 
       r.id_residencia, 
@@ -105,9 +86,8 @@ if (id_noti.length > 0) {
       array_agg(DISTINCT s.parrilla_residencia) AS parrilla_residencia,
       array_agg(DISTINCT s.camaras_segurid_residencia) AS camaras_segurid_residencia,
       array_agg(DISTINCT s.humo_segurid_residencia) AS humo_segurid_residencia,
-      array_agg(DISTINCT e.fecha_inicio_pausado) AS fecha_inicio_pausado,
-      array_agg(DISTINCT e.fecha_fin_pausado) AS fecha_fin_pausado,
       array_agg(DISTINCT ARRAY[f.fecha_inicio_reserva, f.fecha_fin_reserva]) AS fechas_renta,
+      array_agg(DISTINCT ARRAY[e.fecha_inicio_pausado, e.fecha_fin_pausado]) AS fechas_pausado,
       pe.promedio
     FROM residencia r
     LEFT JOIN imagen i ON r.id_residencia = i.id_residencia
