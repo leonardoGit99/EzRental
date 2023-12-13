@@ -60,8 +60,8 @@ function MoreInfoMyAds() {
               estadoResidencia={detailAdd.estado_residencia}
               direccionResidencia={detailAdd.direccion_residencia}
               precioResidencia={detailAdd.precio_residencia}
-              fechaIni={detailAdd.fecha_inicio_estado ? detailAdd.fecha_inicio_estado.split('T')[0].toString() : 'Sin fecha'}
-              fechaFin={detailAdd.fecha_fin_estado ? detailAdd.fecha_fin_estado.split('T')[0].toString() : 'Sin fecha'}
+              fechaIni={detailAdd.fecha_inicio_publicado ? detailAdd.fecha_inicio_publicado.split('T')[0].toString() : 'Sin fecha'}
+              fechaFin={detailAdd.fecha_fin_publicado ? detailAdd.fecha_fin_publicado.split('T')[0].toString() : 'Sin fecha'}
             />
 
           </DetailTitle>

@@ -58,23 +58,25 @@ function SideMenu({ sideMenuCollapsed, displaySideMenu, switchMode, setSwitchMod
       />
       <div className="user-info">
         {sideMenuCollapsed
-        ? 
-        <Link to={`/usuario/${user.uid}`}>
-          <Avatar
-            src={user.photoURL}
-            alt={<UserOutlined />}
-            size={50}
-          />
-        </Link>
+          ?
+          <Link to={`/usuario/${user.uid}`}>
+            <Avatar
+              src={user.photoURL}
+              alt={<UserOutlined />}
+              size={50}
+            />
+          </Link>
           :
           <>
             <div className="avatar-username-container">
               <div>
-                <Avatar
-                  src={user.photoURL}
-                  alt={<UserOutlined />}
-                  size={50}
-                />
+                <Link to={`/usuario/${user.uid}`}>
+                  <Avatar
+                    src={user.photoURL}
+                    alt={<UserOutlined />}
+                    size={50}
+                  />
+                </Link>
               </div>
               <div className="username-container">
                 <h3>{user.displayName}</h3>

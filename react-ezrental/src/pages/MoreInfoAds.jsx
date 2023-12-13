@@ -93,8 +93,8 @@ function MoreInfoAds() {
           >
             <DetailsForGuestOnly
               numberMaxOfGuests={detailAdd.huesped_max_residencia}
-              initialDate={detailAdd.fecha_inicio_estado ? detailAdd.fecha_inicio_estado.split('T')[0].toString() : null}
-              finalDate={detailAdd.fecha_fin_estado ? detailAdd.fecha_fin_estado.split('T')[0].toString() : null}
+              initialDate={detailAdd.fecha_inicio_publicado ? detailAdd.fecha_inicio_publicado.split('T')[0].toString() : null}
+              finalDate={detailAdd.fecha_fin_publicado ? detailAdd.fecha_fin_publicado.split('T')[0].toString() : null}
               daysMax={detailAdd.dias_max_residencia - 1}
               isRefresh={isRefresh}
               setRefresh={setRefresh}

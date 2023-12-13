@@ -128,7 +128,7 @@ function AdsFilterModal({ selectedCountry, handleCountryChange, countries, selec
               type="primary"
               onClick={closeFilterModal}
             >
-              Mostrar {filteredResidences.filter(residence => residence.estado_residencia[0] === "Publicado" || residence.estado_residencia[0] === "Alquilado").length}  Lugares
+              Mostrar {filteredResidences.filter(residence => residence.estado_residencia === "Publicado" || residence.estado_residencia === "Alquilado" || residence.estado_residencia === "Pausado").length}  Lugares
             </Button>
 
             <Button
