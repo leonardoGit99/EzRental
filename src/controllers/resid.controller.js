@@ -55,10 +55,10 @@ if (id_noti.length > 0) {
 */
 
     // Lógica para actualizar el estado aquí
-    await pool.query("UPDATE estado SET estado_residencia = 'Inactivo', fecha_inicio_estado = null, fecha_fin_estado = null WHERE estado_residencia = 'Publicado' AND fecha_fin_estado < CURRENT_DATE"
-    );
-    await pool.query("UPDATE estado SET estado_residencia = 'Publicado', fecha_inicio_estado = CURRENT_DATE, fecha_fin_estado = CURRENT_DATE + INTERVAL '30 days' WHERE estado_residencia = 'Pausado' AND fecha_fin_estado < CURRENT_DATE"
-    );
+    //await pool.query("UPDATE estado SET estado_residencia = 'Inactivo', fecha_inicio_estado = null, fecha_fin_estado = null WHERE estado_residencia = 'Publicado' AND fecha_fin_estado < CURRENT_DATE"
+   // );
+   // await pool.query("UPDATE estado SET estado_residencia = 'Publicado', fecha_inicio_estado = CURRENT_DATE, fecha_fin_estado = CURRENT_DATE + INTERVAL '30 days' WHERE estado_residencia = 'Pausado' AND fecha_fin_estado < CURRENT_DATE"
+    //);
 
     const result = await pool.query(`
     WITH PromedioEvaluacion AS (
@@ -88,6 +88,9 @@ if (id_noti.length > 0) {
       r.tipo_alojamiento, 
       r.telefono_usuario, 
       r.ubicacion_residencia,
+      r.estado_residencia,
+      r.fecha_inicio_publicado,
+      r.fecha_fin_publicado,
       array_agg(DISTINCT i.imagen_residencia) AS imagenes,
       array_agg(DISTINCT i.descripcion_imagen) AS descripcion_imagen,
       array_agg(DISTINCT s.wifi_residencia) AS wifi_residencia,
@@ -102,9 +105,8 @@ if (id_noti.length > 0) {
       array_agg(DISTINCT s.parrilla_residencia) AS parrilla_residencia,
       array_agg(DISTINCT s.camaras_segurid_residencia) AS camaras_segurid_residencia,
       array_agg(DISTINCT s.humo_segurid_residencia) AS humo_segurid_residencia,
-      array_agg(DISTINCT e.estado_residencia) AS estado_residencia,
-      array_agg(DISTINCT e.fecha_inicio_estado) AS fecha_inicio_estado,
-      array_agg(DISTINCT e.fecha_fin_estado) AS fecha_fin_estado,
+      array_agg(DISTINCT e.fecha_inicio_pausado) AS fecha_inicio_pausado,
+      array_agg(DISTINCT e.fecha_fin_pausado) AS fecha_fin_pausado,
       array_agg(DISTINCT ARRAY[f.fecha_inicio_reserva, f.fecha_fin_reserva]) AS fechas_renta,
       pe.promedio
     FROM residencia r
@@ -136,7 +138,9 @@ const getResidUsr = async (req, res) => {
   )
   
     SELECT 
-    r.id_residencia, r.titulo_residencia, r.tipo_residencia, r.pais_residencia, r.ciudad_residencia, r.direccion_residencia, r.cama_residencia, r.habitacion_residencia, r.banio_residencia, r.descripcion_residencia, r.huesped_max_residencia, r.dias_max_residencia, r.precio_residencia, r.check_in_residencia, r.check_out_residencia, r.tipo_alojamiento, r.telefono_usuario, r.ubicacion_residencia,
+    r.id_residencia, r.titulo_residencia, r.tipo_residencia, r.pais_residencia, r.ciudad_residencia, r.direccion_residencia, r.cama_residencia, r.habitacion_residencia, r.banio_residencia, r.descripcion_residencia, r.huesped_max_residencia, r.dias_max_residencia, r.precio_residencia, r.check_in_residencia, r.check_out_residencia, r.tipo_alojamiento, r.telefono_usuario, r.ubicacion_residencia, r.estado_residencia,
+    r.fecha_inicio_publicado,
+    r.fecha_fin_publicado,
     array_agg(DISTINCT i.imagen_residencia) AS imagenes,
     array_agg( i.descripcion_imagen) AS descripcion_imagen,
     array_agg(DISTINCT s.wifi_residencia) AS wifi_residencia,
@@ -151,9 +155,8 @@ const getResidUsr = async (req, res) => {
     array_agg(DISTINCT s.parrilla_residencia) AS parrilla_residencia,
     array_agg(DISTINCT s.camaras_segurid_residencia) AS camaras_segurid_residencia,
     array_agg(DISTINCT s.humo_segurid_residencia) AS humo_segurid_residencia,
-    array_agg(DISTINCT e.estado_residencia) AS estado_residencia,
-    array_agg(DISTINCT e.fecha_inicio_estado) AS fecha_inicio_estado,
-    array_agg(DISTINCT e.fecha_fin_estado) AS fecha_fin_estado,
+    array_agg(DISTINCT e.fecha_inicio_pausado) AS fecha_inicio_pausado,
+    array_agg(DISTINCT e.fecha_fin_pausado) AS fecha_fin_pausado,
     pe.promedio
 FROM residencia r
 LEFT JOIN imagen i ON r.id_residencia = i.id_residencia
@@ -197,9 +200,9 @@ const getResid = async (req, res) =>{
       MAX(DISTINCT s.parrilla_residencia) AS parrilla_residencia,
       MAX(DISTINCT s.camaras_segurid_residencia) AS camaras_segurid_residencia,
       MAX(DISTINCT s.humo_segurid_residencia) AS humo_segurid_residencia,
-      MAX(DISTINCT e.estado_residencia) AS estado_residencia,
-      MAX(DISTINCT e.fecha_inicio_estado) AS fecha_inicio_estado,
-      MAX(DISTINCT e.fecha_fin_estado) AS fecha_fin_estado,
+      r.estado_residencia,
+      r.fecha_inicio_publicado,
+      r.fecha_fin_publicado,
       MAX(DISTINCT u.nombre_usuario) AS nombre_usuario,
       MAX(DISTINCT u.foto_usuario) AS foto_usuario,
       pe.promedio
@@ -278,6 +281,14 @@ const createResid = async (req, res) =>{
      wifi, lavadora, cocina, televisor, aireAcond, psicina, jacuzzi, estacionamiento, gim, parrilla, camaras, detectorHumo,
     imagen
     } = req.body;
+    let algunCampoEsNull = false;
+
+    for (const campo in req.body) {
+      if (req.body[campo] === null || req.body[campo] === undefined) {
+        algunCampoEsNull = true;
+       break; // Sale del bucle tan pronto se encuentra un campo nulo o indefinido
+     }
+    }
     const idUsuarioResult = await pool.query("SELECT id_usuario FROM usuario WHERE codigo_usuario = $1", [codUsuario]);
     const idUsuario = idUsuarioResult.rows[0].id_usuario;
     
@@ -289,13 +300,18 @@ const createResid = async (req, res) =>{
       return res.status(200).json({ data: 1 }); //si reciben 1 es error por titulo repetido, sino pos no 
     }
 
-    
     await client.query('BEGIN'); // Inicia la transacción
-    const newResid = await pool.query(
-      "INSERT INTO residencia (id_usuario, titulo_residencia, tipo_residencia, pais_residencia, ciudad_residencia, direccion_residencia, cama_residencia, habitacion_residencia, banio_residencia, descripcion_residencia, huesped_max_residencia, dias_max_residencia, precio_residencia, check_in_residencia, check_out_residencia, tipo_alojamiento, telefono_usuario, ubicacion_residencia ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)",
-      [idUsuario, tituloResid, tipoResid, paisResid, ciudadResid, direcResid, camaResid, habitResid, banioResid, descripResid, huesMaxResid, diasMaxResid, precioResid, checkInResid, checkOutResid, tipoAlojam, telefono, ubicacion]
-    );
-    
+    if (algunCampoEsNull) {
+      const newResid = await pool.query(
+        "INSERT INTO residencia (id_usuario, titulo_residencia, tipo_residencia, pais_residencia, ciudad_residencia, direccion_residencia, cama_residencia, habitacion_residencia, banio_residencia, descripcion_residencia, huesped_max_residencia, dias_max_residencia, precio_residencia, check_in_residencia, check_out_residencia, tipo_alojamiento, telefono_usuario, ubicacion_residencia, estado_residencia, fecha_inicio_publicado, fecha_fin_publicado ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, 'En Construcción', null, null)",
+        [idUsuario, tituloResid, tipoResid, paisResid, ciudadResid, direcResid, camaResid, habitResid, banioResid, descripResid, huesMaxResid, diasMaxResid, precioResid, checkInResid, checkOutResid, tipoAlojam, telefono, ubicacion]
+      );
+    } else {
+      const newResid = await pool.query(
+        "INSERT INTO residencia (id_usuario, titulo_residencia, tipo_residencia, pais_residencia, ciudad_residencia, direccion_residencia, cama_residencia, habitacion_residencia, banio_residencia, descripcion_residencia, huesped_max_residencia, dias_max_residencia, precio_residencia, check_in_residencia, check_out_residencia, tipo_alojamiento, telefono_usuario, ubicacion_residencia, estado_residencia, fecha_inicio_publicado, fecha_fin_publicado ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, 'Inactivo', null, null)",
+        [idUsuario, tituloResid, tipoResid, paisResid, ciudadResid, direcResid, camaResid, habitResid, banioResid, descripResid, huesMaxResid, diasMaxResid, precioResid, checkInResid, checkOutResid, tipoAlojam, telefono, ubicacion]
+      );
+    }
     const id_nuevo = await pool.query(
       "SELECT id_residencia FROM residencia WHERE LOWER(titulo_residencia) = LOWER($1);",
       [tituloResid]
@@ -316,26 +332,6 @@ const createResid = async (req, res) =>{
       "INSERT INTO servicio (id_residencia, wifi_residencia, cocina_residencia, televisor_residencia, lavadora_residencia, aire_acond_residencia, psicina_residencia, jacuzzi_residencia, estacionamiento_residencia, gimnasio_residencia, parrilla_residencia, camaras_segurid_residencia, humo_segurid_residencia ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)",
       [id_nuevoResid, wifi, cocina, televisor, lavadora, aireAcond, psicina, jacuzzi, estacionamiento, gim, parrilla, camaras, detectorHumo]
     );
-
-    let algunCampoEsNull = false;
-
-    for (const campo in req.body) {
-      if (req.body[campo] === null || req.body[campo] === undefined) {
-        algunCampoEsNull = true;
-       break; // Sale del bucle tan pronto se encuentra un campo nulo o indefinido
-     }
-    }
-
-    if (algunCampoEsNull) {
-      const newEst1 = await pool.query(
-        "INSERT INTO estado (id_residencia, estado_residencia, fecha_inicio_estado, fecha_fin_estado) VALUES ($1,'En Construcción', null, null)",
-        [id_nuevoResid]);  //raro raro las comillas en activo...
-    } else {
-      const newEst2 = await pool.query(
-        "INSERT INTO estado (id_residencia, estado_residencia, fecha_inicio_estado, fecha_fin_estado) VALUES ($1,'Inactivo', null, null)",
-        [id_nuevoResid]  //raro raro las comillas en activo...
-      );
-    }
     await client.query('COMMIT'); // Confirma la transacción
     
     return res.status(200).json(`Residencia agregada exitosamente. ${imagen.length} imagen(es) y ${imagen.length} registro(s) agregado(s).`);
@@ -366,14 +362,25 @@ const createResid = async (req, res) =>{
         return res.status(200).json({ data: 1 });
       }
       
-      const newResid = await pool.query(
-        "UPDATE residencia SET titulo_residencia = $1, tipo_residencia = $2, pais_residencia = $3, ciudad_residencia = $4, direccion_residencia= $5, cama_residencia = $6, habitacion_residencia = $7, banio_residencia = $8, descripcion_residencia = $9, huesped_max_residencia= $10, dias_max_residencia = $11, precio_residencia = $12, check_in_residencia= $13, check_out_residencia= $14, tipo_alojamiento= $15, telefono_usuario= $16, ubicacion_residencia= $17 WHERE id_residencia = $18 ",
-        [tituloResid, tipoResid, paisResid, ciudadResid, direcResid, camaResid, habitResid, banioResid, descripResid, huesMaxResid, diasMaxResid, precioResid, checkInResid, checkOutResid, tipoAlojam, telefono, ubicacion, idResid]
-      );
+      if(estado === 'Pausado'){
+        const newResid = await pool.query(
+          "UPDATE residencia SET titulo_residencia = $1, tipo_residencia = $2, pais_residencia = $3, ciudad_residencia = $4, direccion_residencia= $5, cama_residencia = $6, habitacion_residencia = $7, banio_residencia = $8, descripcion_residencia = $9, huesped_max_residencia= $10, dias_max_residencia = $11, precio_residencia = $12, check_in_residencia= $13, check_out_residencia= $14, tipo_alojamiento= $15, telefono_usuario= $16, ubicacion_residencia= $17, estado_residencia=$19 WHERE id_residencia = $18 ",
+          [tituloResid, tipoResid, paisResid, ciudadResid, direcResid, camaResid, habitResid, banioResid, descripResid, huesMaxResid, diasMaxResid, precioResid, checkInResid, checkOutResid, tipoAlojam, telefono, ubicacion, idResid, estado]
+        );
+        const newEst2 = await pool.query(
+          "INSERT INTO estado (id_residencia, fecha_inicio_pausado, fecha_fin_pausado) VALUES ($1, $2, $3)",
+          [idResid, fechaIniEst, fechaFinEst]  
+        );
+      }else{
+        const newResid = await pool.query(
+          "UPDATE residencia SET titulo_residencia = $1, tipo_residencia = $2, pais_residencia = $3, ciudad_residencia = $4, direccion_residencia= $5, cama_residencia = $6, habitacion_residencia = $7, banio_residencia = $8, descripcion_residencia = $9, huesped_max_residencia= $10, dias_max_residencia = $11, precio_residencia = $12, check_in_residencia= $13, check_out_residencia= $14, tipo_alojamiento= $15, telefono_usuario= $16, ubicacion_residencia= $17, estado_residencia=$19, fecha_inicio_publicado=$20, fecha_fin_publicado=$21 WHERE id_residencia = $18 ",
+          [tituloResid, tipoResid, paisResid, ciudadResid, direcResid, camaResid, habitResid, banioResid, descripResid, huesMaxResid, diasMaxResid, precioResid, checkInResid, checkOutResid, tipoAlojam, telefono, ubicacion, idResid, estado, fechaIniEst, fechaFinEst]
+        );
+      }
+      
       await pool.query('DELETE FROM IMAGEN WHERE id_residencia = $1', [idResid]);
 
       const enlacesImagenes = imagen;
-      console.log(enlacesImagenes);
       for (let i = 0; i < enlacesImagenes.length; i++) {
         const {imagen_residencia, descripcion_imagen } = enlacesImagenes[i];
         
@@ -387,13 +394,6 @@ const createResid = async (req, res) =>{
         "UPDATE servicio SET wifi_residencia = $1, cocina_residencia = $2, televisor_residencia = $3, lavadora_residencia = $4, aire_acond_residencia= $5, psicina_residencia = $6, jacuzzi_residencia = $7, estacionamiento_residencia = $8, gimnasio_residencia = $9, parrilla_residencia= $10, camaras_segurid_residencia = $11, humo_segurid_residencia= $12 WHERE id_residencia = $13 ",
         [wifi, cocina, televisor, lavadora, aireAcond, psicina, jacuzzi, estacionamiento, gim, parrilla, camaras, detectorHumo, idResid]
       );
-      const newEst = await pool.query(
-        "UPDATE estado SET estado_residencia = $1, fecha_inicio_estado = $2, fecha_fin_estado= $3 WHERE id_residencia = $4 ",
-        [estado, fechaIniEst, fechaFinEst, idResid]   //mas raro raro aun las comillas
-      );
-      if (newResid.rowCount === 0)
-        return res.status(404).json({ message: "OK" });
-  
       return res.status(200).json({ message: `La residencia con ID ${idResid} ha sido actualizado correctamente` });
     } catch (error) {
       return res.status(500).json({ message: `Error actualizando residencia: ${error.message}` });
