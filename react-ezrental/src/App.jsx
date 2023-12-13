@@ -16,6 +16,7 @@ import ProtectedRoute from './routes/ProtectedRoute';
 import PasswordRecovery from './pages/PasswordRecovery';
 import MyReserves from './pages/MyReserves';
 import MyRents from './pages/MyRents';
+import UserProfile from './pages/UserProfile';
 
 function App() {
   return (
@@ -67,6 +68,7 @@ function App() {
               </Route>
             </Route>
             <Route path="myRents" element={<MyRents/>}/>
+            <Route path="usuario/:userId" element={<UserProfile />} />
           </Route>
           <Route path='/ez-rental' element={<LayoutBasic />}>
             <Route path='pago-residencia' element={<PaymentSimulation />} />

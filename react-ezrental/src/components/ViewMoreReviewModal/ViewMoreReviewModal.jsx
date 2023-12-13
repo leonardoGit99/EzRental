@@ -3,7 +3,7 @@ import { Modal, Rate } from 'antd';
 import { StarFilled } from '@ant-design/icons';
 import './viewMoreReviewModalStyles.css';
 
-function ViewMoreReviewModal({ reviewOwner, moreReviewModal, openMoreReviewModal, closeMoreReviewModal, cleaningRate, accuracyRate, comunicationRate, commentResidence, averageSegmentedRate }) {
+function ViewMoreReviewModal({ reviewOwner, moreReviewModal, openMoreReviewModal, closeMoreReviewModal, cleaningRate, accuracyRate, comunicationRate, commentResidence, averageSegmentedRate, hostReviews }) {
   return (
     <>
       <Modal
@@ -24,13 +24,22 @@ function ViewMoreReviewModal({ reviewOwner, moreReviewModal, openMoreReviewModal
                     defaultValue={cleaningRate}
                   />
                 </div>
-                <div>
-                  <h4>Exactitud</h4>
-                  <Rate
-                    disabled
-                    defaultValue={accuracyRate}
-                  />
-                </div>
+                {hostReviews ? 
+                  <div>
+                    <h4>Puntualidad</h4>
+                    <Rate
+                      disabled
+                      defaultValue={accuracyRate}
+                    />
+                  </div>
+                :
+                  <div>
+                      <h4>Exactitud</h4>
+                      <Rate
+                        disabled
+                        defaultValue={accuracyRate}
+                      />
+                  </div>}
                 <div>
                   <h4>Comunicación</h4>
                   <Rate

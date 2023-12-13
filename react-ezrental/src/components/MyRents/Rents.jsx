@@ -59,7 +59,7 @@ function Rents({ loading, setRefresh, reservas }) {
 
   const handleWriteReviewClick = (record) => {
     // Aquí puedes "Escribir Reseña del huesped"
-    console.log(`Escribir reseña para la reserva con ID: ${record.id_reserva}`);
+    
     // abrir un modal.
     setSelectedReservation(record);
     setIsReviewModalOpen(true);
@@ -86,7 +86,7 @@ function Rents({ loading, setRefresh, reservas }) {
           key: 'nombre_usuario',
           align: 'center',
           render: (text, record) => (
-            <Link to={`/usuario/${record.id_usuario}`}>{text}</Link>
+            <Link to={`/usuario/${record.codigo_usuario}`}>{text}</Link>
           ),
         },
         { title: 'Correo', dataIndex: 'correo_usuario', key: 'correo_usuario', align: 'center', },
@@ -213,7 +213,9 @@ function Rents({ loading, setRefresh, reservas }) {
       {selectedReservation && (
         <ModalReviewHost
           visible={isReviewModalOpen}
+          setVisible={setIsReviewModalOpen}
           onCancel={() => setIsReviewModalOpen(false)}
+          userId={selectedReservation.codigo_usuario}
         />
       )}
     </div>
