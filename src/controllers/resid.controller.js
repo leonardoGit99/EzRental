@@ -36,11 +36,47 @@ const getAllResid = async (req, res) => {
   try {
  
 
-    // Lógica para actualizar el estado aquí
+    // Cambio de estado Publicado-Inactivo
     await pool.query("UPDATE residencia SET estado_residencia = 'Inactivo', fecha_inicio_publicado = null, fecha_fin_publicado = null WHERE estado_residencia = 'Publicado' AND fecha_fin_publicado < CURRENT_DATE"
     );
-    
-
+    //Cambio de estado Alquilado-Publicado
+    await pool.query(`
+    UPDATE residencia r
+    SET estado_residencia = 'Publicado'
+    FROM reserva e
+    WHERE r.id_residencia = e.id_residencia
+          AND r.estado_residencia = 'Alquilado'
+          AND e.fecha_fin_reserva = CURRENT_DATE - INTERVAL '1 day';
+     `
+    );
+    await pool.query(`
+    UPDATE residencia r
+    SET estado_residencia = 'Alquilado'
+    FROM reserva e
+    WHERE r.id_residencia = e.id_residencia
+          AND r.estado_residencia = 'Publicado'
+          AND e.fecha_inicio_reserva = CURRENT_DATE;
+     `
+    );
+    //Cambio de estado Pausado-Publicado
+    await pool.query(`
+    UPDATE residencia r
+    SET estado_residencia = 'Publicado'
+    FROM estado e
+    WHERE r.id_residencia = e.id_residencia
+          AND r.estado_residencia = 'Pausado'
+          AND e.fecha_fin_pausado = CURRENT_DATE - INTERVAL '1 day';
+     `
+    );
+    await pool.query(`
+    UPDATE residencia r
+    SET estado_residencia = 'Pausado'
+    FROM estado e
+    WHERE r.id_residencia = e.id_residencia
+          AND r.estado_residencia = 'Publicado'
+          AND e.fecha_inicio_pausado = CURRENT_DATE;
+     `
+    );
     const result = await pool.query(`
     WITH PromedioEvaluacion AS (
       SELECT
@@ -108,6 +144,7 @@ const getResidUsr = async (req, res) => {
     const codUsuario = req.params.codUsuario;
     const idUsuarioResult = await pool.query("SELECT id_usuario FROM usuario WHERE codigo_usuario = $1", [codUsuario]);
     const idUsuario = idUsuarioResult.rows[0].id_usuario;
+
     const result = await pool.query(`
     WITH PromedioEvaluacion AS (
       SELECT
@@ -185,11 +222,14 @@ const getResid = async (req, res) =>{
       r.fecha_fin_publicado,
       MAX(DISTINCT u.nombre_usuario) AS nombre_usuario,
       MAX(DISTINCT u.foto_usuario) AS foto_usuario,
+      array_agg(DISTINCT ARRAY[f.fecha_inicio_reserva, f.fecha_fin_reserva]) AS fechas_renta,
+      array_agg(DISTINCT ARRAY[e.fecha_inicio_pausado, e.fecha_fin_pausado]) AS fechas_pausado,
       pe.promedio
       FROM residencia r
       LEFT JOIN servicio s ON r.id_residencia = s.id_residencia
       LEFT JOIN estado e ON r.id_residencia = e.id_residencia
       LEFT JOIN usuario u ON r.id_usuario = u.id_usuario
+      LEFT JOIN reserva f ON r.id_residencia = f.id_residencia
       LEFT JOIN PromedioEvaluacion pe ON r.id_residencia = pe.id_residencia
       WHERE r.id_residencia = $1
       GROUP BY r.id_residencia, pe.promedio;
