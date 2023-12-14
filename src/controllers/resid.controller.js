@@ -131,7 +131,7 @@ const getAllResid = async (req, res) => {
     LEFT JOIN estado e ON r.id_residencia = e.id_residencia
     LEFT JOIN reserva f ON r.id_residencia = f.id_residencia
     LEFT JOIN PromedioEvaluacion pe ON r.id_residencia = pe.id_residencia
-    WHERE r.estado_residencia != 'Inactivo'
+    WHERE r.estado_residencia = 'Publicado'
     GROUP BY r.id_residencia, pe.promedio;
       `);
     
