@@ -131,6 +131,7 @@ const getAllResid = async (req, res) => {
     LEFT JOIN estado e ON r.id_residencia = e.id_residencia
     LEFT JOIN reserva f ON r.id_residencia = f.id_residencia
     LEFT JOIN PromedioEvaluacion pe ON r.id_residencia = pe.id_residencia
+    WHERE r.estado_residencia = 'Publicado'
     GROUP BY r.id_residencia, pe.promedio;
       `);
     
@@ -141,10 +142,29 @@ const getAllResid = async (req, res) => {
 };
 const getResidUsr = async (req, res) => {
   try {
+    
     const codUsuario = req.params.codUsuario;
     const idUsuarioResult = await pool.query("SELECT id_usuario FROM usuario WHERE codigo_usuario = $1", [codUsuario]);
     const idUsuario = idUsuarioResult.rows[0].id_usuario;
-
+    //Cambio de estado Pausado-Publicado
+    await pool.query(`
+    UPDATE residencia r
+    SET estado_residencia = 'Publicado'
+    FROM estado e
+    WHERE r.id_residencia = e.id_residencia
+          AND r.estado_residencia = 'Pausado'
+          AND e.fecha_fin_pausado = CURRENT_DATE - INTERVAL '1 day';
+     `
+    );
+    await pool.query(`
+    UPDATE residencia r
+    SET estado_residencia = 'Pausado'
+    FROM estado e
+    WHERE r.id_residencia = e.id_residencia
+          AND r.estado_residencia = 'Publicado'
+          AND e.fecha_inicio_pausado = CURRENT_DATE;
+     `
+    );
     const result = await pool.query(`
     WITH PromedioEvaluacion AS (
       SELECT
