@@ -25,6 +25,7 @@ function MoreInfoAds() {
   const [rentals, setRentals] = useState([]);
   const [reservesByUser, setReservesByUser] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [pauseDates, setPauseDates] = useState([]);
   const { user } = useAuth();
 
   const setRefresh = (status) => {
@@ -33,7 +34,10 @@ function MoreInfoAds() {
 
   useEffect(() => {
     if (isRefresh) {
-      getOneResidence(idAd).then((data) => setDetailAdd(data));
+      getOneResidence(idAd).then((data) => {
+        setDetailAdd(data)
+        setPauseDates(data.fechas_pausado)
+      });
       setRefresh(false);
       setLoading(false);
     }
@@ -101,6 +105,7 @@ function MoreInfoAds() {
               priceResidence={detailAdd.precio_residencia}
               idAd={idAd}
               rentals={rentals}
+              pauseDates={pauseDates}
             />
 
           </DetailTitle>
