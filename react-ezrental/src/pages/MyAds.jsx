@@ -94,10 +94,10 @@ function MyAds() {
               titulo={residence.titulo_residencia}
               ciudad={residence.ciudad_residencia}
               pais={residence.pais_residencia}
-              fechaIni={residence.fecha_inicio_estado[0] ? residence.fecha_inicio_estado[0].split('T')[0].toString() : 'Sin fecha'}
-              fechaFin={residence.fecha_fin_estado[0] ? residence.fecha_fin_estado[0].split('T')[0].toString() : 'Sin fecha'}
+              fechaIni={residence.fecha_inicio_publicado ? residence.fecha_inicio_publicado.split('T')[0].toString() : 'Sin fecha'}
+              fechaFin={residence.fecha_fin_publicado ? residence.fecha_fin_publicado.split('T')[0].toString() : 'Sin fecha'}
               precio={residence.precio_residencia}
-              estadoResidencia={residence.estado_residencia[0]}
+              estadoResidencia={residence.estado_residencia}
               isRefresh={isRefresh}
               setRefresh={setRefresh}
             />

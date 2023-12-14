@@ -71,7 +71,7 @@ function Home() {
           }, pageSize: 12,
         }}
         locale={customEmptyMessage}
-        dataSource={filteredResidences.filter(residence => residence.estado_residencia[0] === "Publicado" || residence.estado_residencia[0] === "Alquilado")}
+        dataSource={filteredResidences.filter(residence => residence.estado_residencia === "Publicado" || residence.estado_residencia === "Alquilado" || residence.estado_residencia === "Pausado")}
         renderItem={(residence) => (
           <List.Item
             style={
@@ -89,8 +89,8 @@ function Home() {
               titulo={residence.titulo_residencia}
               ciudad={residence.ciudad_residencia}
               pais={residence.pais_residencia}
-              fechaIni={residence.fecha_inicio_estado[0] ? residence.fecha_inicio_estado[0].split('T')[0].toString() : 'Sin fecha'}
-              fechaFin={residence.fecha_fin_estado[0] ? residence.fecha_fin_estado[0].split('T')[0].toString() : 'Sin fecha'}
+              fechaIni={residence.fecha_inicio_publicado ? residence.fecha_inicio_publicado.split('T')[0].toString() : 'Sin fecha'}
+              fechaFin={residence.fecha_fin_publicado ? residence.fecha_fin_publicado.split('T')[0].toString() : 'Sin fecha'}
               precio={residence.precio_residencia}
               promedio={Number(residence.promedio).toFixed(1)}
               setRefresh={setRefresh}

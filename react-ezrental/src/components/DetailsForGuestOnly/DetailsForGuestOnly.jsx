@@ -5,7 +5,7 @@ import { faCalendarCheck } from '@fortawesome/free-solid-svg-icons';
 import ReserveModal from '../ReserveModal/ReserveModal';
 import './detailsForGuestOnlyStyles.css';
 
-function DetailsForGuestOnly({ numberMaxOfGuests, initialDate, finalDate, daysMax, isRefresh, setRefresh, priceResidence, idAd, rentals }) {
+function DetailsForGuestOnly({ numberMaxOfGuests, initialDate, finalDate, daysMax, isRefresh, setRefresh, priceResidence, idAd, rentals, pauseDates }) {
   const [reservationModal, setReservationModal] = useState(false);
   const openReservationModal = () => {
     setReservationModal(true);
@@ -32,6 +32,7 @@ function DetailsForGuestOnly({ numberMaxOfGuests, initialDate, finalDate, daysMa
         priceResidence={priceResidence}
         idAd={idAd}
         rentals={rentals}
+        pauseDates={pauseDates}
       />
     </div>
   )

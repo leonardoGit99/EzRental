@@ -92,10 +92,16 @@ function RentalForm() {
     // formData.append(body);
     console.log(body);
     try {
-      await createResidence(body, user.uid);
-      // await createResidence(body, 1);
-      navigate('/mis-anuncios');
-      message.success("Anuncio creado exitosamente!");
+      await createResidence(body, user.uid).then(response => {
+
+        if(response.data.data === 1){
+          message.warning("El titulo de la residencia ya se encuentra registrado")
+        }else{
+          // await createResidence(body, 1);
+          navigate('/mis-anuncios');
+          message.success("Anuncio creado exitosamente!");
+        }
+      })
     } catch (error) {
       message.error(error);
     }

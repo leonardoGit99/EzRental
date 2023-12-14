@@ -21,6 +21,13 @@
   background-color: #a0d3f146 !important;
 }
 
+.review-modal{
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  height: 78% !important;
+}
+
 @media (320px <=width <=480px) {
   .table-my-guest-reserves {
     overflow-x: auto;
@@ -39,12 +46,7 @@
   }
 }
 
-.review-modal{
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  height: 78% !important;
-}
+
 
 /* @media (768px <=width <=1024px) {}
 

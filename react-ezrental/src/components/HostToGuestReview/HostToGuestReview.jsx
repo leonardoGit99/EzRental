@@ -72,7 +72,7 @@ function HostToGuestReview({ isRefresh, setRefresh, closeModal, userId }) {
 
   return (
     <>
-      <div className="review-form-container">
+      <div className="review-host-to-guest-form-container">
         <Form
           name="review-form"
           autoComplete="off"
