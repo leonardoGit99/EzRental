@@ -1,4 +1,3 @@
-
 CREATE SEQUENCE public.usuario_id_usuario_seq_3;
 
 CREATE TABLE public.USUARIO (
@@ -50,6 +49,9 @@ CREATE TABLE public.RESIDENCIA (
                 tipo_alojamiento VARCHAR,
                 telefono_usuario VARCHAR,
                 ubicacion_residencia VARCHAR,
+                estado_residencia VARCHAR,
+                fecha_inicio_publicado DATE,
+                fecha_fin_publicado DATE,
                 id_usuario INTEGER NOT NULL,
                 CONSTRAINT id_residencia PRIMARY KEY (id_residencia)
 );
@@ -95,9 +97,8 @@ CREATE SEQUENCE public.estado_id_estado_seq;
 CREATE TABLE public.ESTADO (
                 id_estado INTEGER NOT NULL DEFAULT nextval('public.estado_id_estado_seq'),
                 id_residencia INTEGER NOT NULL,
-                estado_residencia VARCHAR NOT NULL,
-                fecha_inicio_estado DATE,
-                fecha_fin_estado DATE,
+                fecha_inicio_pausado DATE,
+                fecha_fin_pausado DATE,
                 CONSTRAINT estado_pk PRIMARY KEY (id_estado)
 );
 
