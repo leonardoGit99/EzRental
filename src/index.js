@@ -3,6 +3,8 @@ const morgan = require('morgan');
 const cors = require("cors");
 
 const taskRoutes = require('./routes/resid.routes');
+const { config } = require('dotenv'); // modulo para utilizar variables de entorno
+config();
 
 const app = express();
 

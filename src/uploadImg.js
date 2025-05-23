@@ -1,51 +1,59 @@
 const { google } = require('googleapis');
 const streamifier = require('streamifier');
-const {auth} = require('./auth');
+const { auth } = require('./auth');
 
 async function createAndUploadFile(auth, fileImg) {
-    //Init cliente drive
     if (!fileImg) {
         console.log("No se ha recibido ningún archivo");
         return;
-      }
+    }
+
     const driveService = google.drive({ version: 'v3', auth });
     const fileStream = streamifier.createReadStream(fileImg.buffer);
 
-    //Metadata del archivo
-    let fileMetadata = {
-        'name': fileImg.originalname,
-        'parents': ['1lCnH6L-cciJ4UqJLsmDGXJ9_1o5T2BhO']
+    // Metadata del archivo
+    const fileMetadata = {
+        name: fileImg.originalname,
+        parents: ['1en5W1RlRNG2sWanD2JFMKidYNOHAYrs4'], // tu carpeta en Drive
     };
 
-    //Definicion del media.
-    let media = {
+    const media = {
         mimeType: fileImg.mimetype,
-        body: fileStream
+        body: fileStream,
     };
-    
-    let response = await driveService.files.create({
+
+    const response = await driveService.files.create({
         requestBody: fileMetadata,
         media: media,
-        fields: 'id'
+        fields: 'id',
     });
 
-    //Handle la respuesta
-    switch (response.status) {
-        case 200:
-            const fileIdResponse = response.data.id;
-            return getDirectLink();
-        default:
-            return "Error";
-    }
-    //Obtener enlace directo
-    async function getDirectLink() {
-        const file = await driveService.files.get({
-            fileId: response.data.id,
-            fields: 'webContentLink'
-        });
-        const directLink = file.data.webContentLink.replace('&export=download', '');
-        return directLink;
-    }
+    if (response.status !== 200) return "Error";
+
+    const fileId = response.data.id;
+
+    // 👇 Hacer público el archivo
+    await driveService.permissions.create({
+        fileId: fileId,
+        requestBody: {
+            role: 'reader',
+            type: 'anyone',
+        },
+    });
+
+
+    // const getLinkRes = await driveService.files.get({
+    //     fileId: fileId,
+    //     fields: 'webViewLink, webContentLink'
+    // });
+
+    // console.log("webViewLink:", getLinkRes.data.webViewLink);
+    // console.log("webContentLink:", getLinkRes.data.webContentLink);
+
+    // 👇 Generar enlace directo en el formato deseado
+    const publicUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w1600`;;
+    // publicUrl = publicUrl.replace(/&export=download/, '');
+    return publicUrl;
 }
 
 module.exports = {
